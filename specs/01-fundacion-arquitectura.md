@@ -12,7 +12,7 @@ Dejar listo el esqueleto del proyecto y el modelo de datos base sobre el que se 
   - **Proveedor: Clerk** (decidido).
   - Roles mínimos: `importador`, `revisor`. Un usuario puede tener uno o ambos roles.
 - Modelo de datos inicial en Prisma (borrador de la sección 4 del documento original, ajustado):
-  - `CasoReembolso`: id, folio (único, ver decisión #2), campos importados del Excel (placeholder hasta spec 02), estado actual, fecha de creación, fecha de última actualización, importacionId (FK).
+  - `CasoReembolso`: id, folio (⚠️ **no es único** — ver decisión #2 revisada; la identidad real de un caso es folio + conceptoGasto), conceptoGasto, campos importados del Excel (placeholder hasta spec 02), estado actual, fecha de creación, fecha de última actualización, importacionId (FK).
   - `HistorialEstado`: id, casoId (FK), estadoAnterior, estadoNuevo, fecha, usuarioId (FK, nullable si es un cambio automático del sistema).
   - `Documento`: id, casoId (FK, nullable si no matchea), nombreArchivo, tipoArchivo, urlBlob, fechaCarga, estadoMatching (`matcheado` / `sin_match`).
   - `ImportacionExcel`: id, nombreArchivoOriginal, fecha, usuarioId (FK), cantidadFilas, cantidadDuplicados, cantidadErrores.

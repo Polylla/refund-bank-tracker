@@ -8,7 +8,11 @@ Registro de las decisiones tomadas antes de escribir el plan de specs. Cualquier
 - No hay selección manual como mecanismo primario (queda abierto si se agrega como fallback más adelante — ver "Abiertos" al final).
 
 ## 2. Criterio de duplicidad
-**Decisión:** el Excel trae un folio/ID único por fila: la columna **`OT`** (numérica). La duplicidad se define por ese folio. Confirmado con archivo de ejemplo real (ver #7).
+**Decisión revisada (2026-09-16, tras feedback del usuario sobre datos reales):** `OT` **NO es un identificador único por caso**. Una misma OT (orden de trabajo) puede tener múltiples diligencias distintas asociadas (ej. la misma OT con "notificación de demanda" y, por separado, "notificación de sentencia") — cada una es un caso de reembolso legítimo y distinto.
+
+**Clave de identidad de un caso = `OT` + `Conceptos gasto de receptor`.** Dos filas con esa combinación exacta igual sí son consideradas el mismo caso (duplicado real). `OT` solo, repetido con distinto concepto, no es duplicado.
+
+Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` en Prisma (ver [01-fundacion-arquitectura.md](01-fundacion-arquitectura.md) y [03-deteccion-duplicados.md](03-deteccion-duplicados.md)). Se agrega `conceptoGasto` como columna de primera clase (antes solo vivía dentro de `datosImportados`).
 
 ## 3. Comportamiento ante duplicado (dentro de una misma importación)
 **Decisión:** se importa igual, marcada como "posible duplicado" para revisión posterior. No bloquea la importación.

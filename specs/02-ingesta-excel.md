@@ -8,7 +8,7 @@ Archivo de referencia: `GASTOS RECEPTORES FRAUDE JUNIO 2026.xlsx` — una sola h
 
 | Columna en Excel | Campo interno | Tipo | Obligatoria al importar |
 |---|---|---|---|
-| `OT` | `folio` | número (tratado como string) | Sí — es el identificador único de caso (ver decisión #2) |
+| `OT` | `folio` | número (tratado como string) | Sí — ⚠️ no es único por sí solo; la identidad real del caso es `OT` + `Conceptos gasto de receptor` (ver decisión #2 revisada) |
 | `Nombre cliente` | `nombreCliente` | texto | Sí |
 | `RUT` | `rut` | texto (formato `XX.XXX.XXX-X`) | Sí |
 | `Tribunal` | `tribunal` | texto | Sí |
