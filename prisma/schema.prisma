@@ -17,6 +17,12 @@ enum EstadoMatching {
   SIN_MATCH
 }
 
+enum EstadoRevisionFila {
+  PENDIENTE
+  APROBADA
+  DESCARTADA
+}
+
 model Usuario {
   id        String   @id @default(cuid())
   clerkId   String   @unique
@@ -27,25 +33,50 @@ model Usuario {
 
   importaciones     ImportacionExcel[]
   cambiosDeEstado   HistorialEstado[]
+  filasRevisadas    FilaEnRevision[]
 
   @@map("usuarios")
 }
 
 model CasoReembolso {
-  id             String   @id @default(cuid())
-  folio          String   @unique
-  datosImportados Json
-  estadoActual   String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id               String   @id @default(cuid())
+  // folio (OT) NO es único: la misma OT puede tener varias diligencias
+  // distintas. La identidad real de un caso es folio + conceptoGasto
+  // (ver specs/03-deteccion-duplicados.md).
+  folio            String
+  conceptoGasto    String
+  posibleDuplicado Boolean  @default(false)
+  datosImportados  Json
+  estadoActual     String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   importacionId  String
   importacion    ImportacionExcel @relation(fields: [importacionId], references: [id])
 
-  historial      HistorialEstado[]
-  documentos     Documento[]
+  historial        HistorialEstado[]
+  documentos       Documento[]
+  filasEnRevision  FilaEnRevision[]
 
+  @@index([folio, conceptoGasto])
   @@map("casos_reembolso")
+}
+
+model FilaEnRevision {
+  id              String             @id @default(cuid())
+  importacionId   String
+  importacion     ImportacionExcel   @relation(fields: [importacionId], references: [id])
+  casoExistenteId String
+  casoExistente   CasoReembolso      @relation(fields: [casoExistenteId], references: [id])
+  datosNuevos     Json
+  estado          EstadoRevisionFila @default(PENDIENTE)
+  fecha           DateTime           @default(now())
+
+  revisadoPorId   String?
+  revisadoPor     Usuario?           @relation(fields: [revisadoPorId], references: [id])
+  fechaRevision   DateTime?
+
+  @@map("filas_en_revision")
 }
 
 model HistorialEstado {
@@ -86,6 +117,7 @@ model ImportacionExcel {
   cantidadErrores       Int
 
   casos                 CasoReembolso[]
+  filasEnRevision       FilaEnRevision[]
 
   @@map("importaciones_excel")
 }

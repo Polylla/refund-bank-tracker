@@ -5,6 +5,7 @@ import {
   parseReembolsosXlsx,
   type ParseResult,
 } from "./parser";
+import { marcarDuplicadosIntraArchivo } from "./duplicados";
 
 export interface ResultadoImportacion {
   ok: boolean;
@@ -14,6 +15,7 @@ export interface ResultadoImportacion {
   resumen?: {
     filasImportadas: number;
     filasDescartadas: number;
+    filasDuplicadas: number;
   };
 }
 
@@ -43,6 +45,9 @@ export async function procesarImportacion(
     };
   }
 
+  const filasConDuplicados = marcarDuplicadosIntraArchivo(resultado.filasValidas);
+  const filasDuplicadas = filasConDuplicados.filter((f) => f.posibleDuplicado).length;
+
   try {
     await prisma.$transaction(
       async (tx) => {
@@ -50,17 +55,19 @@ export async function procesarImportacion(
           data: {
             nombreArchivoOriginal: nombreArchivo,
             usuarioId,
-            cantidadFilas: resultado.filasValidas.length,
-            cantidadDuplicados: 0,
+            cantidadFilas: filasConDuplicados.length,
+            cantidadDuplicados: filasDuplicadas,
             cantidadErrores: 0,
           },
         });
 
-        for (const fila of resultado.filasValidas) {
+        for (const fila of filasConDuplicados) {
           const estadoActual = fila.estadoInicial ?? "Pendiente";
           const caso = await tx.casoReembolso.create({
             data: {
               folio: fila.folio,
+              conceptoGasto: fila.conceptoGasto,
+              posibleDuplicado: fila.posibleDuplicado,
               datosImportados: fila.datosImportados as Prisma.InputJsonValue,
               estadoActual,
               importacionId: importacion.id,
@@ -91,8 +98,9 @@ export async function procesarImportacion(
   return {
     ok: true,
     resumen: {
-      filasImportadas: resultado.filasValidas.length,
+      filasImportadas: filasConDuplicados.length,
       filasDescartadas: resultado.filasDescartadas,
+      filasDuplicadas,
     },
   };
 }

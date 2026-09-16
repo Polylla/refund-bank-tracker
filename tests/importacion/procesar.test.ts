@@ -54,6 +54,7 @@ describe("procesarImportacion (integración con base de datos real)", () => {
     expect(resultado.ok).toBe(true);
     expect(resultado.resumen?.filasImportadas).toBe(15);
     expect(resultado.resumen?.filasDescartadas).toBe(1);
+    expect(resultado.resumen?.filasDuplicadas).toBe(0);
 
     const importacion = await prisma.importacionExcel.findFirst({
       where: { usuarioId, nombreArchivoOriginal: "reembolsos-ejemplo.xlsx" },

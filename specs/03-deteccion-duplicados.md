@@ -35,7 +35,7 @@ Evitar que casos de reembolso se dupliquen silenciosamente, cubriendo dos escena
 - Un usuario con rol `revisor` decide, fila por fila, desde una vista de "cola de revisión":
   - **Aprobar** → se aplica un upsert manual: los campos de `datosNuevos` reemplazan a los del `casoExistente` (excepto `estadoActual`, que no se toca acá — eso es de spec 04). Queda un registro en `HistorialEstado` documentando el cambio.
   - **Descartar** → la fila entrante se ignora. También queda registrado (en `FilaEnRevision.estado = DESCARTADA`, no hace falta duplicar en `HistorialEstado` ya que no cambió el caso).
-- Nota de interacción con Caso 1: si una fila es duplicado intra-archivo **y además** coincide con un caso ya existente de otra importación, ambas marcas aplican independientemente (se crea el `CasoReembolso` marcado `posibleDuplicado: true` **y** además se genera la entrada en `FilaEnRevision`— no son excluyentes, ver criterios de aceptación).
+- **Regla de precedencia (simplificada tras revisión):** el chequeo contra la base (Caso 2) tiene prioridad. Para cada fila válida: si su clave de identidad ya existe en un `CasoReembolso` de una importación anterior, **siempre** va a `FilaEnRevision` y **nunca** se crea un `CasoReembolso` nuevo para esa fila — sin importar si además es duplicado intra-archivo. El marcado `posibleDuplicado` (Caso 1) solo aplica a las filas que sí se insertan como `CasoReembolso` nuevo. Si dos filas del mismo archivo duplican entre sí y ADEMÁS coinciden con un caso ya existente, ambas terminan como entradas separadas en `FilaEnRevision` apuntando al mismo `casoExistente` (el revisor decide cuál aprobar, si alguna).
 
 ## Fuera de alcance
 - UI de matching de documentos (spec 05).
@@ -46,7 +46,7 @@ Evitar que casos de reembolso se dupliquen silenciosamente, cubriendo dos escena
 - Importar un archivo con una fila cuya `OT`+`conceptoGasto` ya existe de una importación anterior no crea ni modifica ningún `CasoReembolso`; genera una fila en `FilaEnRevision` con estado `PENDIENTE`.
 - Un revisor que aprueba una fila en revisión actualiza el `CasoReembolso` existente con los datos nuevos y queda registrado en `HistorialEstado`.
 - Un revisor que descarta una fila en revisión no modifica nada, solo cambia `FilaEnRevision.estado` a `DESCARTADA`.
-- Una fila que es duplicado intra-archivo Y coincide con un caso existente de otra importación genera ambos efectos (nuevo `CasoReembolso` marcado como duplicado + entrada en la cola de revisión apuntando al caso viejo).
+- Una fila que es duplicado intra-archivo Y coincide con un caso existente de otra importación **no** crea un `CasoReembolso` nuevo — el chequeo contra la base tiene prioridad, va directo a `FilaEnRevision` (igual que cualquier otra coincidencia con la base).
 - Importar un archivo sin repeticiones de `OT`+`conceptoGasto` (ni internas ni contra la base) no genera ninguna alerta ni fila en revisión.
 - Dos filas con la misma `OT` pero **distinto** `conceptoGasto` (ej. notificación de demanda vs. notificación de sentencia) **no** se marcan como duplicado ni generan fila en revisión.
 

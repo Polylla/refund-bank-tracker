@@ -21,6 +21,7 @@ export interface CasoImportado {
   estudioAbogado: string;
   fechaEnvioPago: Date | null;
   estadoInicial: string | null;
+  posibleDuplicado: boolean;
   datosImportados: Record<string, unknown>;
 }
 
@@ -106,6 +107,7 @@ function parseSheet(sheet: RawSheet): ParseResult {
       estudioAbogado: parsed.estudioAbogado as string,
       fechaEnvioPago: (parsed.fechaEnvioPago as Date | null) ?? null,
       estadoInicial: (parsed.estadoInicial as string | null) || null,
+      posibleDuplicado: false,
       datosImportados,
     });
   });
