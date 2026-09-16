@@ -36,7 +36,8 @@
 - Muestra el resumen post-importación: filas importadas, errores (con detalle por fila), filas descartadas.
 - **Verificación:** manual en navegador — subir el fixture anonimizado y confirmar que el resumen muestra 15 importados, 0 errores.
 
-## Task 2.5 — Verificación end-to-end
+## Task 2.5 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción (refund-bank-tracker.vercel.app/importaciones): "Importación exitosa, Filas importadas: 15, Filas descartadas: 1".
 - Subir el fixture real vía la UI desplegada (o local), confirmar en Prisma Studio (o una vista simple de listado) que los 15 casos existen con los datos correctos y la fila de totales no aparece.
 - **Verificación:** ✅ manual, con captura/registro de que el flujo completo funciona de punta a punta.
 
