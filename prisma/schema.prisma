@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  IMPORTADOR
+  REVISOR
+}
+
+enum EstadoMatching {
+  MATCHEADO
+  SIN_MATCH
+}
+
+model Usuario {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  nombre    String?
+  roles     Rol[]
+  createdAt DateTime @default(now())
+
+  importaciones     ImportacionExcel[]
+  cambiosDeEstado   HistorialEstado[]
+
+  @@map("usuarios")
+}
+
+model CasoReembolso {
+  id             String   @id @default(cuid())
+  folio          String   @unique
+  datosImportados Json
+  estadoActual   String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  importacionId  String
+  importacion    ImportacionExcel @relation(fields: [importacionId], references: [id])
+
+  historial      HistorialEstado[]
+  documentos     Documento[]
+
+  @@map("casos_reembolso")
+}
+
+model HistorialEstado {
+  id             String   @id @default(cuid())
+  casoId         String
+  caso           CasoReembolso @relation(fields: [casoId], references: [id])
+  estadoAnterior String?
+  estadoNuevo    String
+  fecha          DateTime @default(now())
+
+  usuarioId      String?
+  usuario        Usuario? @relation(fields: [usuarioId], references: [id])
+
+  @@map("historial_estados")
+}
+
+model Documento {
+  id             String   @id @default(cuid())
+  casoId         String?
+  caso           CasoReembolso? @relation(fields: [casoId], references: [id])
+  nombreArchivo  String
+  tipoArchivo    String
+  urlBlob        String
+  fechaCarga     DateTime @default(now())
+  estadoMatching EstadoMatching
+
+  @@map("documentos")
+}
+
+model ImportacionExcel {
+  id                    String   @id @default(cuid())
+  nombreArchivoOriginal String
+  fecha                 DateTime @default(now())
+  usuarioId             String
+  usuario               Usuario  @relation(fields: [usuarioId], references: [id])
+  cantidadFilas         Int
+  cantidadDuplicados    Int
+  cantidadErrores       Int
+
+  casos                 CasoReembolso[]
+
+  @@map("importaciones_excel")
+}
