@@ -48,6 +48,11 @@ model CasoReembolso {
   posibleDuplicado Boolean  @default(false)
   datosImportados  Json
   estadoActual     String
+  // Se completan automaticamente al cambiar el estado (ver
+  // specs/04-estados-reembolso.md). datosImportados NO se modifica
+  // cuando esto pasa: queda como snapshot historico del import original.
+  fechaEnvioPago   DateTime?
+  fechaPago        DateTime?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 

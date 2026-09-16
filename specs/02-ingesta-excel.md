@@ -41,7 +41,7 @@ El archivo de ejemplo trae una fila final tipo resumen (`Conceptos gasto de rece
   - Las columnas obligatorias de la tabla de arriba deben estar presentes y con valor.
   - Tipos de dato correctos por columna (fechas parseables cuando no están vacías, `Costo de diligencia` numérico, `OT` no vacío).
   - Si el archivo no pasa validación, se rechaza completo con un reporte de errores por fila/columna (no se hace inserción parcial).
-- Registro de cada fila válida como un `CasoReembolso` nuevo (`folio` = `OT`, `estadoActual` = `Estado reembolso` si viene, si no `"Pendiente"`), asociado a un registro `ImportacionExcel` (fecha, usuario, cantidad de filas, cantidad de errores).
+- Registro de cada fila válida como un `CasoReembolso` nuevo, asociado a un registro `ImportacionExcel` (fecha, usuario, cantidad de filas, cantidad de errores). **Estado inicial (actualizado tras spec 04):** en la práctica `Estado reembolso` siempre viene vacío, pero `Fecha pago`/`Fecha envío a pago` a veces ya vienen completadas desde el Excel. El estado inicial se infiere: `Fecha pago` con valor → `Pagado`; si no, `Fecha envío a pago` con valor → `Enviado a pago`; si no, `Estado reembolso` si viene con valor; si no, `Pendiente`. Ver [lib/estados/estados.ts](../lib/estados/estados.ts) y spec 04.
 - La detección de duplicados (spec 03) se ejecuta como parte de este flujo, pero su lógica vive en su propia spec.
 - Resumen post-importación visible al usuario: filas importadas, duplicados detectados, errores, filas de totales/en blanco descartadas.
 

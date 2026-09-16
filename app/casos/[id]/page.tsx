@@ -1,0 +1,66 @@
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { EstadoSelector } from "../EstadoSelector";
+
+export default async function CasoDetallePage(
+  props: PageProps<"/casos/[id]">
+) {
+  const { id } = await props.params;
+
+  const caso = await prisma.casoReembolso.findUnique({
+    where: { id },
+    include: {
+      historial: {
+        orderBy: { fecha: "asc" },
+        include: { usuario: true },
+      },
+    },
+  });
+
+  if (!caso) notFound();
+
+  const datos = caso.datosImportados as Record<string, unknown>;
+
+  return (
+    <div className="flex-1 p-8 max-w-3xl mx-auto">
+      <h1 className="text-xl font-semibold">
+        OT {caso.folio} — {caso.conceptoGasto}
+      </h1>
+
+      <div className="mt-4 flex items-center gap-4">
+        <span className="text-sm text-gray-600">Estado actual:</span>
+        <EstadoSelector casoId={caso.id} estadoActual={caso.estadoActual} />
+      </div>
+
+      <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+        <dt className="text-gray-500">Nombre cliente</dt>
+        <dd>{String(datos["Nombre cliente"] ?? "")}</dd>
+        <dt className="text-gray-500">Monto</dt>
+        <dd>{String(datos["Costo de diligencia"] ?? "")}</dd>
+        <dt className="text-gray-500">Fecha envío a pago</dt>
+        <dd>
+          {caso.fechaEnvioPago
+            ? caso.fechaEnvioPago.toLocaleDateString("es-CL")
+            : "—"}
+        </dd>
+        <dt className="text-gray-500">Fecha pago</dt>
+        <dd>
+          {caso.fechaPago ? caso.fechaPago.toLocaleDateString("es-CL") : "—"}
+        </dd>
+      </dl>
+
+      <h2 className="mt-8 font-medium">Historial de estados</h2>
+      <ol className="mt-3 flex flex-col gap-2 text-sm">
+        {caso.historial.map((h) => (
+          <li key={h.id} className="border-l-2 pl-3">
+            <span className="text-gray-500">
+              {h.fecha.toLocaleString("es-CL")}
+            </span>{" "}
+            — {h.estadoAnterior ?? "(creación)"} → {h.estadoNuevo}
+            {h.usuario ? ` (${h.usuario.email})` : " (sistema)"}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}

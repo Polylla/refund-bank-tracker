@@ -35,3 +35,9 @@ export function requireRole(roles: Role[], rol: Role) {
     throw new Error(`Requiere rol ${rol}`);
   }
 }
+
+export function requireAnyRole(roles: Role[], rolesPermitidos: Role[]) {
+  if (!rolesPermitidos.some((r) => roles.includes(r))) {
+    throw new Error(`Requiere alguno de estos roles: ${rolesPermitidos.join(", ")}`);
+  }
+}

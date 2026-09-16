@@ -7,6 +7,7 @@ import {
 } from "./parser";
 import { marcarDuplicadosIntraArchivo } from "./duplicados";
 import { claveIdentidad } from "./identidad";
+import { inferirEstadoInicial } from "@/lib/estados/estados";
 
 export interface ResultadoImportacion {
   ok: boolean;
@@ -103,7 +104,11 @@ export async function procesarImportacion(
             continue;
           }
 
-          const estadoActual = fila.estadoInicial ?? "Pendiente";
+          const estadoActual = inferirEstadoInicial(
+            fila.fechaPago,
+            fila.fechaEnvioPago,
+            fila.estadoInicial
+          );
           const caso = await tx.casoReembolso.create({
             data: {
               folio: fila.folio,
@@ -111,6 +116,8 @@ export async function procesarImportacion(
               posibleDuplicado: fila.posibleDuplicado,
               datosImportados: fila.datosImportados as Prisma.InputJsonValue,
               estadoActual,
+              fechaPago: fila.fechaPago,
+              fechaEnvioPago: fila.fechaEnvioPago,
               importacionId: importacion.id,
             },
           });
