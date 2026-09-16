@@ -6,7 +6,7 @@ Dejar listo el esqueleto del proyecto y el modelo de datos base sobre el que se 
 ## Alcance
 - Inicializar proyecto Next.js 16 (App Router), configurado para desplegar en Vercel.
 - Configurar Prisma + conexión a PostgreSQL (Neon).
-- Configurar Vercel Blob Storage (credenciales, cliente de subida/descarga).
+- Configurar Vercel Blob Storage (cliente de subida/descarga). Autenticación vía **OIDC** (recomendado por Vercel desde 2026): usa `BLOB_STORE_ID` + `VERCEL_OIDC_TOKEN` (token de corta duración, se renueva solo). No se usa `BLOB_READ_WRITE_TOKEN` estático — ese solo aplica si el código corriera fuera de Vercel.
 - Configurar Tailwind CSS + shadcn/ui.
 - Autenticación multi-usuario con roles (decisión #5 en [00-decisiones.md](00-decisiones.md)):
   - **Proveedor: Clerk** (decidido).

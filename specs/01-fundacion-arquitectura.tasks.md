@@ -26,10 +26,10 @@ Cada task se implementa y se da por completa solo cuando cumple su criterio de v
 - **Verificación:** un usuario de prueba puede loguearse; su rol es accesible en la sesión (`session.user.roles`); una ruta protegida de ejemplo rechaza a un usuario sin sesión.
 
 ## Task 1.5 — Vercel Blob Storage
-- Configurar cliente de Vercel Blob (`@vercel/blob`).
-- Variable `BLOB_READ_WRITE_TOKEN` en `.env.example`.
+- Instalar `@vercel/blob`. Store ya conectado al proyecto en Vercel (`BLOB_STORE_ID` ya en `.env.local`).
+- Autenticación vía OIDC (sin `BLOB_READ_WRITE_TOKEN` estático): el SDK usa `BLOB_STORE_ID` + `VERCEL_OIDC_TOKEN` automáticamente. En local, `VERCEL_OIDC_TOKEN` se refresca corriendo `vercel env pull` cuando expire (vida corta, ~12h).
 - Función de utilidad `uploadFile` / `getFileUrl` en `/lib`.
-- **Verificación:** test (unitario o script manual) que sube un archivo de prueba y recupera su URL pública correctamente.
+- **Verificación:** test (unitario o script manual) que sube un archivo de prueba y recupera su URL correctamente.
 
 ## Task 1.6 — Deploy inicial a Vercel
 - Conectar repo a Vercel, configurar variables de entorno de producción (`DATABASE_URL`, `BLOB_READ_WRITE_TOKEN`, secretos de auth).
