@@ -6,7 +6,7 @@ Metodología: SDD (spec por feature, aprobada antes de implementar) + TDD obliga
 
 | # | Spec | Depende de | Estado |
 |---|------|-----------|--------|
-| 01 | [Fundación técnica y modelo de datos](01-fundacion-arquitectura.md) | — | Pendiente de aprobación |
+| 01 | [Fundación técnica y modelo de datos](01-fundacion-arquitectura.md) | — | ✅ Completa (ver [tasks](01-fundacion-arquitectura.tasks.md)) |
 | 02 | [Ingesta de Excel/CSV](02-ingesta-excel.md) | 01 | Pendiente de aprobación — **bloqueada** hasta recibir el archivo Excel de ejemplo |
 | 03 | [Detección de duplicados y reimportación](03-deteccion-duplicados.md) | 01, 02 | Pendiente de aprobación |
 | 04 | [Estados del reembolso](04-estados-reembolso.md) | 01, 02 | Pendiente de aprobación |

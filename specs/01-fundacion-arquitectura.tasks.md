@@ -29,15 +29,17 @@ Cada task se implementa y se da por completa solo cuando cumple su criterio de v
 - Ruta de prueba `/dashboard` protegida.
 - **Verificación:** ✅ un usuario sin sesión que visita `/dashboard` es redirigido a `/sign-in` (confirmado en navegador, sin errores de consola).
 
-## Task 1.5 — Vercel Blob Storage
-- Instalar `@vercel/blob`. Store ya conectado al proyecto en Vercel (`BLOB_STORE_ID` ya en `.env.local`).
-- Autenticación vía OIDC (sin `BLOB_READ_WRITE_TOKEN` estático): el SDK usa `BLOB_STORE_ID` + `VERCEL_OIDC_TOKEN` automáticamente. En local, `VERCEL_OIDC_TOKEN` se refresca corriendo `vercel env pull` cuando expire (vida corta, ~12h).
-- Función de utilidad `uploadFile` / `getFileUrl` en `/lib`.
-- **Verificación:** test (unitario o script manual) que sube un archivo de prueba y recupera su URL correctamente.
+## Task 1.5 — Vercel Blob Storage ✅ completada (verificación diferida a producción)
+- `@vercel/blob` instalado. `lib/blob.ts` (`uploadFile` / `getFileUrl`) implementado.
+- **Decisión del proyecto: un solo ambiente en Vercel (Production), sin Development/Preview separados.** Por eso no se conectó el store al ambiente "Development" (el CLI de Vercel siempre pide ese ambiente para OIDC local, aunque el proyecto no lo use).
+- Consecuencia: el script `tests/manual/verify-blob.mjs` no corre en local vía OIDC. La verificación real de subida/matching de documentos se hace en producción cuando se implemente la spec 05 (matching de documentos), que es cuando `lib/blob.ts` se usa por primera vez de verdad.
+- Autenticación vía OIDC en producción: `BLOB_STORE_ID` + `VERCEL_OIDC_TOKEN` (automático, sin `BLOB_READ_WRITE_TOKEN` estático).
 
-## Task 1.6 — Deploy inicial a Vercel
-- Conectar repo a Vercel, configurar variables de entorno de producción (`DATABASE_URL`, `BLOB_READ_WRITE_TOKEN`, secretos de auth).
-- **Verificación:** la URL de producción responde con la página placeholder; login funciona en producción contra la base Neon real.
+## Task 1.6 — Deploy inicial a Vercel ✅ completada
+- Proyecto conectado a GitHub (`Polylla/refund-bank-tracker`): cada push a `main` dispara build+deploy automático a Production.
+- Deployment Protection ("Vercel Authentication") desactivada para Production por el usuario, para que Clerk sea la única puerta de entrada.
+- `NEXT_PUBLIC_CLERK_SIGN_IN_URL` / `NEXT_PUBLIC_CLERK_SIGN_UP_URL` agregadas a las env vars de Production en Vercel (no solo en `.env.local`) — de lo contrario Clerk redirige a su Account Portal hosteado en vez de nuestras páginas propias.
+- **Verificación:** ✅ https://refund-bank-tracker.vercel.app carga la app; `/dashboard` redirige correctamente a `/sign-in` propio (confirmado en navegador, sin errores de consola).
 
 ---
 **Nota TDD:** esta spec es mayormente configuración de infraestructura, sin lógica de negocio compleja, por lo que no exige TDD estricto salvo en Task 1.4 (control de acceso por rol), donde sí debe existir un test que verifique que una ruta protegida rechaza correctamente a un usuario sin el rol requerido.
