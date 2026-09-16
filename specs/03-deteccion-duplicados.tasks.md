@@ -27,7 +27,10 @@
 - Página `/revision` (protegida, rol `revisor`): lista las `FilaEnRevision` con `estado: PENDIENTE`, mostrando datos del caso existente vs. datos nuevos entrantes, con botones Aprobar/Descartar.
 - **Verificación:** manual en navegador — generar una fila en revisión (reimportando un archivo con un `OT`+`conceptoGasto` ya existente) y aprobarla/descartarla desde la UI.
 
-## Task 3.5 — Verificación end-to-end
+## Task 3.5 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: reimportar el archivo real de junio dio "0 importadas, 1 descartada, 0 duplicados, 15 en revisión"; la cola en `/revision` mostró las 15 filas con los datos comparados, y aprobar/descartar funcionaron sin errores.
+
+**Bug de infraestructura encontrado y corregido en el camino:** los deploys en Vercel fallaban el build (Prisma Client desactualizado, ver commit `84c28fa`) — Vercel seguía sirviendo un deploy viejo (folio único) contra la base ya migrada (conceptoGasto NOT NULL), lo que rompía cualquier importación en producción hasta que se agregó `"postinstall": "prisma generate"` a `package.json`.
 - Con datos reales: reimportar un archivo con al menos una fila que coincida con un caso ya existente, confirmar que aparece en `/revision`, y probar ambas acciones (aprobar y descartar) en producción o local.
 
 ---

@@ -8,7 +8,7 @@ Metodología: SDD (spec por feature, aprobada antes de implementar) + TDD obliga
 |---|------|-----------|--------|
 | 01 | [Fundación técnica y modelo de datos](01-fundacion-arquitectura.md) | — | ✅ Completa (ver [tasks](01-fundacion-arquitectura.tasks.md)) |
 | 02 | [Ingesta de Excel/CSV](02-ingesta-excel.md) | 01 | ✅ Completa (ver [tasks](02-ingesta-excel.tasks.md)), verificada en producción |
-| 03 | [Detección de duplicados y reimportación](03-deteccion-duplicados.md) | 01, 02 | Pendiente de aprobación |
+| 03 | [Detección de duplicados y reimportación](03-deteccion-duplicados.md) | 01, 02 | ✅ Completa (ver [tasks](03-deteccion-duplicados.tasks.md)), verificada en producción |
 | 04 | [Estados del reembolso](04-estados-reembolso.md) | 01, 02 | Pendiente de aprobación |
 | 05 | [Matching de documentos](05-matching-documentos.md) | 01, 02 | Pendiente de aprobación |
 | 06 | [Historial y reportería](06-historial-reporteria.md) | 02, 03, 04, 05 | Pendiente de aprobación |
