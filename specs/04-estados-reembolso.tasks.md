@@ -24,7 +24,8 @@
 - Página `/casos/[id]`: detalle del caso + línea de tiempo de su `HistorialEstado` en orden cronológico.
 - **Verificación:** manual en navegador — cambiar el estado de un caso real y confirmar que se refleja en el listado y en el historial del detalle.
 
-## Task 4.4 — Verificación end-to-end
+## Task 4.4 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: listado de casos visible, cambio de estado sin errores, historial reflejando el cambio correctamente.
 - En producción: cambiar el estado de al menos un caso real a `Enviado a pago` y luego a `Pagado`, confirmar que las fechas se completan y el historial queda correcto.
 
 ---
