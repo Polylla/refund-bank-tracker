@@ -18,12 +18,12 @@
 - **Tests primero (integración contra la base real, con cleanup):** fila nueva sin coincidencia → se crea normal; fila que coincide con caso existente → no se crea, se genera `FilaEnRevision`; fila que es duplicado intra-archivo Y coincide con la base → no se crea, va a `FilaEnRevision` (no `posibleDuplicado`).
 - Agregar `ImportacionExcel.cantidadEnRevision` (nueva migración) y reflejarlo en el resumen de importación.
 
-## Task 3.3 — Acciones del revisor sobre la cola (TDD)
+## Task 3.3 — Acciones del revisor sobre la cola (TDD) ✅ completada
 - `lib/revision/acciones.ts`: `aprobarFila(filaId, usuarioId)` (aplica `datosNuevos` sobre el `casoExistente`, crea `HistorialEstado`, marca `FilaEnRevision.estado = APROBADA`) y `descartarFila(filaId, usuarioId)` (solo marca `DESCARTADA`).
 - Server Actions correspondientes en `app/revision/actions.ts`, protegidas por rol `revisor`.
 - **Tests primero (integración):** aprobar actualiza el caso y crea historial; descartar no modifica el caso; ambas dejan `FilaEnRevision` en el estado correcto.
 
-## Task 3.4 — UI de cola de revisión
+## Task 3.4 — UI de cola de revisión ✅ implementada (verificación manual pendiente, ver Task 3.5)
 - Página `/revision` (protegida, rol `revisor`): lista las `FilaEnRevision` con `estado: PENDIENTE`, mostrando datos del caso existente vs. datos nuevos entrantes, con botones Aprobar/Descartar.
 - **Verificación:** manual en navegador — generar una fila en revisión (reimportando un archivo con un `OT`+`conceptoGasto` ya existente) y aprobarla/descartarla desde la UI.
 

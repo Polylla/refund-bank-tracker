@@ -33,7 +33,6 @@ describe("parseReembolsosXlsx", () => {
   });
 
   it("rechaza el archivo completo si falta una columna obligatoria", async () => {
-    const buffer = readFileSync(FIXTURE_XLSX);
     // Simula un archivo sin la columna RUT quitándola del buffer no es trivial;
     // en vez de eso probamos el caso vía CSV, más fácil de mutar como texto.
     const csv = readFileSync(FIXTURE_CSV, "utf-8");
