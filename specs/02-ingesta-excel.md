@@ -27,10 +27,10 @@ Estos 13 campos se guardan en `CasoReembolso.datosImportados` (JSON) tal como vi
 ### Fila de totales
 El archivo de ejemplo trae una fila final tipo resumen (`Conceptos gasto de receptor: "TOTAL"`, `Costo de diligencia: <suma>`, el resto de columnas vacías). **Regla de filtrado:** cualquier fila con `OT` vacío se descarta silenciosamente antes de validar (no cuenta como error ni como caso). Esto cubre la fila de totales y cualquier fila en blanco intermedia.
 
-## ⚠️ Pendiente de confirmar contigo
-- ¿`Tribunal`, `N° de Rol`, `Año Rol`, `Nombre receptor`, `Conceptos gasto de receptor` y `Estudio/Abogado` son **siempre** obligatorios, o hay casos legítimos donde alguno viene vacío? Asumí que sí son obligatorios porque en el archivo de ejemplo las 15 filas de datos los traen completos.
-- ¿El `RUT` necesita validación de formato/dígito verificador, o basta con guardarlo como texto tal cual viene?
-- ¿`OT` es siempre numérico, o en algún mes podría venir con letras/prefijo?
+## Decisiones confirmadas sobre estas columnas
+- `Tribunal`, `N° de Rol`, `Año Rol`, `Nombre receptor`, `Conceptos gasto de receptor` y `Estudio/Abogado` son **siempre obligatorios**; si falta alguno, la fila se rechaza como error de validación.
+- `RUT` se guarda como texto tal cual viene del Excel, **sin validar** formato ni dígito verificador (MVP).
+- `OT` siempre es **numérico**; se valida como tal al importar.
 
 ## Alcance
 - Endpoint/acción para subir un archivo `.xlsx` o `.csv`.
