@@ -8,6 +8,12 @@ export default defineConfig(({ mode }) => {
   return {
     test: {
       environment: "node",
+      // Los tests de integracion (lib/importacion) pegan contra la base
+      // Neon real de desarrollo (no hay DB de test separada, ver
+      // specs/03-deteccion-duplicados.md). Correr los archivos de test en
+      // serie evita que corridas concurrentes se pisen sobre las mismas
+      // filas.
+      fileParallelism: false,
     },
     resolve: {
       alias: {

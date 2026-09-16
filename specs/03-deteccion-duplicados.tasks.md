@@ -11,7 +11,8 @@
 - Se integra en `parseSheet`/`procesarImportacion`: las filas marcadas se insertan igual pero con `posibleDuplicado: true`.
 - **Tests primero:** 0 duplicados, 1 par duplicado, grupo de 3+ con misma clave, mismo OT distinto concepto (no debe marcar), fixture con folios repetidos legítimamente (distinta diligencia).
 
-## Task 3.2 — Detección contra casos existentes + cola de revisión (TDD)
+## Task 3.2 — Detección contra casos existentes + cola de revisión (TDD) ✅ completada
+(Nota: se agregó `fileParallelism: false` en `vitest.config.ts` — los tests de integración pegan contra la misma base Neon real y corrían en paralelo por archivo, lo que causaba colisiones de datos entre archivos de test distintos.)
 - Antes de insertar cada fila válida, consultar si ya existe un `CasoReembolso` con la misma `folio`+`conceptoGasto` **de una importación anterior** (no la que se está procesando ahora).
 - **Precedencia:** si existe coincidencia contra la base, esa fila SIEMPRE va a `FilaEnRevision` (`estado: PENDIENTE`) y NUNCA se crea un `CasoReembolso` para ella — sin importar si también es duplicado intra-archivo (Task 3.1). El marcado `posibleDuplicado` solo aplica a filas que sí se insertan.
 - **Tests primero (integración contra la base real, con cleanup):** fila nueva sin coincidencia → se crea normal; fila que coincide con caso existente → no se crea, se genera `FilaEnRevision`; fila que es duplicado intra-archivo Y coincide con la base → no se crea, va a `FilaEnRevision` (no `posibleDuplicado`).

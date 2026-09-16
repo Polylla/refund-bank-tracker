@@ -6,6 +6,7 @@ import {
   type ParseResult,
 } from "./parser";
 import { marcarDuplicadosIntraArchivo } from "./duplicados";
+import { claveIdentidad } from "./identidad";
 
 export interface ResultadoImportacion {
   ok: boolean;
@@ -16,6 +17,7 @@ export interface ResultadoImportacion {
     filasImportadas: number;
     filasDescartadas: number;
     filasDuplicadas: number;
+    filasEnRevision: number;
   };
 }
 
@@ -45,8 +47,28 @@ export async function procesarImportacion(
     };
   }
 
-  const filasConDuplicados = marcarDuplicadosIntraArchivo(resultado.filasValidas);
-  const filasDuplicadas = filasConDuplicados.filter((f) => f.posibleDuplicado).length;
+  const filasConDuplicados = marcarDuplicadosIntraArchivo(
+    resultado.filasValidas
+  );
+
+  // Task 3.2: filas cuya clave de identidad (folio + conceptoGasto) ya
+  // existe en un CasoReembolso de una importación anterior. Se consulta
+  // ANTES de insertar nada de esta importación, para no confundir
+  // duplicados intra-archivo (Task 3.1) con coincidencias reales contra
+  // la base.
+  const foliosDelArchivo = [
+    ...new Set(filasConDuplicados.map((f) => f.folio.trim())),
+  ];
+  const casosExistentes = await prisma.casoReembolso.findMany({
+    where: { folio: { in: foliosDelArchivo } },
+  });
+  const existentePorClave = new Map<string, (typeof casosExistentes)[number]>();
+  for (const caso of casosExistentes) {
+    existentePorClave.set(claveIdentidad(caso.folio, caso.conceptoGasto), caso);
+  }
+
+  let filasDuplicadas = 0;
+  let filasEnRevision = 0;
 
   try {
     await prisma.$transaction(
@@ -56,12 +78,31 @@ export async function procesarImportacion(
             nombreArchivoOriginal: nombreArchivo,
             usuarioId,
             cantidadFilas: filasConDuplicados.length,
-            cantidadDuplicados: filasDuplicadas,
+            cantidadDuplicados: 0,
             cantidadErrores: 0,
+            cantidadEnRevision: 0,
           },
         });
 
         for (const fila of filasConDuplicados) {
+          const clave = claveIdentidad(fila.folio, fila.conceptoGasto);
+          const existente = existentePorClave.get(clave);
+
+          if (existente) {
+            // Precedencia: una coincidencia contra la base siempre gana
+            // sobre el marcado de duplicado intra-archivo. No se crea
+            // un CasoReembolso nuevo para esta fila.
+            await tx.filaEnRevision.create({
+              data: {
+                importacionId: importacion.id,
+                casoExistenteId: existente.id,
+                datosNuevos: fila.datosImportados as Prisma.InputJsonValue,
+              },
+            });
+            filasEnRevision++;
+            continue;
+          }
+
           const estadoActual = fila.estadoInicial ?? "Pendiente";
           const caso = await tx.casoReembolso.create({
             data: {
@@ -73,6 +114,8 @@ export async function procesarImportacion(
               importacionId: importacion.id,
             },
           });
+          if (fila.posibleDuplicado) filasDuplicadas++;
+
           await tx.historialEstado.create({
             data: {
               casoId: caso.id,
@@ -82,6 +125,14 @@ export async function procesarImportacion(
             },
           });
         }
+
+        await tx.importacionExcel.update({
+          where: { id: importacion.id },
+          data: {
+            cantidadDuplicados: filasDuplicadas,
+            cantidadEnRevision: filasEnRevision,
+          },
+        });
       },
       { timeout: 20000 }
     );
@@ -98,9 +149,10 @@ export async function procesarImportacion(
   return {
     ok: true,
     resumen: {
-      filasImportadas: filasConDuplicados.length,
+      filasImportadas: filasConDuplicados.length - filasEnRevision,
       filasDescartadas: resultado.filasDescartadas,
       filasDuplicadas,
+      filasEnRevision,
     },
   };
 }

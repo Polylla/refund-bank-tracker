@@ -115,6 +115,7 @@ model ImportacionExcel {
   cantidadFilas         Int
   cantidadDuplicados    Int
   cantidadErrores       Int
+  cantidadEnRevision    Int      @default(0)
 
   casos                 CasoReembolso[]
   filasEnRevision       FilaEnRevision[]

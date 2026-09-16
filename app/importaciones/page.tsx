@@ -53,6 +53,14 @@ export default function ImportacionesPage() {
                 Filas descartadas (ej. fila de totales):{" "}
                 {resultado.resumen?.filasDescartadas}
               </p>
+              <p>
+                Posibles duplicados (misma OT + concepto, en este archivo):{" "}
+                {resultado.resumen?.filasDuplicadas}
+              </p>
+              <p>
+                En cola de revisión (ya existían de otra importación):{" "}
+                {resultado.resumen?.filasEnRevision}
+              </p>
             </div>
           ) : (
             <div>
