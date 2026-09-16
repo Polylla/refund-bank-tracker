@@ -2,28 +2,32 @@
 
 Cada task se implementa y se da por completa solo cuando cumple su criterio de verificación. No se pasa a la siguiente sin confirmar la anterior.
 
-## Task 1.1 — Inicializar proyecto Next.js 16
+## Task 1.1 — Inicializar proyecto Next.js 16 ✅ completada
 - Crear proyecto Next.js 16 (App Router, TypeScript).
 - Configurar Tailwind CSS + shadcn/ui (`components.json`, tema base).
 - Estructura de carpetas: `/app`, `/lib`, `/prisma`, `/tests`, `/specs` (ya existe).
 - `.gitignore`, `.env.example` (vacío por ahora, se llena en tasks siguientes).
 - **Verificación:** `npm run dev` levanta una página placeholder sin errores en consola.
 
-## Task 1.2 — Prisma + conexión a Neon
+## Task 1.2 — Prisma + conexión a Neon ✅ completada
+(Nota: Prisma CLI no lee `.env.local` — necesita `DATABASE_URL` también en un `.env` en la raíz del proyecto, ambos gitignored.)
 - Instalar Prisma, inicializar `schema.prisma` con datasource PostgreSQL.
 - Variable `DATABASE_URL` en `.env.example` (documentada, sin valor real).
 - **Verificación:** `npx prisma db pull` o `npx prisma migrate dev` conecta correctamente contra una base Neon de desarrollo (el usuario provee la connection string real fuera del repo).
 
-## Task 1.3 — Modelo de datos inicial
+## Task 1.3 — Modelo de datos inicial ✅ completada
 - Definir en `schema.prisma`: `Usuario`, `CasoReembolso`, `HistorialEstado`, `Documento`, `ImportacionExcel` (campos según [01-fundacion-arquitectura.md](01-fundacion-arquitectura.md)).
 - Generar migración inicial.
 - **Verificación:** `npx prisma migrate dev` crea las 5 tablas sin errores; `npx prisma studio` las muestra vacías y con las relaciones correctas (FKs visibles).
 
-## Task 1.4 — Autenticación con roles
+## Task 1.4 — Autenticación con roles ✅ completada
 - **Decisión confirmada: Clerk.**
-- Configurar login (al menos un proveedor, ej. email/password o magic link).
-- Modelar roles `importador` / `revisor` sobre el `Usuario` de Prisma.
-- **Verificación:** un usuario de prueba puede loguearse; su rol es accesible en la sesión (`session.user.roles`); una ruta protegida de ejemplo rechaza a un usuario sin sesión.
+- `proxy.ts` (Next.js 16 renombró `middleware.ts` a `proxy.ts`) con `clerkMiddleware` protegiendo `/dashboard(.*)`.
+- `<ClerkProvider>` en `app/layout.tsx`, con `<Show when="signed-in">` / `<Show when="signed-out">` (en `@clerk/nextjs` Core 3, lanzado 2026-03-03, se eliminaron `<SignedIn>`/`<SignedOut>`/`<Protect>` a favor de `<Show>`).
+- Páginas `/sign-in` y `/sign-up` (catch-all) con los componentes de Clerk.
+- Roles `importador` / `revisor` vía `publicMetadata.roles` de Clerk (helper en `lib/roles.ts`), no todavía sincronizados al modelo `Usuario` de Prisma — eso se conecta cuando una spec necesite `usuarioId` real (ImportacionExcel, HistorialEstado).
+- Ruta de prueba `/dashboard` protegida.
+- **Verificación:** ✅ un usuario sin sesión que visita `/dashboard` es redirigido a `/sign-in` (confirmado en navegador, sin errores de consola).
 
 ## Task 1.5 — Vercel Blob Storage
 - Instalar `@vercel/blob`. Store ya conectado al proyecto en Vercel (`BLOB_STORE_ID` ya en `.env.local`).

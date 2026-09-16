@@ -9,10 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.9.4",
+    "@prisma/client": "^6",
+    "@vercel/blob": "^2.8.0",
     "next": "16.3.5",
     "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "@prisma/client": "^6"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -21,8 +23,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
+    "prisma": "^6",
     "tailwindcss": "^4",
-    "typescript": "^5",
-    "prisma": "^6"
+    "typescript": "^5"
   }
 }
