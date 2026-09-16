@@ -8,8 +8,7 @@ Registro de las decisiones tomadas antes de escribir el plan de specs. Cualquier
 - No hay selección manual como mecanismo primario (queda abierto si se agrega como fallback más adelante — ver "Abiertos" al final).
 
 ## 2. Criterio de duplicidad
-**Decisión:** el Excel trae un folio/ID único por fila. La duplicidad se define por ese folio.
-- Pendiente confirmar el nombre exacto de la columna cuando el usuario comparta el archivo de ejemplo (spec 02).
+**Decisión:** el Excel trae un folio/ID único por fila: la columna **`OT`** (numérica). La duplicidad se define por ese folio. Confirmado con archivo de ejemplo real (ver #7).
 
 ## 3. Comportamiento ante duplicado (dentro de una misma importación)
 **Decisión:** se importa igual, marcada como "posible duplicado" para revisión posterior. No bloquea la importación.
@@ -25,8 +24,7 @@ Registro de las decisiones tomadas antes de escribir el plan de specs. Cualquier
 **Decisión:** lista básica de estados (ej. Pendiente, En Revisión, Aprobado, Rechazado, Pagado — a confirmar nombres exactos) con transiciones libres (cualquier estado puede pasar a cualquier otro) en el MVP. No se modela una máquina de estados restrictiva por ahora.
 
 ## 7. Columnas del Excel/CSV de origen
-**Decisión:** el usuario compartirá un archivo de ejemplo antes de cerrar la spec 02 (ingesta). Hasta entonces, la spec 02 usa columnas placeholder típicas de un caso de reembolso.
-- **Bloqueante para cerrar spec 02.**
+**Decisión:** confirmado con archivo de ejemplo real (`GASTOS RECEPTORES FRAUDE JUNIO 2026.xlsx`, un solo caso de uso: gastos de receptores judiciales en causas de fraude, Ley 20.009). 13 columnas: `OT` (folio único), `Nombre cliente`, `RUT`, `Tribunal`, `N° de Rol`, `Año Rol`, `Nombre receptor`, `Conceptos gasto de receptor`, `Costo de diligencia` (monto), `Fecha pago`, `Estudio/Abogado`, `Fecha envío a pago`, `Estado reembolso`. Las últimas tres suelen venir vacías al importar (se llenan durante el ciclo de vida del caso). El archivo trae una fila de totales al final que se debe descartar (fila sin `OT`). Detalle completo en [02-ingesta-excel.md](02-ingesta-excel.md).
 
 ## 8. Filtros de exportación
 **Decisión:** todos los campos importados del Excel deben poder usarse como filtro al exportar (no solo un subconjunto fijo).
