@@ -3,29 +3,32 @@
 ## Objetivo
 Permitir cargar un archivo `.xlsx`/`.csv` con el listado de casos de reembolso y registrar automáticamente cada fila como un `CasoReembolso`.
 
-## Columnas reales (confirmado con archivo de ejemplo)
-Archivo de referencia: `GASTOS RECEPTORES FRAUDE JUNIO 2026.xlsx` — una sola hoja, nombrada según el mes (ej. `JUNIO`). El parser debe leer **la primera hoja del archivo**, sin depender de su nombre (el nombre cambia cada mes).
+## Columnas reales (confirmado con dos archivos de ejemplo reales)
+Archivos de referencia: `GASTOS RECEPTORES FRAUDE JUNIO 2026.xlsx` (formato original) y `Rendición receptores BECH - PLANILLA FRAUDES JUNIO.xlsx` (formato nuevo, con columnas adicionales). El parser debe leer **la primera hoja del archivo**, sin depender de su nombre (cambia entre archivos — a veces el mes, a veces una fecha).
 
-| Columna en Excel | Campo interno | Tipo | Obligatoria al importar |
+**El nombre de columna no es 100% estable entre archivos** (el formato evolucionó). El parser matchea por **alias**: cada campo interno acepta una o más variantes de nombre de columna (normalizadas por tildes/mayúsculas/espacios/símbolos).
+
+| Columna(s) en Excel (alias) | Campo interno | Tipo | Obligatoria al importar |
 |---|---|---|---|
-| `OT` | `folio` | número (tratado como string) | Sí — ⚠️ no es único por sí solo; la identidad real del caso es `OT` + `Conceptos gasto de receptor` (ver decisión #2 revisada) |
+| `OT` | `folio` | número (tratado como string) | Sí — ⚠️ no es único por sí solo; la identidad real del caso es `OT` + concepto de gasto (ver decisión #2 revisada) |
 | `Nombre cliente` | `nombreCliente` | texto | Sí |
 | `RUT` | `rut` | texto (formato `XX.XXX.XXX-X`) | Sí |
 | `Tribunal` | `tribunal` | texto | Sí |
 | `N° de Rol` | `numeroRol` | número | Sí |
 | `Año Rol` | `anoRol` | número (año) | Sí |
 | `Nombre receptor` | `nombreReceptor` | texto | Sí |
-| `Conceptos gasto de receptor` | `conceptoGasto` | texto | Sí |
+| `Conceptos gasto de receptor` **o** `Concepto gasto de receptor` | `conceptoGasto` | texto | Sí |
 | `Costo de diligencia` | `monto` | número (CLP, sin decimales) | Sí |
-| `Fecha pago` | `fechaPago` | fecha | No — viene vacía al importar, se llena durante el ciclo de vida del caso |
+| `N° BOLETA` *(nueva)* | `nBoleta` | número (tratado como string) | No — no toda diligencia tiene boleta rendida todavía. Usada para matching de documentos (spec 05) |
+| `Fecha pago` **o** `Fecha pago diligencia receptor` | `fechaPago` | fecha | No — a veces viene completada desde el Excel (ver spec 04, inferencia de estado inicial) |
 | `Estudio/Abogado` | `estudioAbogado` | texto | Sí |
-| `Fecha envío a pago` | `fechaEnvioPago` | fecha | No — igual que `fechaPago` |
-| `Estado reembolso` | `estadoInicial` | texto | No — viene vacía; si está vacía, el estado inicial del caso es `Pendiente` |
+| `Fecha envío a pago` | `fechaEnvioPago` | fecha | No |
+| `Estado reembolso` | `estadoInicial` | texto | No — en la práctica siempre viene vacía |
 
-Estos 13 campos se guardan en `CasoReembolso.datosImportados` (JSON) tal como vienen del Excel, más el mapeo normalizado de arriba para los que sí son campos de primera clase del modelo (`folio`, `estadoActual`, fechas usadas en reportería).
+Todos los campos (con su nombre de columna **canónico**, el primer alias de la lista) se guardan en `CasoReembolso.datosImportados` (JSON) tal como vienen del Excel, más el mapeo normalizado de arriba para los que son campos de primera clase del modelo (`folio`, `conceptoGasto`, `nBoleta`, `estadoActual`, `fechaPago`, `fechaEnvioPago`).
 
-### Fila de totales
-El archivo de ejemplo trae una fila final tipo resumen (`Conceptos gasto de receptor: "TOTAL"`, `Costo de diligencia: <suma>`, el resto de columnas vacías). **Regla de filtrado:** cualquier fila con `OT` vacío se descarta silenciosamente antes de validar (no cuenta como error ni como caso). Esto cubre la fila de totales y cualquier fila en blanco intermedia.
+### Fila de totales / filas en blanco
+Los archivos pueden traer una fila final vacía o de resumen (con o sin la palabra "TOTAL"). **Regla de filtrado:** cualquier fila con `OT` vacío se descarta silenciosamente antes de validar (no cuenta como error ni como caso).
 
 ## Decisiones confirmadas sobre estas columnas
 - `Tribunal`, `N° de Rol`, `Año Rol`, `Nombre receptor`, `Conceptos gasto de receptor` y `Estudio/Abogado` son **siempre obligatorios**; si falta alguno, la fila se rechaza como error de validación.
@@ -35,7 +38,7 @@ El archivo de ejemplo trae una fila final tipo resumen (`Conceptos gasto de rece
 ## Alcance
 - Endpoint/acción para subir un archivo `.xlsx` o `.csv`.
 - Parseo del archivo (librería a definir en la task de implementación, ej. `xlsx`/`exceljs` para Excel, parser nativo o `papaparse` para CSV). Debe leer la primera hoja sin importar su nombre.
-- Mapeo de columnas del archivo a los campos internos de la tabla de arriba. Normalización de nombres de columna para tolerar variaciones menores (espacios extra, mayúsculas/minúsculas, tildes — el archivo de ejemplo ya trae acentos y símbolos como `N°`).
+- Mapeo de columnas del archivo a los campos internos de la tabla de arriba, **por alias** (más de un nombre de columna válido por campo, ver tabla). Normalización de nombres de columna para tolerar variaciones menores (espacios extra, mayúsculas/minúsculas, tildes, símbolos como `N°`).
 - Descartar filas sin `OT` (fila de totales / filas en blanco) antes de validar.
 - Validación de formato **antes** de insertar nada:
   - Las columnas obligatorias de la tabla de arriba deben estar presentes y con valor.
@@ -51,8 +54,9 @@ El archivo de ejemplo trae una fila final tipo resumen (`Conceptos gasto de rece
 - Cambios de estado posteriores a la creación → spec 04.
 
 ## Criterios de aceptación
-- Subir el archivo de ejemplo real (`GASTOS RECEPTORES FRAUDE JUNIO 2026.xlsx`) crea 15 `CasoReembolso` (no 16 — la fila de totales se descarta) y un `ImportacionExcel` con los contadores correctos.
-- Subir un archivo con una columna obligatoria faltante rechaza el archivo completo con un mensaje claro de qué columna falta.
+- Subir el archivo de ejemplo real original (`GASTOS RECEPTORES FRAUDE JUNIO 2026.xlsx`, formato de 13 columnas) crea 15 `CasoReembolso` (no 16 — la fila de totales se descarta) y un `ImportacionExcel` con los contadores correctos, todos con `nBoleta: null`.
+- Subir el archivo de formato nuevo (`Rendición receptores BECH`, 14 columnas con `N° BOLETA` y `Concepto` singular) se importa igual de bien, matcheando los alias de columna correctamente y persistiendo `nBoleta` cuando viene con valor.
+- Subir un archivo con una columna **obligatoria** faltante rechaza el archivo completo con un mensaje claro de qué columna falta. Falta de una columna **opcional** (`N° BOLETA`, fechas, estado) no rechaza nada.
 - Subir un archivo con una fila con tipo de dato inválido (ej. `Costo de diligencia` no numérico) reporta esa fila específica sin insertar nada del archivo.
 - Subir un archivo `.csv` y uno `.xlsx` equivalentes producen el mismo resultado.
 - Una fila sin `OT` (como la fila de totales) no genera error ni se cuenta como caso importado.
@@ -65,5 +69,6 @@ El archivo de ejemplo trae una fila final tipo resumen (`Conceptos gasto de rece
 
 Escribir tests **antes** de implementar para:
 - Parser de Excel/CSV usando el fixture anonimizado: columnas correctas, columnas faltantes, tipos inválidos, fila de totales descartada, filas vacías, archivo vacío.
-- Mapeo de columnas → modelo: normalización de nombres de columna (mayúsculas/minúsculas, espacios, tildes, símbolos como `N°`).
+- Mapeo de columnas → modelo: normalización de nombres de columna (mayúsculas/minúsculas, espacios, tildes, símbolos como `N°`), **y matching por alias** (`Conceptos`/`Concepto`, `Fecha pago`/`Fecha pago diligencia receptor`).
+- `N° BOLETA` ausente del archivo (formato viejo) no rompe nada; presente pero vacío en una fila puntual tampoco.
 - Generación correcta del resumen (`cantidadFilas`, `cantidadErrores`) para distintos escenarios mixtos (algunas filas válidas, otras no, más la fila de totales).

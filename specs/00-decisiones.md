@@ -3,9 +3,10 @@
 Registro de las decisiones tomadas antes de escribir el plan de specs. Cualquier spec que dependa de una de estas decisiones debe citarla en vez de redefinirla.
 
 ## 1. Matching documento ↔ caso
-**Decisión:** por folio/N° de caso en el nombre del archivo (ej. `12345.pdf`).
+**Decisión revisada (2026-09-16, tras revisar archivo real "Rendición receptores BECH"):** NO es por folio (OT). Los PDFs vienen nombrados por **`N° BOLETA`** (ej. `740.pdf`, `299.pdf`), una columna nueva que aparece en la planilla de rendición del receptor — no toda fila tiene boleta asociada (se completa cuando el receptor rinde/cobra ese gasto). El matching de spec 05 usa `CasoReembolso.nBoleta`.
 - No se implementa OCR en el MVP.
 - No hay selección manual como mecanismo primario (queda abierto si se agrega como fallback más adelante — ver "Abiertos" al final).
+- Nota: algunos PDFs traen sufijo `(1)` en el nombre (ej. `38(1).pdf`), típico de descargas duplicadas — el parser de nombre de archivo debe tolerar esto y extraer igual el número de boleta.
 
 ## 2. Criterio de duplicidad
 **Decisión revisada (2026-09-16, tras feedback del usuario sobre datos reales):** `OT` **NO es un identificador único por caso**. Una misma OT (orden de trabajo) puede tener múltiples diligencias distintas asociadas (ej. la misma OT con "notificación de demanda" y, por separado, "notificación de sentencia") — cada una es un caso de reembolso legítimo y distinto.
@@ -28,7 +29,12 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 **Decisión:** lista básica de estados (ej. Pendiente, En Revisión, Aprobado, Rechazado, Pagado — a confirmar nombres exactos) con transiciones libres (cualquier estado puede pasar a cualquier otro) en el MVP. No se modela una máquina de estados restrictiva por ahora.
 
 ## 7. Columnas del Excel/CSV de origen
-**Decisión:** confirmado con archivo de ejemplo real (`GASTOS RECEPTORES FRAUDE JUNIO 2026.xlsx`, un solo caso de uso: gastos de receptores judiciales en causas de fraude, Ley 20.009). 13 columnas: `OT` (folio único), `Nombre cliente`, `RUT`, `Tribunal`, `N° de Rol`, `Año Rol`, `Nombre receptor`, `Conceptos gasto de receptor`, `Costo de diligencia` (monto), `Fecha pago`, `Estudio/Abogado`, `Fecha envío a pago`, `Estado reembolso`. Las últimas tres suelen venir vacías al importar (se llenan durante el ciclo de vida del caso). El archivo trae una fila de totales al final que se debe descartar (fila sin `OT`). Detalle completo en [02-ingesta-excel.md](02-ingesta-excel.md).
+**Decisión (actualizada 2026-09-16 con un segundo archivo real, "Rendición receptores BECH"):** los nombres de columna **varían levemente entre archivos** — el formato evoluciona. El parser tolera alias por columna (ver [02-ingesta-excel.md](02-ingesta-excel.md)):
+- `Conceptos gasto de receptor` (plural, archivo original) = `Concepto gasto de receptor` (singular, archivo nuevo) → mismo campo interno `conceptoGasto`.
+- `Fecha pago` (original) = `Fecha pago diligencia receptor` (nuevo) → mismo campo interno `fechaPago`.
+- Columna nueva **`N° BOLETA`** (opcional, no toda fila la trae): se agrega como campo permanente `nBoleta` en `CasoReembolso`, usado para matching de documentos (spec 05, ver decisión #1 revisada).
+- El resto de columnas (`OT`, `Nombre cliente`, `RUT`, `Tribunal`, `N° de Rol`, `Año Rol`, `Nombre receptor`, `Costo de diligencia`, `Estudio/Abogado`, `Fecha envío a pago`, `Estado reembolso`) se mantienen igual.
+- El archivo puede traer una fila en blanco al final (con o sin la palabra "TOTAL") que se descarta igual (fila sin `OT`).
 
 ## 8. Filtros de exportación
 **Decisión:** todos los campos importados del Excel deben poder usarse como filtro al exportar (no solo un subconjunto fijo).
