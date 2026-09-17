@@ -13,6 +13,7 @@ function fila(overrides: Partial<CasoImportado>): CasoImportado {
     nombreReceptor: "R",
     conceptoGasto: "NOTIFICACION DEMANDA",
     monto: 1000,
+    nBoleta: null,
     fechaPago: null,
     estudioAbogado: "E",
     fechaEnvioPago: null,

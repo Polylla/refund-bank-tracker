@@ -2,25 +2,41 @@ export type ColumnType = "integer" | "number" | "string" | "date";
 
 export interface ColumnDef {
   key: string;
-  header: string;
+  /** Nombres de columna aceptados; el primero es el canónico (usado en
+   * mensajes de error y como clave dentro de datosImportados). El
+   * formato de columnas del Excel de origen evoluciona entre archivos
+   * (ver specs/02-ingesta-excel.md), así que cada campo puede aceptar
+   * más de un nombre. */
+  headers: string[];
   required: boolean;
   type: ColumnType;
 }
 
 export const COLUMNAS: ColumnDef[] = [
-  { key: "folio", header: "OT", required: true, type: "integer" },
-  { key: "nombreCliente", header: "Nombre cliente", required: true, type: "string" },
-  { key: "rut", header: "RUT", required: true, type: "string" },
-  { key: "tribunal", header: "Tribunal", required: true, type: "string" },
-  { key: "numeroRol", header: "N° de Rol", required: true, type: "integer" },
-  { key: "anoRol", header: "Año Rol", required: true, type: "integer" },
-  { key: "nombreReceptor", header: "Nombre receptor", required: true, type: "string" },
-  { key: "conceptoGasto", header: "Conceptos gasto de receptor", required: true, type: "string" },
-  { key: "monto", header: "Costo de diligencia", required: true, type: "number" },
-  { key: "fechaPago", header: "Fecha pago", required: false, type: "date" },
-  { key: "estudioAbogado", header: "Estudio/Abogado", required: true, type: "string" },
-  { key: "fechaEnvioPago", header: "Fecha envío a pago", required: false, type: "date" },
-  { key: "estadoInicial", header: "Estado reembolso", required: false, type: "string" },
+  { key: "folio", headers: ["OT"], required: true, type: "integer" },
+  { key: "nombreCliente", headers: ["Nombre cliente"], required: true, type: "string" },
+  { key: "rut", headers: ["RUT"], required: true, type: "string" },
+  { key: "tribunal", headers: ["Tribunal"], required: true, type: "string" },
+  { key: "numeroRol", headers: ["N° de Rol"], required: true, type: "integer" },
+  { key: "anoRol", headers: ["Año Rol"], required: true, type: "integer" },
+  { key: "nombreReceptor", headers: ["Nombre receptor"], required: true, type: "string" },
+  {
+    key: "conceptoGasto",
+    headers: ["Conceptos gasto de receptor", "Concepto gasto de receptor"],
+    required: true,
+    type: "string",
+  },
+  { key: "monto", headers: ["Costo de diligencia"], required: true, type: "number" },
+  { key: "nBoleta", headers: ["N° BOLETA"], required: false, type: "integer" },
+  {
+    key: "fechaPago",
+    headers: ["Fecha pago", "Fecha pago diligencia receptor"],
+    required: false,
+    type: "date",
+  },
+  { key: "estudioAbogado", headers: ["Estudio/Abogado"], required: true, type: "string" },
+  { key: "fechaEnvioPago", headers: ["Fecha envío a pago"], required: false, type: "date" },
+  { key: "estadoInicial", headers: ["Estado reembolso"], required: false, type: "string" },
 ];
 
 export const FOLIO_KEY = "folio";

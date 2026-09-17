@@ -17,6 +17,7 @@ export interface CasoImportado {
   nombreReceptor: string;
   conceptoGasto: string;
   monto: number;
+  nBoleta: string | null;
   fechaPago: Date | null;
   estudioAbogado: string;
   fechaEnvioPago: Date | null;
@@ -40,18 +41,24 @@ export function parseReembolsosCsv(content: string): ParseResult {
   return parseSheet(readCsvRows(content));
 }
 
+function nombreCanonico(def: ColumnDef): string {
+  return def.headers[0];
+}
+
 function parseSheet(sheet: RawSheet): ParseResult {
   const normalizedHeaders = sheet.headers.map(normalizeHeader);
   const columnaIndexPorClave = new Map<string, number>();
 
   for (const def of COLUMNAS) {
-    const idx = normalizedHeaders.indexOf(normalizeHeader(def.header));
+    const idx = normalizedHeaders.findIndex((h) =>
+      def.headers.some((alias) => normalizeHeader(alias) === h)
+    );
     if (idx !== -1) columnaIndexPorClave.set(def.key, idx);
   }
 
   const columnasFaltantes = COLUMNAS.filter(
     (def) => def.required && !columnaIndexPorClave.has(def.key)
-  ).map((def) => def.header);
+  ).map(nombreCanonico);
 
   if (columnasFaltantes.length > 0) {
     return { filasValidas: [], errores: [], filasDescartadas: 0, columnasFaltantes };
@@ -80,7 +87,9 @@ function parseSheet(sheet: RawSheet): ParseResult {
     for (const def of COLUMNAS) {
       const raw = getRaw(row, def.key);
       const { value, error } = parseValue(raw, def);
-      if (error) rowErrors.push({ fila: filaNumero, campo: def.header, mensaje: error });
+      if (error) {
+        rowErrors.push({ fila: filaNumero, campo: nombreCanonico(def), mensaje: error });
+      }
       parsed[def.key] = value;
     }
 
@@ -90,7 +99,7 @@ function parseSheet(sheet: RawSheet): ParseResult {
     }
 
     const datosImportados = Object.fromEntries(
-      COLUMNAS.map((def) => [def.header, getRaw(row, def.key) ?? null])
+      COLUMNAS.map((def) => [nombreCanonico(def), getRaw(row, def.key) ?? null])
     );
 
     filasValidas.push({
@@ -103,6 +112,7 @@ function parseSheet(sheet: RawSheet): ParseResult {
       nombreReceptor: parsed.nombreReceptor as string,
       conceptoGasto: parsed.conceptoGasto as string,
       monto: parsed.monto as number,
+      nBoleta: parsed.nBoleta !== null ? String(parsed.nBoleta) : null,
       fechaPago: (parsed.fechaPago as Date | null) ?? null,
       estudioAbogado: parsed.estudioAbogado as string,
       fechaEnvioPago: (parsed.fechaEnvioPago as Date | null) ?? null,
@@ -128,7 +138,9 @@ function parseValue(
   def: ColumnDef
 ): { value: unknown; error?: string } {
   if (isBlank(raw)) {
-    if (def.required) return { value: null, error: `"${def.header}" es obligatorio` };
+    if (def.required) {
+      return { value: null, error: `"${nombreCanonico(def)}" es obligatorio` };
+    }
     return { value: null };
   }
 
@@ -136,14 +148,14 @@ function parseValue(
     case "integer": {
       const n = typeof raw === "number" ? raw : Number(String(raw).trim());
       if (!Number.isInteger(n)) {
-        return { value: null, error: `"${def.header}" debe ser un número entero` };
+        return { value: null, error: `"${nombreCanonico(def)}" debe ser un número entero` };
       }
       return { value: n };
     }
     case "number": {
       const n = typeof raw === "number" ? raw : Number(String(raw).trim());
       if (Number.isNaN(n)) {
-        return { value: null, error: `"${def.header}" debe ser un número` };
+        return { value: null, error: `"${nombreCanonico(def)}" debe ser un número` };
       }
       return { value: n };
     }
@@ -151,7 +163,7 @@ function parseValue(
       if (raw instanceof Date) return { value: raw };
       const d = new Date(String(raw));
       if (Number.isNaN(d.getTime())) {
-        return { value: null, error: `"${def.header}" debe ser una fecha válida` };
+        return { value: null, error: `"${nombreCanonico(def)}" debe ser una fecha válida` };
       }
       return { value: d };
     }

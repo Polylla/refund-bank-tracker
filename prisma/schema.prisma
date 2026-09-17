@@ -45,6 +45,10 @@ model CasoReembolso {
   // (ver specs/03-deteccion-duplicados.md).
   folio            String
   conceptoGasto    String
+  // N BOLETA: numero de boleta/recibo que el receptor rinde para
+  // cobrar un gasto puntual. No toda fila la trae. Es la clave real de
+  // matching de documentos (ver specs/05-matching-documentos.md).
+  nBoleta          String?
   posibleDuplicado Boolean  @default(false)
   datosImportados  Json
   estadoActual     String
@@ -64,6 +68,7 @@ model CasoReembolso {
   filasEnRevision  FilaEnRevision[]
 
   @@index([folio, conceptoGasto])
+  @@index([nBoleta])
   @@map("casos_reembolso")
 }
 

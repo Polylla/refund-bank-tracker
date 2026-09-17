@@ -113,6 +113,7 @@ export async function procesarImportacion(
             data: {
               folio: fila.folio,
               conceptoGasto: fila.conceptoGasto,
+              nBoleta: fila.nBoleta,
               posibleDuplicado: fila.posibleDuplicado,
               datosImportados: fila.datosImportados as Prisma.InputJsonValue,
               estadoActual,

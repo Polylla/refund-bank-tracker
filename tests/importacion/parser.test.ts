@@ -85,6 +85,45 @@ describe("parseReembolsosXlsx", () => {
   });
 });
 
+describe("formato nuevo (alias de columna + N BOLETA)", () => {
+  const HEADERS_NUEVOS =
+    "OT,Nombre cliente,RUT,Tribunal,N° de Rol,Año Rol,Nombre receptor,Concepto gasto de receptor,Costo de diligencia,N° BOLETA,Fecha pago diligencia receptor,Estudio/Abogado,Fecha envío a pago,Estado reembolso";
+
+  it("matchea 'Concepto' (singular) y 'Fecha pago diligencia receptor' como alias", () => {
+    const csv = [
+      HEADERS_NUEVOS,
+      "111,CLIENTE UNO,1-9,TRIBUNAL,1,2026,RECEPTOR,NOTIF. TEST,40000,740,2026-08-18,ESTUDIO,,",
+    ].join("\n");
+
+    const result = parseReembolsosCsv(csv);
+    expect(result.columnasFaltantes).toEqual([]);
+    expect(result.errores).toEqual([]);
+    expect(result.filasValidas).toHaveLength(1);
+    expect(result.filasValidas[0].conceptoGasto).toBe("NOTIF. TEST");
+    expect(result.filasValidas[0].nBoleta).toBe("740");
+    expect(result.filasValidas[0].fechaPago).not.toBeNull();
+  });
+
+  it("N° BOLETA ausente de la fila (opcional) no genera error", () => {
+    const csv = [
+      HEADERS_NUEVOS,
+      "112,CLIENTE DOS,2-9,TRIBUNAL,2,2026,RECEPTOR,NOTIF. TEST,40000,,,ESTUDIO,,",
+    ].join("\n");
+
+    const result = parseReembolsosCsv(csv);
+    expect(result.errores).toEqual([]);
+    expect(result.filasValidas).toHaveLength(1);
+    expect(result.filasValidas[0].nBoleta).toBeNull();
+  });
+
+  it("archivo sin la columna N° BOLETA (formato viejo) sigue funcionando", async () => {
+    const buffer = readFileSync(FIXTURE_XLSX);
+    const result = await parseReembolsosXlsx(buffer);
+    expect(result.columnasFaltantes).toEqual([]);
+    expect(result.filasValidas.every((f) => f.nBoleta === null)).toBe(true);
+  });
+});
+
 describe("parseReembolsosCsv", () => {
   it("produce el mismo resultado que el XLSX equivalente", async () => {
     const bufferXlsx = readFileSync(FIXTURE_XLSX);
