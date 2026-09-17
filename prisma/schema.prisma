@@ -104,14 +104,17 @@ model HistorialEstado {
 }
 
 model Documento {
-  id             String   @id @default(cuid())
-  casoId         String?
-  caso           CasoReembolso? @relation(fields: [casoId], references: [id])
-  nombreArchivo  String
-  tipoArchivo    String
-  urlBlob        String
-  fechaCarga     DateTime @default(now())
-  estadoMatching EstadoMatching
+  id              String   @id @default(cuid())
+  // N BOLETA no es unica por caso (una boleta puede cubrir varias
+  // diligencias), asi que un documento puede matchear a mas de un
+  // CasoReembolso (ver specs/05-matching-documentos.md).
+  casos           CasoReembolso[]
+  nombreArchivo   String
+  tipoArchivo     String
+  urlBlob         String
+  fechaCarga      DateTime @default(now())
+  estadoMatching  EstadoMatching
+  nBoletaExtraido String?
 
   @@map("documentos")
 }
