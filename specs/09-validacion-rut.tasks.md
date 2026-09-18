@@ -10,7 +10,8 @@
 - `lib/importacion/parser.ts`: en `parseValue`, el caso `"rut"` llama a `normalizarRut`; si retorna `null`, agrega error `"RUT" tiene un formato o dígito verificador inválido` (fila rechazada, mismo comportamiento que otros errores de validación). Si es válido, el valor normalizado reemplaza el original tanto en el `CasoImportado` como en `datosImportados.RUT`.
 - **Tests primero:** fila con RUT válido en distintos formatos se importa con el RUT normalizado; fila con RUT inválido se rechaza y aparece en `errores`; el resto de las filas del archivo no se ven afectadas por el rechazo de una fila puntual.
 
-## Task 9.2 — Chequeo de solo lectura sobre datos reales
+## Task 9.2 — Chequeo de solo lectura sobre datos reales ✅ completada
+Resultado (2026-09-18): 0 de 63 casos reales tienen RUT inválido — no se requiere ninguna corrección.
 - Script puntual (`scripts/chequear-ruts.mjs`, no persistente) que recorre los `CasoReembolso` reales, extrae `datosImportados.RUT` de cada uno, y reporta por consola cuáles no pasan `normalizarRut` — sin modificar nada.
 - **Verificación:** correr el script contra producción y revisar el resultado con el usuario; si aparece algún RUT inválido, se decide en conjunto qué hacer (no se corrige automáticamente).
 
