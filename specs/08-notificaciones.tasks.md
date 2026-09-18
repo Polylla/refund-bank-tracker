@@ -14,7 +14,7 @@
 - Integrar en `lib/importacion/procesar.ts`: si `filasEnRevision > 0`, llamar a `notificarATodosLosUsuarios("FILA_EN_REVISION", ...)` **una sola vez** (agregado, no por fila).
 - **Tests primero:** subir documento sin match genera 1 notificación por usuario; subir documento que sí matchea no genera ninguna; reimportar con N filas en revisión genera 1 notificación agregada por usuario (no N).
 
-## Task 8.3 — Marcar duplicado como revisado (TDD)
+## Task 8.3 — Marcar duplicado como revisado (TDD) ✅ completada
 - `lib/notificaciones/marcarDuplicadoRevisado.ts`: `marcarDuplicadoRevisado(casoId, usuarioId)` — setea `duplicadoRevisadoPorId`/`duplicadoRevisadoEn`. Rechaza si el caso no tiene `posibleDuplicado: true`, o si ya fue revisado (idempotencia).
 - Server Action + botón "Marcar como revisado" en `/casos`, visible solo en filas con `posibleDuplicado: true` sin revisar.
 - **Tests primero:** marca correctamente; rechaza un caso sin `posibleDuplicado`; rechaza volver a marcar uno ya revisado.

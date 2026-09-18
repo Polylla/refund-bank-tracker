@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { EstadoSelector } from "./EstadoSelector";
+import { MarcarDuplicadoRevisado } from "./MarcarDuplicadoRevisado";
 import { ESTADOS } from "@/lib/estados/estados";
 import { obtenerCasosParaExportar } from "@/lib/exportacion/exportarCasos";
 import { COLUMNAS } from "@/lib/importacion/columns";
@@ -135,7 +136,14 @@ export default async function CasosPage(props: PageProps<"/casos">) {
                   className="border-b last:border-b-0 hover:bg-black/[.02] dark:hover:bg-white/[.04]"
                 >
                   <td className="p-3">{caso.folio}</td>
-                  <td className="p-3">{caso.conceptoGasto}</td>
+                  <td className="p-3">
+                    {caso.conceptoGasto}
+                    {caso.posibleDuplicado && !caso.duplicadoRevisadoEn && (
+                      <div className="mt-1">
+                        <MarcarDuplicadoRevisado casoId={caso.id} />
+                      </div>
+                    )}
+                  </td>
                   <td className="p-3">
                     {String(datos["Costo de diligencia"] ?? "")}
                   </td>

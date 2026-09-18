@@ -6,6 +6,10 @@ import {
   cambiarEstado,
   type ResultadoCambioEstado,
 } from "@/lib/estados/cambiarEstado";
+import {
+  marcarDuplicadoRevisado,
+  type ResultadoMarcarRevisado,
+} from "@/lib/notificaciones/marcarDuplicadoRevisado";
 
 export async function cambiarEstadoAction(
   casoId: string,
@@ -19,5 +23,16 @@ export async function cambiarEstadoAction(
     revalidatePath("/casos");
     revalidatePath(`/casos/${casoId}`);
   }
+  return resultado;
+}
+
+export async function marcarDuplicadoRevisadoAction(
+  casoId: string
+): Promise<ResultadoMarcarRevisado> {
+  const { usuario, roles } = await getOrCreateUsuarioActual();
+  requireAnyRole(roles, ["importador", "revisor"]);
+
+  const resultado = await marcarDuplicadoRevisado(casoId, usuario.id);
+  if (resultado.ok) revalidatePath("/casos");
   return resultado;
 }
