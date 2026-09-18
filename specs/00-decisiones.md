@@ -42,5 +42,8 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 ## 9. Validación de RUT (2026-09-18)
 **Decisión:** un RUT con formato o dígito verificador inválido rechaza la fila completa durante la importación (igual que cualquier otro error de validación) — no se importa marcado ni se corrige automáticamente. El RUT válido se normaliza al guardar a `NNNNNNNN-D` (sin puntos, con guión), independientemente del formato de entrada en el Excel. Ver [09-validacion-rut.md](09-validacion-rut.md).
 
+## 10. Roles más granulares (2026-09-18)
+**Decisión:** se agregan `admin` (incluye automáticamente todos los permisos de `importador`+`revisor`, y gestiona roles de otros usuarios desde `/admin/usuarios`) y `visor` (solo lectura en todas las páginas, sin ningún control de escritura visible). El primer `admin` se asigna una vez vía CLI; de ahí en adelante se gestiona desde la app. Ver [10-roles-granulares.md](10-roles-granulares.md).
+
 ## Abiertos / a revisar más adelante
-- Detalle de permisos por rol más allá de "importador" / "revisor" (depende de #5).
+(ninguno pendiente por ahora)
