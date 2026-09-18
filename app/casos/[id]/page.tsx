@@ -14,6 +14,9 @@ export default async function CasoDetallePage(
         orderBy: { fecha: "asc" },
         include: { usuario: true },
       },
+      documentos: {
+        orderBy: { fechaCarga: "asc" },
+      },
     },
   });
 
@@ -37,6 +40,8 @@ export default async function CasoDetallePage(
         <dd>{String(datos["Nombre cliente"] ?? "")}</dd>
         <dt className="text-gray-500">Monto</dt>
         <dd>{String(datos["Costo de diligencia"] ?? "")}</dd>
+        <dt className="text-gray-500">N° boleta</dt>
+        <dd>{caso.nBoleta ?? "—"}</dd>
         <dt className="text-gray-500">Fecha envío a pago</dt>
         <dd>
           {caso.fechaEnvioPago
@@ -61,6 +66,35 @@ export default async function CasoDetallePage(
           </li>
         ))}
       </ol>
+
+      <h2 className="mt-8 font-medium">
+        Documentos asociados ({caso.documentos.length})
+      </h2>
+      {caso.documentos.length === 0 ? (
+        <p className="mt-2 text-sm text-gray-500">
+          {caso.nBoleta
+            ? "Sin documento subido todavía para esta boleta."
+            : "Este caso no tiene N° de boleta, no se espera documento."}
+        </p>
+      ) : (
+        <ul className="mt-2 flex flex-col gap-1 text-sm">
+          {caso.documentos.map((doc) => (
+            <li key={doc.id}>
+              <a
+                href={`/api/documentos/${doc.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                {doc.nombreArchivo}
+              </a>{" "}
+              <span className="text-gray-500">
+                subido {doc.fechaCarga.toLocaleDateString("es-CL")}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
