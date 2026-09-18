@@ -39,5 +39,8 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 ## 8. Filtros de exportación
 **Decisión:** todos los campos importados del Excel deben poder usarse como filtro al exportar (no solo un subconjunto fijo).
 
+## 9. Validación de RUT (2026-09-18)
+**Decisión:** un RUT con formato o dígito verificador inválido rechaza la fila completa durante la importación (igual que cualquier otro error de validación) — no se importa marcado ni se corrige automáticamente. El RUT válido se normaliza al guardar a `NNNNNNNN-D` (sin puntos, con guión), independientemente del formato de entrada en el Excel. Ver [09-validacion-rut.md](09-validacion-rut.md).
+
 ## Abiertos / a revisar más adelante
 - Detalle de permisos por rol más allá de "importador" / "revisor" (depende de #5).
