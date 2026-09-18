@@ -30,7 +30,8 @@ Verificado localmente: sin el header correcto → 401; con `Bearer $CRON_SECRET`
 - `vercel.json`: configurar el cron (`0 12 * * *` — 8am Chile en horario UTC-4, ajustar según DST) apuntando a esa ruta.
 - **Verificación:** invocar la ruta manualmente con el secreto correcto genera las notificaciones esperadas; sin el secreto, 401.
 
-## Task 8.6 — Indicador en la app + página `/notificaciones` ✅ implementada (verificación manual pendiente en producción)
+## Task 8.6 — Indicador en la app + página `/notificaciones` ✅ completada
+Confirmado por el usuario en producción: la campanita mostró el contador y `/notificaciones` listó el resumen diario. La confusión inicial (no encontraba el botón de "marcar revisado") era esperada: no hay casos con posible duplicado sin revisar en los datos reales todavía — se corrigió además el link del resumen diario para apuntar más preciso (`/documentos` o `/casos` según corresponda, ver commit `ac4d5c9`).
 - Header: ícono con badge de no leídas (cuenta `Notificacion` del usuario actual con `leida: false`).
 - `/notificaciones`: lista ordenada por fecha descendente, cada una linkeando a `enlace`; al cargar la página se marcan todas como leídas.
 - **Verificación:** manual en navegador.
