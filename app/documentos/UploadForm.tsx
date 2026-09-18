@@ -1,32 +1,67 @@
 "use client";
 
-import { useActionState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { subirDocumentosAction, type ResultadoSubidaDocumento } from "./actions";
 
-async function accion(
-  _previo: ResultadoSubidaDocumento[] | null,
-  formData: FormData
-) {
-  return subirDocumentosAction(formData);
+interface ResultadoConError {
+  nombreArchivo: string;
+  ok: boolean;
+  mensaje?: string;
+  resultado?: ResultadoSubidaDocumento;
 }
 
 export function UploadForm() {
-  const [resultados, formAction, pending] = useActionState<
-    ResultadoSubidaDocumento[] | null,
-    FormData
-  >(accion, null);
+  const [resultados, setResultados] = useState<ResultadoConError[]>([]);
+  const [subiendo, setSubiendo] = useState(false);
+  const [progreso, setProgreso] = useState<{ actual: number; total: number } | null>(
+    null
+  );
+  const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const input = formRef.current?.elements.namedItem(
+      "archivos"
+    ) as HTMLInputElement | null;
+    const archivos = input?.files ? Array.from(input.files) : [];
+    if (archivos.length === 0) return;
+
+    setSubiendo(true);
+    setResultados([]);
+    const acumulados: ResultadoConError[] = [];
+
+    // Se sube un archivo a la vez: mandar todos juntos en un solo
+    // Server Action supera el límite de tamaño de body (1MB por
+    // defecto en Next.js, y Vercel tiene su propio tope de payload).
+    for (let i = 0; i < archivos.length; i++) {
+      setProgreso({ actual: i + 1, total: archivos.length });
+      const archivo = archivos[i];
+      const formData = new FormData();
+      formData.append("archivos", archivo);
+      try {
+        const [resultado] = await subirDocumentosAction(formData);
+        acumulados.push({ nombreArchivo: archivo.name, ok: true, resultado });
+      } catch (err) {
+        acumulados.push({
+          nombreArchivo: archivo.name,
+          ok: false,
+          mensaje: err instanceof Error ? err.message : "Error desconocido",
+        });
+      }
+      setResultados([...acumulados]);
+    }
+
+    setProgreso(null);
+    setSubiendo(false);
+    formRef.current?.reset();
+    router.refresh();
+  }
 
   return (
     <div>
-      <form
-        action={async (formData) => {
-          await formAction(formData);
-          router.refresh();
-        }}
-        className="flex flex-col gap-4"
-      >
+      <form ref={formRef} onSubmit={onSubmit} className="flex flex-col gap-4">
         <input
           type="file"
           name="archivos"
@@ -37,25 +72,34 @@ export function UploadForm() {
         />
         <button
           type="submit"
-          disabled={pending}
+          disabled={subiendo}
           className="self-start rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
         >
-          {pending ? "Subiendo..." : "Subir documentos"}
+          {subiendo
+            ? `Subiendo... ${progreso ? `(${progreso.actual}/${progreso.total})` : ""}`
+            : "Subir documentos"}
         </button>
       </form>
 
-      {resultados && resultados.length > 0 && (
+      {resultados.length > 0 && (
         <ul className="mt-4 flex flex-col gap-1 text-sm">
           {resultados.map((r, i) => (
             <li key={i}>
-              {r.nombreArchivo} — boleta extraída:{" "}
-              {r.nBoletaExtraido ?? "(ninguna)"} —{" "}
-              {r.estadoMatching === "MATCHEADO" ? (
-                <span className="text-green-700">
-                  matcheado a {r.casosVinculados} caso(s)
-                </span>
+              {r.nombreArchivo} —{" "}
+              {!r.ok ? (
+                <span className="text-red-700">error: {r.mensaje}</span>
               ) : (
-                <span className="text-red-700">sin match</span>
+                <>
+                  boleta extraída: {r.resultado?.nBoletaExtraido ?? "(ninguna)"}{" "}
+                  —{" "}
+                  {r.resultado?.estadoMatching === "MATCHEADO" ? (
+                    <span className="text-green-700">
+                      matcheado a {r.resultado.casosVinculados} caso(s)
+                    </span>
+                  ) : (
+                    <span className="text-red-700">sin match</span>
+                  )}
+                </>
               )}
             </li>
           ))}
