@@ -19,9 +19,9 @@
 - Server Action + botón "Marcar como revisado" en `/casos`, visible solo en filas con `posibleDuplicado: true` sin revisar.
 - **Tests primero:** marca correctamente; rechaza un caso sin `posibleDuplicado`; rechaza volver a marcar uno ya revisado.
 
-## Task 8.4 — Resumen diario (TDD, sin envío de email todavía)
-- `lib/notificaciones/resumenDiario.ts`: `calcularResumenDiario()` — cuenta `casosSinDocumento()` (spec 05) + casos con `posibleDuplicado: true` y `duplicadoRevisadoEn: null`. Si ambos son 0, retorna `null` (no generar nada).
-- `generarNotificacionesResumenDiario()`: si `calcularResumenDiario()` no es null, llama a `notificarATodosLosUsuarios("RESUMEN_DIARIO", ...)`.
+## Task 8.4 — Resumen diario (TDD, sin envío de email todavía) ✅ completada
+- `lib/notificaciones/resumenDiario.ts`: `calcularResumenDiario()` — retorna `{ casosSinDocumento, duplicadosSinRevisar }` (cuenta `casosSinDocumento()` de spec 05 + casos con `posibleDuplicado: true` y `duplicadoRevisadoEn: null`).
+- `generarNotificacionesResumenDiario()`: si ambos conteos son 0, no hace nada; si no, llama a `notificarATodosLosUsuarios("RESUMEN_DIARIO", ...)` una sola vez con el mensaje agregado.
 - **Tests primero:** con 0 pendientes no genera notificación; con al menos 1 pendiente sí, y el mensaje refleja los conteos correctos.
 
 ## Task 8.5 — Cron diario + Route Handler
