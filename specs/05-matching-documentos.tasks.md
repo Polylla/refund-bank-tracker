@@ -23,7 +23,10 @@
 - Sección de alertas: documentos sin match (con el número extraído) y casos sin documento (folio + boleta esperada).
 - **Verificación:** manual en navegador — subir un PDF real (ej. `740.pdf`) y confirmar que matchea, y subir uno con nombre sin número y confirmar que aparece en alertas.
 
-## Task 5.5 — Verificación end-to-end
+## Task 5.5 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción con PDFs reales: matching correcto (incluyendo el par `38.pdf`/`38(1).pdf`, ambos matcheando a los mismos 2 casos de esa boleta compartida) y un archivo renombrado a propósito correctamente marcado "sin match".
+
+**Bug encontrado y corregido en el camino:** subir varios archivos juntos en una sola request superaba el límite de 1MB de los Server Actions de Next.js, mostrando "This page couldn't load". Se corrigió subiendo los archivos de a uno desde el cliente (`app/documentos/UploadForm.tsx`, commit `ccfa51e`) y subiendo el límite de body a 10mb para PDFs escaneados grandes.
 - En producción: subir los 45 PDFs reales (o una muestra representativa incluyendo el caso `38.pdf` + `38(1).pdf`), confirmar matching correcto y que las boletas compartidas vinculan ambos casos.
 
 ---
