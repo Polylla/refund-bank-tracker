@@ -24,7 +24,8 @@
 - `generarNotificacionesResumenDiario()`: si ambos conteos son 0, no hace nada; si no, llama a `notificarATodosLosUsuarios("RESUMEN_DIARIO", ...)` una sola vez con el mensaje agregado.
 - **Tests primero:** con 0 pendientes no genera notificación; con al menos 1 pendiente sí, y el mensaje refleja los conteos correctos.
 
-## Task 8.5 — Cron diario + Route Handler
+## Task 8.5 — Cron diario + Route Handler ✅ completada
+Verificado localmente: sin el header correcto → 401; con `Bearer $CRON_SECRET` → 200 y crea la notificación real ("42 caso(s) con boleta pendiente de documento").
 - `app/api/cron/resumen-diario/route.ts` (GET): protegido con un secreto (`CRON_SECRET` en el header `Authorization`, patrón estándar de Vercel Cron), llama a `generarNotificacionesResumenDiario()` (y al envío de emails, Task 8.7).
 - `vercel.json`: configurar el cron (`0 12 * * *` — 8am Chile en horario UTC-4, ajustar según DST) apuntando a esa ruta.
 - **Verificación:** invocar la ruta manualmente con el secreto correcto genera las notificaciones esperadas; sin el secreto, 401.
