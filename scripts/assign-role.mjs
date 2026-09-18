@@ -1,5 +1,7 @@
-// Utilidad de administración: asigna roles (importador/revisor) a un usuario de Clerk por email.
-// Uso: node --env-file=.env.local scripts/assign-role.mjs correo@ejemplo.com importador revisor
+// Utilidad de administración: asigna roles a un usuario de Clerk por email.
+// Desde Spec 10, la gestión normal de roles se hace en /admin/usuarios;
+// este script solo hace falta para asignar el primer admin (bootstrap).
+// Uso: node --env-file=.env.local scripts/assign-role.mjs correo@ejemplo.com admin
 import { createClerkClient } from "@clerk/backend";
 
 const [email, ...roles] = process.argv.slice(2);
@@ -11,7 +13,7 @@ if (!email || roles.length === 0) {
   process.exit(1);
 }
 
-const rolesValidos = ["importador", "revisor"];
+const rolesValidos = ["importador", "revisor", "admin", "visor"];
 for (const r of roles) {
   if (!rolesValidos.includes(r)) {
     console.error(`Rol inválido: ${r}. Roles válidos: ${rolesValidos.join(", ")}`);

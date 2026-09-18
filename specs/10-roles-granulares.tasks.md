@@ -27,7 +27,8 @@
 - Ocultar (no solo deshabilitar) tras `puedeActuar(roles)`: formulario de importar (`/importaciones`), formulario de subir/vincular documento (`/documentos`), selector de cambiar estado y botón "marcar revisado" (`/casos`), botones "Aprobar"/"Descartar" (`/revision`).
 - **Verificación:** manual en navegador — un usuario con solo `visor` ve todas las páginas con datos reales pero sin ninguno de esos controles.
 
-## Task 10.5 — Bootstrap del primer admin
+## Task 10.5 — Bootstrap del primer admin ✅ completada
+El usuario real (phidalgoamestica@gmail.com) ya tiene el rol `admin` asignado.
 - Extender `scripts/assign-role.mjs` para aceptar `admin` y `visor` como roles válidos.
 - **Verificación:** correr el script una vez sobre el usuario real para asignarle `admin`, confirmar que puede entrar a `/admin/usuarios`.
 
