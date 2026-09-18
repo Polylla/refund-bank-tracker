@@ -1,5 +1,6 @@
 import { COLUMNAS, FOLIO_KEY, normalizeHeader, type ColumnDef } from "./columns";
 import { readXlsxRows, readCsvRows, type RawSheet } from "./readers";
+import { normalizarRut } from "./rut";
 
 export interface ErrorFila {
   fila: number;
@@ -99,7 +100,10 @@ function parseSheet(sheet: RawSheet): ParseResult {
     }
 
     const datosImportados = Object.fromEntries(
-      COLUMNAS.map((def) => [nombreCanonico(def), getRaw(row, def.key) ?? null])
+      COLUMNAS.map((def) => [
+        nombreCanonico(def),
+        def.type === "rut" ? parsed[def.key] : getRaw(row, def.key) ?? null,
+      ])
     );
 
     filasValidas.push({
@@ -166,6 +170,16 @@ function parseValue(
         return { value: null, error: `"${nombreCanonico(def)}" debe ser una fecha válida` };
       }
       return { value: d };
+    }
+    case "rut": {
+      const normalizado = normalizarRut(String(raw));
+      if (normalizado === null) {
+        return {
+          value: null,
+          error: `"${nombreCanonico(def)}" tiene un formato o dígito verificador inválido`,
+        };
+      }
+      return { value: normalizado };
     }
     case "string":
     default:

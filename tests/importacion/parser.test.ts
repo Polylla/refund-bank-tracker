@@ -107,7 +107,7 @@ describe("formato nuevo (alias de columna + N BOLETA)", () => {
   it("N° BOLETA ausente de la fila (opcional) no genera error", () => {
     const csv = [
       HEADERS_NUEVOS,
-      "112,CLIENTE DOS,2-9,TRIBUNAL,2,2026,RECEPTOR,NOTIF. TEST,40000,,,ESTUDIO,,",
+      "112,CLIENTE DOS,2-7,TRIBUNAL,2,2026,RECEPTOR,NOTIF. TEST,40000,,,ESTUDIO,,",
     ].join("\n");
 
     const result = parseReembolsosCsv(csv);
@@ -121,6 +121,49 @@ describe("formato nuevo (alias de columna + N BOLETA)", () => {
     const result = await parseReembolsosXlsx(buffer);
     expect(result.columnasFaltantes).toEqual([]);
     expect(result.filasValidas.every((f) => f.nBoleta === null)).toBe(true);
+  });
+});
+
+describe("validación de RUT", () => {
+  const HEADERS =
+    "OT,Nombre cliente,RUT,Tribunal,N° de Rol,Año Rol,Nombre receptor,Conceptos gasto de receptor,Costo de diligencia,Fecha pago,Estudio/Abogado,Fecha envío a pago,Estado reembolso";
+
+  it("normaliza un RUT válido con puntos al guardarlo", () => {
+    const csv = [
+      HEADERS,
+      "200,CLIENTE TEST,12.345.678-5,TRIBUNAL,1,2026,RECEPTOR,NOTIF. TEST,40000,,ESTUDIO,,",
+    ].join("\n");
+
+    const result = parseReembolsosCsv(csv);
+    expect(result.errores).toEqual([]);
+    expect(result.filasValidas).toHaveLength(1);
+    expect(result.filasValidas[0].rut).toBe("12345678-5");
+    expect(result.filasValidas[0].datosImportados.RUT).toBe("12345678-5");
+  });
+
+  it("rechaza la fila si el dígito verificador del RUT es incorrecto", () => {
+    const csv = [
+      HEADERS,
+      "201,CLIENTE TEST,12.345.678-9,TRIBUNAL,1,2026,RECEPTOR,NOTIF. TEST,40000,,ESTUDIO,,",
+    ].join("\n");
+
+    const result = parseReembolsosCsv(csv);
+    expect(result.filasValidas).toEqual([]);
+    expect(result.errores).toHaveLength(1);
+    expect(result.errores[0].campo).toBe("RUT");
+  });
+
+  it("identifica la fila correcta cuando el RUT inválido no está en la primera línea", () => {
+    const csv = [
+      HEADERS,
+      "202,CLIENTE UNO,12.345.678-5,TRIBUNAL,1,2026,RECEPTOR,NOTIF. TEST,40000,,ESTUDIO,,",
+      "203,CLIENTE DOS,12.345.678-9,TRIBUNAL,2,2026,RECEPTOR,NOTIF. TEST,50000,,ESTUDIO,,",
+    ].join("\n");
+
+    const result = parseReembolsosCsv(csv);
+    expect(result.filasValidas).toEqual([]);
+    expect(result.errores).toHaveLength(1);
+    expect(result.errores[0].fila).toBe(2);
   });
 });
 

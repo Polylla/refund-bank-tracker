@@ -1,4 +1,4 @@
-export type ColumnType = "integer" | "number" | "string" | "date";
+export type ColumnType = "integer" | "number" | "string" | "date" | "rut";
 
 export interface ColumnDef {
   key: string;
@@ -15,7 +15,7 @@ export interface ColumnDef {
 export const COLUMNAS: ColumnDef[] = [
   { key: "folio", headers: ["OT"], required: true, type: "integer" },
   { key: "nombreCliente", headers: ["Nombre cliente"], required: true, type: "string" },
-  { key: "rut", headers: ["RUT"], required: true, type: "string" },
+  { key: "rut", headers: ["RUT"], required: true, type: "rut" },
   { key: "tribunal", headers: ["Tribunal"], required: true, type: "string" },
   { key: "numeroRol", headers: ["N° de Rol"], required: true, type: "integer" },
   { key: "anoRol", headers: ["Año Rol"], required: true, type: "integer" },
