@@ -11,7 +11,7 @@ Metodología: SDD (spec por feature, aprobada antes de implementar) + TDD obliga
 | 03 | [Detección de duplicados y reimportación](03-deteccion-duplicados.md) | 01, 02 | ✅ Completa (ver [tasks](03-deteccion-duplicados.tasks.md)), verificada en producción |
 | 04 | [Estados del reembolso](04-estados-reembolso.md) | 01, 02 | ✅ Completa (ver [tasks](04-estados-reembolso.tasks.md)), verificada en producción |
 | 05 | [Matching de documentos](05-matching-documentos.md) | 01, 02 | ✅ Completa (ver [tasks](05-matching-documentos.tasks.md)), verificada en producción |
-| 06 | [Historial y reportería](06-historial-reporteria.md) | 02, 03, 04, 05 | Pendiente de aprobación |
+| 06 | [Historial y reportería](06-historial-reporteria.md) | 02, 03, 04, 05 | ✅ Completa (ver [tasks](06-historial-reporteria.tasks.md)), verificada en producción |
 | 07 | [Exportación a Excel](07-exportacion-excel.md) | 01, 02, 06 | Pendiente de aprobación |
 
 Nota sobre el orden: el documento original (sección 5) propone *ingesta → modelo de datos → duplicados → estados → matching → exportación*. Se adelantó "modelo de datos" a la spec 01 (junto con la fundación técnica y auth) porque ingesta, duplicados, estados y matching dependen todos de que el esquema de datos ya exista — no tiene sentido parsear un Excel sin tener dónde guardarlo. El resto del orden se mantiene igual al propuesto, agregando "historial y reportería" (punto 3.2 del documento original) al final porque es principalmente una capa de presentación sobre datos que generan las specs 02–05.

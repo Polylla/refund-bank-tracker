@@ -17,7 +17,8 @@
 - `/casos/[id]` (ya existe desde spec 04): agregar los `Documento` vinculados al caso a la vista (no es un evento de `HistorialEstado`, se muestra en su propia sección).
 - **Verificación:** manual — un caso con documento matcheado (ej. folio con boleta 829) muestra el PDF vinculado en su detalle.
 
-## Task 6.4 — Verificación end-to-end
+## Task 6.4 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: los números del dashboard (casos por estado, alertas, importaciones recientes) coinciden con /casos, /revision y /documentos; el detalle de caso muestra los documentos vinculados correctamente, incluyendo el caso de boleta compartida (38) con ambos documentos vinculados a ambos casos.
 - En producción: confirmar que el dashboard, el detalle de caso y las alertas reflejan correctamente los datos reales ya cargados (63 casos, documentos subidos, filas en revisión).
 
 ---
