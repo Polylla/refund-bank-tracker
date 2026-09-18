@@ -5,7 +5,7 @@ Registro de las decisiones tomadas antes de escribir el plan de specs. Cualquier
 ## 1. Matching documento ↔ caso
 **Decisión revisada (2026-09-16, tras revisar archivo real "Rendición receptores BECH"):** NO es por folio (OT). Los PDFs vienen nombrados por **`N° BOLETA`** (ej. `740.pdf`, `299.pdf`), una columna nueva que aparece en la planilla de rendición del receptor — no toda fila tiene boleta asociada (se completa cuando el receptor rinde/cobra ese gasto). El matching de spec 05 usa `CasoReembolso.nBoleta`.
 - No se implementa OCR en el MVP.
-- No hay selección manual como mecanismo primario (queda abierto si se agrega como fallback más adelante — ver "Abiertos" al final).
+- Selección manual agregada como fallback (2026-09-17): para documentos `SIN_MATCH`, el usuario busca y vincula manualmente el/los caso(s) por OT o boleta. Ver [05-matching-documentos.md](05-matching-documentos.md).
 - Nota: algunos PDFs traen sufijo `(1)` en el nombre (ej. `38(1).pdf`), típico de descargas duplicadas — el parser de nombre de archivo debe tolerar esto y extraer igual el número de boleta.
 
 ## 2. Criterio de duplicidad
@@ -40,7 +40,4 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 **Decisión:** todos los campos importados del Excel deben poder usarse como filtro al exportar (no solo un subconjunto fijo).
 
 ## Abiertos / a revisar más adelante
-- Nombre exacto de la columna de folio único (depende de #7).
-- Si se agrega selección manual como fallback cuando el nombre del archivo no trae folio reconocible (relacionado a #1).
-- Nombres definitivos y significado de negocio de cada estado (depende de #6, el usuario debe confirmar el listado real).
 - Detalle de permisos por rol más allá de "importador" / "revisor" (depende de #5).

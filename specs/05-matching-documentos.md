@@ -24,9 +24,16 @@ Permitir subir documentos de respaldo (PDF, JPG, PNG, etc.) y asociarlos automá
 - **Alerta inversa — "casos sin documento":** `CasoReembolso` que **sí tienen `nBoleta`** (o sea, se espera un documento) pero no tienen ningún `Documento` vinculado todavía. Los casos sin `nBoleta` en absoluto (formato de Excel viejo, sin esa columna) **no** entran en esta alerta — no hay nada que matchear para ellos.
 - Vista/listado de alertas: documentos sin match (con el número que se intentó extraer) + casos con boleta pendiente de documento.
 
+## Selección manual (fallback) — agregado 2026-09-17
+Para un `Documento` con `estadoMatching: SIN_MATCH`, el usuario (`importador` o `revisor`) puede buscar y vincular manualmente uno o más `CasoReembolso` desde `/documentos`:
+- Búsqueda simple por `OT` (folio) o `N° BOLETA` (contiene, no exact match), limitada a un número razonable de resultados (20).
+- Selección múltiple (checkboxes) — igual que el matching automático, un documento puede terminar vinculado a más de un caso.
+- Al vincular: se conecta el/los `CasoReembolso` seleccionados al `Documento` y `estadoMatching` pasa a `MATCHEADO`. `nBoletaExtraido` no se modifica (sigue mostrando qué se intentó extraer originalmente, para trazabilidad).
+- Solo aplica a documentos `SIN_MATCH`; no se permite "reasignar" un documento ya matcheado automáticamente (fuera de alcance, evita ambigüedad sobre cuál vínculo es el "correcto").
+
 ## Fuera de alcance
 - OCR de contenido del documento.
-- Selección manual del caso al subir (queda abierto, ver decisión #1 en [00-decisiones.md](00-decisiones.md)).
+- Reasignación manual de un documento ya matcheado automáticamente.
 - Reportería agregada de completitud — spec 06 puede consumir estos datos para dashboards.
 
 ## Criterios de aceptación
@@ -36,6 +43,8 @@ Permitir subir documentos de respaldo (PDF, JPG, PNG, etc.) y asociarlos automá
 - Subir el PDF de una boleta que cubre 2 `CasoReembolso` distintos vincula el documento a **ambos** casos; ninguno de los dos aparece después en "casos sin documento".
 - El listado de "casos sin documento" solo incluye casos con `nBoleta` no nulo y sin ningún `Documento` vinculado.
 - Subir múltiples documentos para el mismo caso es válido — no hay restricción de 1 documento por caso.
+- Buscar por OT/boleta en la selección manual devuelve los casos que contienen ese texto; vincular uno o más pasa el documento a `MATCHEADO` y lo saca de la alerta "sin match", y saca a esos casos de "casos sin documento".
+- Un documento ya `MATCHEADO` automáticamente no aparece con la opción de selección manual.
 
 ## Dependencias
 - Spec 01 (Blob Storage configurado).
