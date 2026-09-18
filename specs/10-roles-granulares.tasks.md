@@ -32,7 +32,8 @@ El usuario real (phidalgoamestica@gmail.com) ya tiene el rol `admin` asignado.
 - Extender `scripts/assign-role.mjs` para aceptar `admin` y `visor` como roles válidos.
 - **Verificación:** correr el script una vez sobre el usuario real para asignarle `admin`, confirmar que puede entrar a `/admin/usuarios`.
 
-## Task 10.6 — Verificación end-to-end
+## Task 10.6 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: `/admin/usuarios` funciona (se ve a sí mismo con `admin` marcado). Al dejarse únicamente con rol `visor` (confirmado en Clerk: `publicMetadata.roles: ["visor"]`), ya no puede subir documentos, aprobar/descartar ni cambiar estado — los controles quedan ocultos como se esperaba. La confusión inicial ("puedo hacer todo") era porque `admin` seguía marcado junto con `visor`, y admin incluye todo por diseño (decisión de la spec).
 - En producción: el usuario admin gestiona roles desde `/admin/usuarios`; se crea o reutiliza un segundo usuario de prueba con solo `visor` y se confirma que ve todo pero no puede accionar nada (ni desde la UI ni invocando las Server Actions directamente).
 
 ---
