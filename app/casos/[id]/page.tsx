@@ -26,7 +26,7 @@ export default async function CasoDetallePage(
 
   return (
     <div className="flex-1 p-8 max-w-3xl mx-auto">
-      <h1 className="text-xl font-semibold">
+      <h1 className="text-xl font-semibold text-primary">
         OT {caso.folio} — {caso.conceptoGasto}
       </h1>
 
@@ -35,7 +35,7 @@ export default async function CasoDetallePage(
         <EstadoSelector casoId={caso.id} estadoActual={caso.estadoActual} />
       </div>
 
-      <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+      <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-2 rounded-lg border p-4 text-sm">
         <dt className="text-gray-500">Nombre cliente</dt>
         <dd>{String(datos["Nombre cliente"] ?? "")}</dd>
         <dt className="text-gray-500">Monto</dt>
@@ -57,7 +57,7 @@ export default async function CasoDetallePage(
       <h2 className="mt-8 font-medium">Historial de estados</h2>
       <ol className="mt-3 flex flex-col gap-2 text-sm">
         {caso.historial.map((h) => (
-          <li key={h.id} className="border-l-2 pl-3">
+          <li key={h.id} className="border-l-2 border-primary pl-3">
             <span className="text-gray-500">
               {h.fecha.toLocaleString("es-CL")}
             </span>{" "}
@@ -84,7 +84,7 @@ export default async function CasoDetallePage(
                 href={`/api/documentos/${doc.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 underline"
+                className="text-primary underline"
               >
                 {doc.nombreArchivo}
               </a>{" "}

@@ -65,7 +65,7 @@ export function FilaRevisionCard({
         <button
           onClick={aprobar}
           disabled={pending}
-          className="rounded bg-black px-3 py-1.5 text-white disabled:opacity-50"
+          className="rounded bg-primary px-3 py-1.5 font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           Aprobar
         </button>

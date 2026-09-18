@@ -73,7 +73,7 @@ export function UploadForm() {
         <button
           type="submit"
           disabled={subiendo}
-          className="self-start rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
+          className="self-start rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {subiendo
             ? `Subiendo... ${progreso ? `(${progreso.actual}/${progreso.total})` : ""}`

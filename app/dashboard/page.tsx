@@ -18,14 +18,16 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex-1 p-8 max-w-4xl mx-auto">
-      <h1 className="text-xl font-semibold">Dashboard</h1>
+      <h1 className="text-xl font-semibold text-primary">Dashboard</h1>
 
       <section className="mt-6">
         <h2 className="font-medium">Casos por estado</h2>
         <div className="mt-2 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {porEstado.map((p) => (
-            <div key={p.estado} className="rounded border p-3 text-center">
-              <div className="text-2xl font-semibold">{p.cantidad}</div>
+            <div key={p.estado} className="rounded-lg border p-3 text-center">
+              <div className="text-2xl font-semibold text-primary">
+                {p.cantidad}
+              </div>
               <div className="text-xs text-gray-500">{p.estado}</div>
             </div>
           ))}
@@ -37,25 +39,35 @@ export default async function DashboardPage() {
         <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Link
             href="/revision"
-            className="rounded border p-3 hover:bg-gray-50"
+            className="rounded-lg border p-3 transition-colors hover:bg-black/[.03] dark:hover:bg-white/[.05]"
           >
-            <div className="text-2xl font-semibold">{enRevision}</div>
+            <div
+              className={`text-2xl font-semibold ${enRevision > 0 ? "text-amber-600" : ""}`}
+            >
+              {enRevision}
+            </div>
             <div className="text-xs text-gray-500">
               filas en cola de revisión
             </div>
           </Link>
           <Link
             href="/documentos"
-            className="rounded border p-3 hover:bg-gray-50"
+            className="rounded-lg border p-3 transition-colors hover:bg-black/[.03] dark:hover:bg-white/[.05]"
           >
-            <div className="text-2xl font-semibold">{sinMatch.length}</div>
+            <div
+              className={`text-2xl font-semibold ${sinMatch.length > 0 ? "text-amber-600" : ""}`}
+            >
+              {sinMatch.length}
+            </div>
             <div className="text-xs text-gray-500">documentos sin match</div>
           </Link>
           <Link
             href="/documentos"
-            className="rounded border p-3 hover:bg-gray-50"
+            className="rounded-lg border p-3 transition-colors hover:bg-black/[.03] dark:hover:bg-white/[.05]"
           >
-            <div className="text-2xl font-semibold">
+            <div
+              className={`text-2xl font-semibold ${sinDocumento.length > 0 ? "text-amber-600" : ""}`}
+            >
               {sinDocumento.length}
             </div>
             <div className="text-xs text-gray-500">casos sin documento</div>
@@ -67,7 +79,7 @@ export default async function DashboardPage() {
         <h2 className="font-medium">Importaciones recientes</h2>
         <ul className="mt-2 flex flex-col gap-2 text-sm">
           {importaciones.map((imp) => (
-            <li key={imp.id} className="rounded border p-3">
+            <li key={imp.id} className="rounded-lg border p-3">
               <div className="flex justify-between">
                 <span>{imp.nombreArchivoOriginal}</span>
                 <span className="text-gray-500">

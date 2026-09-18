@@ -10,7 +10,7 @@ export default async function RevisionPage() {
 
   return (
     <div className="flex-1 p-8 max-w-4xl mx-auto">
-      <h1 className="text-xl font-semibold">Cola de revisión</h1>
+      <h1 className="text-xl font-semibold text-primary">Cola de revisión</h1>
       <p className="mt-1 text-sm text-gray-600">
         Filas de reimportaciones que coinciden con un caso ya existente
         (misma OT + concepto de gasto).

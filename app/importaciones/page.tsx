@@ -19,7 +19,9 @@ export default function ImportacionesPage() {
 
   return (
     <div className="flex-1 p-8 max-w-2xl mx-auto">
-      <h1 className="text-xl font-semibold">Importar casos de reembolso</h1>
+      <h1 className="text-xl font-semibold text-primary">
+        Importar casos de reembolso
+      </h1>
       <p className="mt-1 text-sm text-gray-600">
         Sube un archivo .xlsx o .csv con el listado de casos.
       </p>
@@ -35,7 +37,7 @@ export default function ImportacionesPage() {
         <button
           type="submit"
           disabled={pending}
-          className="self-start rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
+          className="self-start rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {pending ? "Importando..." : "Importar"}
         </button>

@@ -38,13 +38,13 @@ export default async function CasosPage(props: PageProps<"/casos">) {
         <h1 className="text-xl font-semibold">Casos de reembolso</h1>
         <a
           href={`/api/exportar${queryString ? `?${queryString}` : ""}`}
-          className="rounded bg-black px-4 py-2 text-sm text-white"
+          className="rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
         >
           Exportar a Excel
         </a>
       </div>
 
-      <form className="mt-4 flex flex-wrap items-end gap-3 text-sm">
+      <form className="mt-4 flex flex-wrap items-end gap-3 rounded-lg border p-4 text-sm">
         <label className="flex flex-col gap-1">
           Estado
           <select
@@ -104,48 +104,51 @@ export default async function CasosPage(props: PageProps<"/casos">) {
         </label>
         <button
           type="submit"
-          className="rounded border px-3 py-1.5 hover:bg-gray-50"
+          className="rounded border px-3 py-1.5 font-medium hover:bg-black/5 dark:hover:bg-white/10"
         >
           Filtrar
         </button>
         {queryString && (
-          <Link href="/casos" className="text-blue-600 underline">
+          <Link href="/casos" className="text-primary underline">
             Limpiar filtros
           </Link>
         )}
       </form>
 
-      <div className="mt-6 overflow-x-auto">
+      <div className="mt-6 overflow-x-auto rounded-lg border">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b">
-              <th className="p-2">OT</th>
-              <th className="p-2">Concepto</th>
-              <th className="p-2">Monto</th>
-              <th className="p-2">Estado</th>
-              <th className="p-2"></th>
+            <tr className="border-b bg-black/[.03] dark:bg-white/[.05]">
+              <th className="p-3 font-medium">OT</th>
+              <th className="p-3 font-medium">Concepto</th>
+              <th className="p-3 font-medium">Monto</th>
+              <th className="p-3 font-medium">Estado</th>
+              <th className="p-3"></th>
             </tr>
           </thead>
           <tbody>
             {casos.map((caso) => {
               const datos = caso.datosImportados as Record<string, unknown>;
               return (
-                <tr key={caso.id} className="border-b">
-                  <td className="p-2">{caso.folio}</td>
-                  <td className="p-2">{caso.conceptoGasto}</td>
-                  <td className="p-2">
+                <tr
+                  key={caso.id}
+                  className="border-b last:border-b-0 hover:bg-black/[.02] dark:hover:bg-white/[.04]"
+                >
+                  <td className="p-3">{caso.folio}</td>
+                  <td className="p-3">{caso.conceptoGasto}</td>
+                  <td className="p-3">
                     {String(datos["Costo de diligencia"] ?? "")}
                   </td>
-                  <td className="p-2">
+                  <td className="p-3">
                     <EstadoSelector
                       casoId={caso.id}
                       estadoActual={caso.estadoActual}
                     />
                   </td>
-                  <td className="p-2">
+                  <td className="p-3">
                     <Link
                       href={`/casos/${caso.id}`}
-                      className="text-blue-600 underline"
+                      className="text-primary underline"
                     >
                       Ver historial
                     </Link>
