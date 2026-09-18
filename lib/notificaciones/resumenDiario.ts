@@ -39,9 +39,19 @@ export async function generarNotificacionesResumenDiario(): Promise<void> {
     );
   }
 
+  // Si solo hay un tipo de pendiente, el link va directo a su vista
+  // (documentos o casos); si hay de los dos, no hay una sola vista que
+  // los muestre juntos, así que va al dashboard.
+  let enlace = "/dashboard";
+  if (resumen.casosSinDocumento > 0 && resumen.duplicadosSinRevisar === 0) {
+    enlace = "/documentos";
+  } else if (resumen.duplicadosSinRevisar > 0 && resumen.casosSinDocumento === 0) {
+    enlace = "/casos";
+  }
+
   await notificarATodosLosUsuarios(
     "RESUMEN_DIARIO",
     `Resumen diario: ${partes.join(" — ")}.`,
-    "/dashboard"
+    enlace
   );
 }

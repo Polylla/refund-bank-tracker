@@ -91,13 +91,15 @@ describe("resumen diario", () => {
     );
   });
 
-  it("genera una notificación agregada cuando hay pendientes", async () => {
+  it("genera una notificación agregada cuando hay pendientes, con link al dashboard si hay de ambos tipos", async () => {
+    // El test anterior ya dejó un duplicado sin revisar, y la base
+    // compartida siempre tiene casos sin documento reales -> ambos > 0.
     await generarNotificacionesResumenDiario();
     expect(notificarMock).toHaveBeenCalledTimes(1);
     expect(notificarMock).toHaveBeenCalledWith(
       "RESUMEN_DIARIO",
       expect.any(String),
-      expect.any(String)
+      "/dashboard"
     );
   });
 });
