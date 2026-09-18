@@ -15,7 +15,8 @@
 - `/casos` agrega un formulario de filtros (estado, rango de fechas, campo+valor) vía query params (GET, sin JS) y un link "Exportar a Excel" que reutiliza los filtros activos.
 - **Verificación:** manual en navegador — filtrar por estado "Pagado" y exportar, confirmar que el Excel descargado solo trae esos casos.
 
-## Task 7.3 — Verificación end-to-end
+## Task 7.3 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: exportación sin filtros y con filtro de estado/campo funcionan correctamente, el Excel descarga y abre bien.
 - En producción: exportar sin filtros (63 casos), exportar filtrando por un campo arbitrario (ej. RUT de un cliente conocido), confirmar que el archivo abre bien en Excel/Sheets.
 
 ---
