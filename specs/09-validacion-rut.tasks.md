@@ -15,7 +15,8 @@ Resultado (2026-09-18): 0 de 63 casos reales tienen RUT inválido — no se requ
 - Script puntual (`scripts/chequear-ruts.mjs`, no persistente) que recorre los `CasoReembolso` reales, extrae `datosImportados.RUT` de cada uno, y reporta por consola cuáles no pasan `normalizarRut` — sin modificar nada.
 - **Verificación:** correr el script contra producción y revisar el resultado con el usuario; si aparece algún RUT inválido, se decide en conjunto qué hacer (no se corrige automáticamente).
 
-## Task 9.3 — Verificación end-to-end
+## Task 9.3 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: reimportar con un RUT de dígito verificador inválido genera "El archivo tiene errores, no se importó nada" con el error específico ("RUT" tiene un formato o dígito verificador inválido) y no crea ningún caso. También se confirmó el camino positivo: un RUT válido pero distinto al existente pasa la validación y va a la cola de revisión normal (Spec 03).
 - Reimportar (o importar un archivo de prueba) con al menos una fila con RUT inválido a propósito y confirmar que esa fila aparece en los errores de importación y no se crea el caso.
 
 ---
