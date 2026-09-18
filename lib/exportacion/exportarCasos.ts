@@ -42,6 +42,16 @@ export function obtenerCasosParaExportar(filtros: FiltrosExportacion) {
   });
 }
 
+export function obtenerCasosConDocumentosParaExportar(
+  filtros: FiltrosExportacion
+) {
+  return prisma.casoReembolso.findMany({
+    where: construirWhere(filtros),
+    include: { documentos: true },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 export function obtenerHistorialParaExportar(filtros: FiltrosExportacion) {
   return prisma.historialEstado.findMany({
     where: { caso: construirWhere(filtros) },
