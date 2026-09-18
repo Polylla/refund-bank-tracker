@@ -1,5 +1,6 @@
 import { casosSinDocumento, documentosSinMatch } from "@/lib/documentos/alertas";
 import { UploadForm } from "./UploadForm";
+import { BuscarYVincular } from "./BuscarYVincular";
 
 export default async function DocumentosPage() {
   const [sinMatch, sinDocumento] = await Promise.all([
@@ -29,6 +30,7 @@ export default async function DocumentosPage() {
               <li key={d.id}>
                 {d.nombreArchivo} — boleta extraída:{" "}
                 {d.nBoletaExtraido ?? "(ninguna)"}
+                <BuscarYVincular documentoId={d.id} />
               </li>
             ))}
           </ul>

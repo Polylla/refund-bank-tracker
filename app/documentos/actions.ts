@@ -3,6 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { getOrCreateUsuarioActual, requireAnyRole } from "@/lib/usuarios";
 import { subirDocumento } from "@/lib/documentos/subirDocumento";
+import {
+  buscarCasosParaVincular,
+  vincularDocumentoManualmente,
+  type ResultadoVinculacion,
+} from "@/lib/documentos/vincularManual";
 import { prisma } from "@/lib/prisma";
 
 export interface ResultadoSubidaDocumento {
@@ -38,4 +43,29 @@ export async function subirDocumentosAction(
 
   revalidatePath("/documentos");
   return resultados;
+}
+
+export async function buscarCasosAction(query: string) {
+  const { roles } = await getOrCreateUsuarioActual();
+  requireAnyRole(roles, ["importador", "revisor"]);
+
+  const casos = await buscarCasosParaVincular(query);
+  return casos.map((c) => ({
+    id: c.id,
+    folio: c.folio,
+    nBoleta: c.nBoleta,
+    conceptoGasto: c.conceptoGasto,
+  }));
+}
+
+export async function vincularManualAction(
+  documentoId: string,
+  casoIds: string[]
+): Promise<ResultadoVinculacion> {
+  const { roles } = await getOrCreateUsuarioActual();
+  requireAnyRole(roles, ["importador", "revisor"]);
+
+  const resultado = await vincularDocumentoManualmente(documentoId, casoIds);
+  if (resultado.ok) revalidatePath("/documentos");
+  return resultado;
 }

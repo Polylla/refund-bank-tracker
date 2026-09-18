@@ -29,13 +29,13 @@ Confirmado por el usuario en producción con PDFs reales: matching correcto (inc
 **Bug encontrado y corregido en el camino:** subir varios archivos juntos en una sola request superaba el límite de 1MB de los Server Actions de Next.js, mostrando "This page couldn't load". Se corrigió subiendo los archivos de a uno desde el cliente (`app/documentos/UploadForm.tsx`, commit `ccfa51e`) y subiendo el límite de body a 10mb para PDFs escaneados grandes.
 - En producción: subir los 45 PDFs reales (o una muestra representativa incluyendo el caso `38.pdf` + `38(1).pdf`), confirmar matching correcto y que las boletas compartidas vinculan ambos casos.
 
-## Task 5.6 — Búsqueda y vínculo manual (TDD)
+## Task 5.6 — Búsqueda y vínculo manual (TDD) ✅ completada
 - `lib/documentos/vincularManual.ts`:
   - `buscarCasosParaVincular(query: string)`: `CasoReembolso` donde `folio` o `nBoleta` contienen `query` (case-insensitive), límite 20, ordenado por fecha de creación descendente.
   - `vincularDocumentoManualmente(documentoId, casoIds: string[])`: conecta los casos al documento y setea `estadoMatching: MATCHEADO`. Rechaza si el documento ya está `MATCHEADO` (no se reasigna) o si `casoIds` viene vacío.
 - **Tests primero (integración contra la base real, con cleanup):** búsqueda por folio parcial, por boleta parcial, sin resultados; vincular pasa el documento a MATCHEADO y lo conecta a los casos elegidos; vincular sobre un documento ya MATCHEADO se rechaza; vincular con lista vacía se rechaza.
 
-## Task 5.7 — UI de selección manual en `/documentos`
+## Task 5.7 — UI de selección manual en `/documentos` ✅ implementada (verificación manual pendiente, ver Task 5.8)
 - Server Actions: `buscarCasosAction(query)` y `vincularManualAction(documentoId, casoIds)`, mismo control de rol que la subida (`importador` o `revisor`).
 - En la sección "Documentos sin match" de `/documentos`: cada fila con un componente cliente (`BuscarYVincular`) con input de búsqueda, resultados con checkbox, y botón "Vincular seleccionados".
 - **Verificación:** manual en navegador — tomar el documento `97044225 .pdf` (ya subido, sin match) y vincularlo manualmente a un caso real; confirmar que pasa a "matcheado" y desaparece de la alerta.
