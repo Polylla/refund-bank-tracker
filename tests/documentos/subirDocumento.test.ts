@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { prisma } from "@/lib/prisma";
 
 vi.mock("@/lib/blob", () => ({
@@ -6,6 +6,11 @@ vi.mock("@/lib/blob", () => ({
     url: `https://blob.test/${pathname}`,
     pathname,
   })),
+}));
+
+const notificarMock = vi.fn();
+vi.mock("@/lib/notificaciones/crear", () => ({
+  notificarATodosLosUsuarios: (...args: unknown[]) => notificarMock(...args),
 }));
 
 const { subirDocumento } = await import("@/lib/documentos/subirDocumento");
@@ -79,6 +84,10 @@ describe("subirDocumento", () => {
     casoSinBoleta = c.id;
   });
 
+  beforeEach(() => {
+    notificarMock.mockClear();
+  });
+
   afterAll(async () => {
     await prisma.documento.deleteMany({ where: { id: { in: documentoIds } } });
     await prisma.casoReembolso.deleteMany({ where: { importacionId } });
@@ -106,6 +115,7 @@ describe("subirDocumento", () => {
     const idsVinculados = conCasos!.casos.map((c) => c.id).sort();
     expect(idsVinculados).toEqual([casoA, casoB].sort());
     expect(idsVinculados).not.toContain(casoSinBoleta);
+    expect(notificarMock).not.toHaveBeenCalled();
   });
 
   it("sin match si ninguna boleta coincide", async () => {
@@ -121,6 +131,12 @@ describe("subirDocumento", () => {
       include: { casos: true },
     });
     expect(conCasos!.casos).toHaveLength(0);
+    expect(notificarMock).toHaveBeenCalledTimes(1);
+    expect(notificarMock).toHaveBeenCalledWith(
+      "DOCUMENTO_SIN_MATCH",
+      expect.stringContaining("000000nadie.pdf"),
+      "/documentos"
+    );
   });
 
   it("sin match si el nombre no tiene número reconocible", async () => {
@@ -130,5 +146,6 @@ describe("subirDocumento", () => {
 
     expect(documento.estadoMatching).toBe("SIN_MATCH");
     expect(documento.nBoletaExtraido).toBeNull();
+    expect(notificarMock).toHaveBeenCalledTimes(1);
   });
 });

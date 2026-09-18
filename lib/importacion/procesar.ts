@@ -8,6 +8,7 @@ import {
 import { marcarDuplicadosIntraArchivo } from "./duplicados";
 import { claveIdentidad } from "./identidad";
 import { inferirEstadoInicial } from "@/lib/estados/estados";
+import { notificarATodosLosUsuarios } from "@/lib/notificaciones/crear";
 
 export interface ResultadoImportacion {
   ok: boolean;
@@ -152,6 +153,14 @@ export async function procesarImportacion(
           ? `No se pudo importar: ${err.message}`
           : "No se pudo importar el archivo",
     };
+  }
+
+  if (filasEnRevision > 0) {
+    await notificarATodosLosUsuarios(
+      "FILA_EN_REVISION",
+      `La importación de "${nombreArchivo}" generó ${filasEnRevision} fila(s) en la cola de revisión.`,
+      "/revision"
+    );
   }
 
   return {

@@ -1,6 +1,12 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { prisma } from "@/lib/prisma";
-import { procesarImportacion } from "@/lib/importacion/procesar";
+
+const notificarMock = vi.fn();
+vi.mock("@/lib/notificaciones/crear", () => ({
+  notificarATodosLosUsuarios: (...args: unknown[]) => notificarMock(...args),
+}));
+
+const { procesarImportacion } = await import("@/lib/importacion/procesar");
 
 // Folios únicos por corrida (no depende del fixture compartido con
 // tests/importacion/procesar.test.ts) para no pisarse con otros tests
@@ -31,6 +37,10 @@ describe("procesarImportacion — reimportación (coincidencia contra la base)",
       },
     });
     usuarioId = usuario.id;
+  });
+
+  beforeEach(() => {
+    notificarMock.mockClear();
   });
 
   afterAll(async () => {
@@ -67,6 +77,7 @@ describe("procesarImportacion — reimportación (coincidencia contra la base)",
     expect(primera.ok).toBe(true);
     expect(primera.resumen?.filasImportadas).toBe(2);
     expect(primera.resumen?.filasEnRevision).toBe(0);
+    expect(notificarMock).not.toHaveBeenCalled();
 
     const primeraImportacion = await prisma.importacionExcel.findFirst({
       where: { usuarioId },
@@ -83,6 +94,13 @@ describe("procesarImportacion — reimportación (coincidencia contra la base)",
     expect(segunda.resumen?.filasImportadas).toBe(0);
     expect(segunda.resumen?.filasEnRevision).toBe(2);
     expect(segunda.resumen?.filasDuplicadas).toBe(0);
+    // 1 sola notificacion agregada, no una por cada fila en revision
+    expect(notificarMock).toHaveBeenCalledTimes(1);
+    expect(notificarMock).toHaveBeenCalledWith(
+      "FILA_EN_REVISION",
+      expect.stringContaining("2"),
+      "/revision"
+    );
 
     const segundaImportacion = await prisma.importacionExcel.findFirst({
       where: { usuarioId, id: { not: primeraImportacion!.id } },

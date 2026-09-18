@@ -23,6 +23,12 @@ enum EstadoRevisionFila {
   DESCARTADA
 }
 
+enum TipoNotificacion {
+  DOCUMENTO_SIN_MATCH
+  FILA_EN_REVISION
+  RESUMEN_DIARIO
+}
+
 model Usuario {
   id        String   @id @default(cuid())
   clerkId   String   @unique
@@ -31,9 +37,11 @@ model Usuario {
   roles     Rol[]
   createdAt DateTime @default(now())
 
-  importaciones     ImportacionExcel[]
-  cambiosDeEstado   HistorialEstado[]
-  filasRevisadas    FilaEnRevision[]
+  importaciones       ImportacionExcel[]
+  cambiosDeEstado     HistorialEstado[]
+  filasRevisadas      FilaEnRevision[]
+  duplicadosRevisados CasoReembolso[]    @relation("DuplicadoRevisadoPor")
+  notificaciones      Notificacion[]
 
   @@map("usuarios")
 }
@@ -50,6 +58,12 @@ model CasoReembolso {
   // matching de documentos (ver specs/05-matching-documentos.md).
   nBoleta          String?
   posibleDuplicado Boolean  @default(false)
+  // Acuse de recibo sobre el marcado de posible duplicado (spec 08) —
+  // no es una decision de aprobar/descartar como en FilaEnRevision,
+  // solo registra que alguien lo vio.
+  duplicadoRevisadoPorId String?
+  duplicadoRevisadoPor   Usuario?  @relation("DuplicadoRevisadoPor", fields: [duplicadoRevisadoPorId], references: [id])
+  duplicadoRevisadoEn    DateTime?
   datosImportados  Json
   estadoActual     String
   // Se completan automaticamente al cambiar el estado (ver
@@ -117,6 +131,20 @@ model Documento {
   nBoletaExtraido String?
 
   @@map("documentos")
+}
+
+model Notificacion {
+  id        String           @id @default(cuid())
+  usuarioId String
+  usuario   Usuario          @relation(fields: [usuarioId], references: [id])
+  tipo      TipoNotificacion
+  mensaje   String
+  enlace    String?
+  leida     Boolean          @default(false)
+  fecha     DateTime         @default(now())
+
+  @@index([usuarioId, leida])
+  @@map("notificaciones")
 }
 
 model ImportacionExcel {

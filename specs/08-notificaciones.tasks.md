@@ -1,14 +1,15 @@
 # Tasks — Spec 08: Notificaciones automáticas
 
-## Task 8.0 — Migración: Notificacion + tracking de duplicado revisado
+## Task 8.0 — Migración: Notificacion + tracking de duplicado revisado ✅ completada
 - Prisma: nuevo modelo `Notificacion` (`usuarioId`, `tipo` enum `TipoNotificacion`, `mensaje`, `enlace?`, `leida`, `fecha`). Agregar a `CasoReembolso`: `duplicadoRevisadoPorId: String?`, `duplicadoRevisadoEn: DateTime?`.
 - **Verificación:** migración aplica sin pérdida de datos.
 
-## Task 8.1 — Creación de notificaciones (TDD)
+## Task 8.1 — Creación de notificaciones (TDD) ✅ completada
 - `lib/notificaciones/crear.ts`: `notificarATodosLosUsuarios(tipo, mensaje, enlace?)` — crea una `Notificacion` por cada `Usuario` existente.
 - **Tests primero (integración, con cleanup):** crea exactamente una notificación por usuario existente; el mensaje/tipo/enlace quedan correctos.
 
-## Task 8.2 — Trigger: documento sin match + fila en revisión (TDD)
+## Task 8.2 — Trigger: documento sin match + fila en revisión (TDD) ✅ completada
+(Nota: los tests existentes de `subirDocumento` y `procesarImportacion`/revisión mockean `notificarATodosLosUsuarios` — de lo contrario cada corrida de test fanearía notificaciones reales al usuario de producción, ya que la función notifica a *todos* los usuarios de la base compartida.)
 - Integrar en `lib/documentos/subirDocumento.ts`: si `estadoMatching: SIN_MATCH`, llamar a `notificarATodosLosUsuarios("DOCUMENTO_SIN_MATCH", ...)`.
 - Integrar en `lib/importacion/procesar.ts`: si `filasEnRevision > 0`, llamar a `notificarATodosLosUsuarios("FILA_EN_REVISION", ...)` **una sola vez** (agregado, no por fila).
 - **Tests primero:** subir documento sin match genera 1 notificación por usuario; subir documento que sí matchea no genera ninguna; reimportar con N filas en revisión genera 1 notificación agregada por usuario (no N).
