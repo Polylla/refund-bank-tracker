@@ -20,11 +20,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Gris oscuro suave en vez de negro puro — se ve más moderno y
+       menos "modo debug". */
+    --background: #1a1c22;
+    --foreground: #e4e4e7;
     --color-primary: #60a5fa;
     --color-primary-foreground: #0a0a0a;
-    --color-border: #27272a;
+    --color-border: #34363e;
   }
 }
 

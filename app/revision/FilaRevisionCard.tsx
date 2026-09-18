@@ -12,6 +12,64 @@ interface Props {
   datosNuevos: Record<string, unknown>;
 }
 
+function formatValor(v: unknown): string {
+  if (v === null || v === undefined || v === "") return "—";
+  return String(v);
+}
+
+function DiffTable({
+  datosActuales,
+  datosNuevos,
+}: {
+  datosActuales: Record<string, unknown>;
+  datosNuevos: Record<string, unknown>;
+}) {
+  const claves = Array.from(
+    new Set([...Object.keys(datosActuales), ...Object.keys(datosNuevos)])
+  );
+
+  return (
+    <table className="w-full text-xs">
+      <thead>
+        <tr className="text-left text-gray-500">
+          <th className="pb-1.5 pr-3 font-medium">Campo</th>
+          <th className="pb-1.5 pr-3 font-medium">Caso existente</th>
+          <th className="pb-1.5 font-medium">Datos nuevos</th>
+        </tr>
+      </thead>
+      <tbody>
+        {claves.map((clave) => {
+          const actual = formatValor(datosActuales[clave]);
+          const nuevo = formatValor(datosNuevos[clave]);
+          const distinto = actual !== nuevo;
+          return (
+            <tr
+              key={clave}
+              className={
+                distinto
+                  ? "bg-amber-50 dark:bg-amber-500/10"
+                  : "border-t border-black/5 dark:border-white/5"
+              }
+            >
+              <td className="py-1.5 pr-3 align-top text-gray-500">{clave}</td>
+              <td className="py-1.5 pr-3 align-top">{actual}</td>
+              <td
+                className={`py-1.5 align-top ${
+                  distinto
+                    ? "font-medium text-amber-700 dark:text-amber-400"
+                    : ""
+                }`}
+              >
+                {nuevo}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+
 export function FilaRevisionCard({
   filaId,
   folio,
@@ -42,23 +100,12 @@ export function FilaRevisionCard({
   }
 
   return (
-    <div className="rounded border p-4 text-sm">
+    <div className="rounded-lg border p-4 text-sm">
       <p className="font-medium">
         OT {folio} — {conceptoGasto}
       </p>
-      <div className="mt-2 grid grid-cols-2 gap-4">
-        <div>
-          <p className="font-medium text-gray-500">Caso existente</p>
-          <pre className="whitespace-pre-wrap text-xs">
-            {JSON.stringify(datosActuales, null, 2)}
-          </pre>
-        </div>
-        <div>
-          <p className="font-medium text-gray-500">Datos nuevos (reimportación)</p>
-          <pre className="whitespace-pre-wrap text-xs">
-            {JSON.stringify(datosNuevos, null, 2)}
-          </pre>
-        </div>
+      <div className="mt-3 overflow-x-auto">
+        <DiffTable datosActuales={datosActuales} datosNuevos={datosNuevos} />
       </div>
       {error && <p className="mt-2 text-red-700">{error}</p>}
       <div className="mt-3 flex gap-2">
@@ -72,7 +119,7 @@ export function FilaRevisionCard({
         <button
           onClick={descartar}
           disabled={pending}
-          className="rounded border px-3 py-1.5 disabled:opacity-50"
+          className="rounded border px-3 py-1.5 hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-50"
         >
           Descartar
         </button>
