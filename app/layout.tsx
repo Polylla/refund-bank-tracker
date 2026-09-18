@@ -4,7 +4,18 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider, Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { NavLinks } from "./NavLinks";
 import { NotificacionesBadge } from "./NotificacionesBadge";
+import { getOrCreateUsuarioActual } from "@/lib/usuarios";
+import type { Role } from "@/lib/roles";
 import "./globals.css";
+
+async function getRolesUsuarioActual(): Promise<Role[]> {
+  try {
+    const { roles } = await getOrCreateUsuarioActual();
+    return roles;
+  } catch {
+    return [];
+  }
+}
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,7 +32,9 @@ export const metadata: Metadata = {
   description: "Gestión del ciclo de vida de reembolsos a receptores judiciales",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const roles = await getRolesUsuarioActual();
+
   return (
     <ClerkProvider
       appearance={{
@@ -44,7 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 Gestión de Reembolsos
               </Link>
               <Show when="signed-in">
-                <NavLinks />
+                <NavLinks roles={roles} />
               </Show>
             </div>
             <div className="flex items-center gap-4">

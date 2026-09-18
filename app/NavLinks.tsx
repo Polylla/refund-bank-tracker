@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { Role } from "@/lib/roles";
 
 const LINKS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -11,12 +12,15 @@ const LINKS = [
   { href: "/documentos", label: "Documentos" },
 ];
 
-export function NavLinks() {
+export function NavLinks({ roles }: { roles: Role[] }) {
   const pathname = usePathname();
+  const links = roles.includes("admin")
+    ? [...LINKS, { href: "/admin/usuarios", label: "Administración" }]
+    : LINKS;
 
   return (
     <nav className="flex flex-wrap gap-1">
-      {LINKS.map((link) => {
+      {links.map((link) => {
         const activo =
           pathname === link.href || pathname.startsWith(`${link.href}/`);
         return (

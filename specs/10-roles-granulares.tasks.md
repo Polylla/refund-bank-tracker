@@ -11,11 +11,11 @@
 - `lib/usuarios.ts`: `requireRole` y `requireAnyRole` pasan automáticamente si `roles.includes("admin")`, sin necesidad de tocar cada punto de uso existente (`app/importaciones/actions.ts`, `app/documentos/actions.ts`, `app/casos/actions.ts`, `app/revision/actions.ts` quedan igual).
 - **Tests primero:** un usuario con solo `admin` pasa `requireRole(roles, "revisor")` y `requireRole(roles, "importador")`; un usuario con solo `visor` sigue siendo rechazado por ambos; el comportamiento existente (sin `admin`) no cambia.
 
-## Task 10.2 — Gestión de roles vía Clerk (TDD)
+## Task 10.2 — Gestión de roles vía Clerk (TDD) ✅ completada
 - `lib/usuarios/gestionRoles.ts`: `listarUsuariosConRoles()` (lista usuarios de Clerk vía `@clerk/backend`, con su email y roles actuales de `publicMetadata`) y `actualizarRolesUsuario(clerkUserId, roles)` (valida que todos los roles sean válidos, actualiza `publicMetadata.roles` en Clerk).
 - **Tests primero (mockeando `@clerk/backend`):** `actualizarRolesUsuario` rechaza un rol inválido; con roles válidos, llama a `updateUserMetadata` con el payload correcto.
 
-## Task 10.3 — Página `/admin/usuarios` + Server Action
+## Task 10.3 — Página `/admin/usuarios` + Server Action ✅ implementada (verificación manual pendiente hasta Task 10.5, cuando exista un admin real)
 - `app/admin/usuarios/page.tsx` (protegida, `requireRole(roles, "admin")`): tabla de usuarios (email, roles actuales) con checkboxes por rol y botón guardar por fila.
 - `app/admin/usuarios/actions.ts`: `actualizarRolesAction(clerkUserId, roles)`, protegida con `requireRole(roles, "admin")`.
 - Enlace "Administración" en `NavLinks`, visible solo si el usuario tiene rol `admin` (requiere pasar los roles del usuario actual desde `layout.tsx`, hoy `NavLinks` no los recibe).
