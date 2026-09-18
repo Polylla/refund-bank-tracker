@@ -30,7 +30,7 @@ Verificado localmente: sin el header correcto → 401; con `Bearer $CRON_SECRET`
 - `vercel.json`: configurar el cron (`0 12 * * *` — 8am Chile en horario UTC-4, ajustar según DST) apuntando a esa ruta.
 - **Verificación:** invocar la ruta manualmente con el secreto correcto genera las notificaciones esperadas; sin el secreto, 401.
 
-## Task 8.6 — Indicador en la app + página `/notificaciones`
+## Task 8.6 — Indicador en la app + página `/notificaciones` ✅ implementada (verificación manual pendiente en producción)
 - Header: ícono con badge de no leídas (cuenta `Notificacion` del usuario actual con `leida: false`).
 - `/notificaciones`: lista ordenada por fecha descendente, cada una linkeando a `enlace`; al cargar la página se marcan todas como leídas.
 - **Verificación:** manual en navegador.

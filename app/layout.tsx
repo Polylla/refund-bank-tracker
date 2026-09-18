@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider, Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { NavLinks } from "./NavLinks";
+import { NotificacionesBadge } from "./NotificacionesBadge";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <SignInButton />
               </Show>
               <Show when="signed-in">
+                <NotificacionesBadge />
                 <UserButton />
               </Show>
             </div>
