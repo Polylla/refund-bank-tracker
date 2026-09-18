@@ -40,7 +40,8 @@ Confirmado por el usuario en producción con PDFs reales: matching correcto (inc
 - En la sección "Documentos sin match" de `/documentos`: cada fila con un componente cliente (`BuscarYVincular`) con input de búsqueda, resultados con checkbox, y botón "Vincular seleccionados".
 - **Verificación:** manual en navegador — tomar el documento `97044225 .pdf` (ya subido, sin match) y vincularlo manualmente a un caso real; confirmar que pasa a "matcheado" y desaparece de la alerta.
 
-## Task 5.8 — Verificación end-to-end
+## Task 5.8 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: vincular manualmente `97044225 .pdf` (el documento sin match real) a un caso real funcionó correctamente, pasando el documento a matcheado.
 - En producción: repetir la vinculación manual sobre datos reales y confirmar que el caso vinculado sale de "casos sin documento" y el documento sale de "sin match".
 
 ---
