@@ -42,15 +42,26 @@ export function obtenerCasosParaExportar(filtros: FiltrosExportacion) {
   });
 }
 
+export function obtenerHistorialParaExportar(filtros: FiltrosExportacion) {
+  return prisma.historialEstado.findMany({
+    where: { caso: construirWhere(filtros) },
+    include: { caso: true, usuario: true },
+    orderBy: { fecha: "asc" },
+  });
+}
+
 export async function generarExcelCasos(
   filtros: FiltrosExportacion
 ): Promise<Buffer> {
-  const casos = await obtenerCasosParaExportar(filtros);
+  const [casos, historial] = await Promise.all([
+    obtenerCasosParaExportar(filtros),
+    obtenerHistorialParaExportar(filtros),
+  ]);
   const columnasImportadas = COLUMNAS.map((c) => c.headers[0]);
 
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Casos");
-  sheet.columns = [
+  const sheetCasos = workbook.addWorksheet("Casos");
+  sheetCasos.columns = [
     ...columnasImportadas.map((header) => ({ header, key: header })),
     { header: "Estado actual", key: "estadoActual" },
     { header: "Fecha creación", key: "createdAt" },
@@ -59,13 +70,34 @@ export async function generarExcelCasos(
 
   for (const caso of casos) {
     const datos = caso.datosImportados as Record<string, unknown>;
-    sheet.addRow({
+    sheetCasos.addRow({
       ...Object.fromEntries(
         columnasImportadas.map((header) => [header, datos[header] ?? ""])
       ),
       estadoActual: caso.estadoActual,
       createdAt: caso.createdAt,
       updatedAt: caso.updatedAt,
+    });
+  }
+
+  const sheetHistorial = workbook.addWorksheet("Historial");
+  sheetHistorial.columns = [
+    { header: "OT", key: "folio" },
+    { header: "Concepto gasto", key: "conceptoGasto" },
+    { header: "Fecha", key: "fecha" },
+    { header: "Estado anterior", key: "estadoAnterior" },
+    { header: "Estado nuevo", key: "estadoNuevo" },
+    { header: "Usuario", key: "usuario" },
+  ];
+
+  for (const entrada of historial) {
+    sheetHistorial.addRow({
+      folio: entrada.caso.folio,
+      conceptoGasto: entrada.caso.conceptoGasto,
+      fecha: entrada.fecha,
+      estadoAnterior: entrada.estadoAnterior ?? "",
+      estadoNuevo: entrada.estadoNuevo,
+      usuario: entrada.usuario?.email ?? "Sistema",
     });
   }
 

@@ -4,19 +4,22 @@ import { prisma } from "@/lib/prisma";
 import {
   generarExcelCasos,
   obtenerCasosParaExportar,
+  obtenerHistorialParaExportar,
 } from "@/lib/exportacion/exportarCasos";
 
 describe("exportación de casos a Excel", () => {
   let importacionId: string;
   let usuarioId: string;
+  let usuarioEmail: string;
   const casoIds: string[] = [];
   const rutUnico = `test-rut-${Date.now()}`;
 
   beforeAll(async () => {
+    usuarioEmail = `test-export-${Date.now()}@example.com`;
     const usuario = await prisma.usuario.create({
       data: {
         clerkId: `test-clerk-export-${Date.now()}`,
-        email: `test-export-${Date.now()}@example.com`,
+        email: usuarioEmail,
         roles: ["IMPORTADOR"],
       },
     });
@@ -54,9 +57,27 @@ describe("exportación de casos a Excel", () => {
       },
     });
     casoIds.push(pagado.id);
+
+    await prisma.historialEstado.create({
+      data: {
+        casoId: pendiente.id,
+        estadoAnterior: null,
+        estadoNuevo: "Pendiente",
+        usuarioId,
+      },
+    });
+    await prisma.historialEstado.create({
+      data: {
+        casoId: pagado.id,
+        estadoAnterior: "Pendiente",
+        estadoNuevo: "Pagado",
+        usuarioId: null, // corrección de sistema, sin usuario (ver spec 04)
+      },
+    });
   });
 
   afterAll(async () => {
+    await prisma.historialEstado.deleteMany({ where: { casoId: { in: casoIds } } });
     await prisma.casoReembolso.deleteMany({ where: { importacionId } });
     await prisma.importacionExcel.delete({ where: { id: importacionId } });
     await prisma.usuario.delete({ where: { id: usuarioId } });
@@ -108,5 +129,45 @@ describe("exportación de casos a Excel", () => {
 
     const dataRow = sheet.getRow(2).values as unknown[];
     expect(dataRow).toContain(rutUnico);
+  });
+
+  it("obtenerHistorialParaExportar respeta los mismos filtros que los casos", async () => {
+    const historialSinFiltro = await obtenerHistorialParaExportar({
+      campoImportado: "RUT",
+      valorImportado: rutUnico,
+    });
+    expect(historialSinFiltro).toHaveLength(1);
+    expect(historialSinFiltro[0].casoId).toBe(casoIds[0]);
+    expect(historialSinFiltro[0].estadoNuevo).toBe("Pendiente");
+    expect(historialSinFiltro[0].usuario?.email).toBe(usuarioEmail);
+  });
+
+  it("incluye la hoja Historial con las filas esperadas, usuario o 'Sistema'", async () => {
+    const buffer = await generarExcelCasos({
+      campoImportado: "RUT",
+      valorImportado: "otro-rut",
+    });
+
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(buffer as never);
+    const sheet = workbook.getWorksheet("Historial")!;
+    expect(sheet).toBeDefined();
+
+    const headerRow = sheet.getRow(1).values as unknown[];
+    expect(headerRow.slice(1).map(String)).toEqual([
+      "OT",
+      "Concepto gasto",
+      "Fecha",
+      "Estado anterior",
+      "Estado nuevo",
+      "Usuario",
+    ]);
+
+    expect(sheet.rowCount).toBe(2); // header + 1 entrada (caso "otro-rut")
+    const dataRow = sheet.getRow(2).values as unknown[];
+    expect(dataRow).toContain("export-2");
+    expect(dataRow).toContain("Pendiente");
+    expect(dataRow).toContain("Pagado");
+    expect(dataRow).toContain("Sistema");
   });
 });

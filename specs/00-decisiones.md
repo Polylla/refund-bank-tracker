@@ -45,5 +45,8 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 ## 10. Roles más granulares (2026-09-18)
 **Decisión:** se agregan `admin` (incluye automáticamente todos los permisos de `importador`+`revisor`, y gestiona roles de otros usuarios desde `/admin/usuarios`) y `visor` (solo lectura en todas las páginas, sin ningún control de escritura visible). El primer `admin` se asigna una vez vía CLI; de ahí en adelante se gestiona desde la app. Ver [10-roles-granulares.md](10-roles-granulares.md).
 
+## 11. Exportar historial y documentos adjuntos (2026-09-18)
+**Decisión:** el historial de estados se agrega como segunda hoja (`Historial`) en el mismo Excel de spec 07, respetando los mismos filtros. Los documentos adjuntos se descargan aparte, en un `.zip` (carpeta por caso), vía un botón nuevo junto al de exportar Excel. Ver [11-exportar-historial-documentos.md](11-exportar-historial-documentos.md).
+
 ## Abiertos / a revisar más adelante
 (ninguno pendiente por ahora)
