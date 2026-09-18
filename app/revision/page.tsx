@@ -1,7 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { FilaRevisionCard } from "./FilaRevisionCard";
+import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
 
 export default async function RevisionPage() {
+  const { roles } = await getOrCreateUsuarioActual();
+  const soloLectura = !puedeActuar(roles);
+
   const filas = await prisma.filaEnRevision.findMany({
     where: { estado: "PENDIENTE" },
     include: { casoExistente: true },
@@ -32,6 +36,7 @@ export default async function RevisionPage() {
                 fila.casoExistente.datosImportados as Record<string, unknown>
               }
               datosNuevos={fila.datosNuevos as Record<string, unknown>}
+              soloLectura={soloLectura}
             />
           ))}
         </div>

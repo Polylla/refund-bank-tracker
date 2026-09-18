@@ -21,7 +21,8 @@
 - Enlace "Administración" en `NavLinks`, visible solo si el usuario tiene rol `admin` (requiere pasar los roles del usuario actual desde `layout.tsx`, hoy `NavLinks` no los recibe).
 - **Verificación:** manual en navegador — un admin cambia el rol de un usuario y el cambio se refleja en su próximo login.
 
-## Task 10.4 — UI de solo lectura para `visor`
+## Task 10.4 — UI de solo lectura para `visor` ✅ implementada (verificación manual pendiente hasta Task 10.6)
+(`/importaciones/page.tsx` se separó en un wrapper de servidor + `ImportarForm.tsx` cliente, ya que antes toda la página era client component y no se podía consultar el rol del usuario ahí.)
 - Helper `puedeActuar(roles)` en `lib/usuarios.ts` (true si tiene `importador`, `revisor` o `admin`).
 - Ocultar (no solo deshabilitar) tras `puedeActuar(roles)`: formulario de importar (`/importaciones`), formulario de subir/vincular documento (`/documentos`), selector de cambiar estado y botón "marcar revisado" (`/casos`), botones "Aprobar"/"Descartar" (`/revision`).
 - **Verificación:** manual en navegador — un usuario con solo `visor` ve todas las páginas con datos reales pero sin ninguno de esos controles.

@@ -5,8 +5,12 @@ import { MarcarDuplicadoRevisado } from "./MarcarDuplicadoRevisado";
 import { ESTADOS } from "@/lib/estados/estados";
 import { obtenerCasosParaExportar } from "@/lib/exportacion/exportarCasos";
 import { COLUMNAS } from "@/lib/importacion/columns";
+import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
 
 export default async function CasosPage(props: PageProps<"/casos">) {
+  const { roles } = await getOrCreateUsuarioActual();
+  const soloLectura = !puedeActuar(roles);
+
   const sp = await props.searchParams;
   const get = (key: string) => {
     const v = sp[key];
@@ -140,7 +144,13 @@ export default async function CasosPage(props: PageProps<"/casos">) {
                     {caso.conceptoGasto}
                     {caso.posibleDuplicado && !caso.duplicadoRevisadoEn && (
                       <div className="mt-1">
-                        <MarcarDuplicadoRevisado casoId={caso.id} />
+                        {soloLectura ? (
+                          <span className="text-xs font-medium text-amber-700 dark:text-amber-500">
+                            Posible duplicado
+                          </span>
+                        ) : (
+                          <MarcarDuplicadoRevisado casoId={caso.id} />
+                        )}
                       </div>
                     )}
                   </td>
@@ -148,10 +158,14 @@ export default async function CasosPage(props: PageProps<"/casos">) {
                     {String(datos["Costo de diligencia"] ?? "")}
                   </td>
                   <td className="p-3">
-                    <EstadoSelector
-                      casoId={caso.id}
-                      estadoActual={caso.estadoActual}
-                    />
+                    {soloLectura ? (
+                      caso.estadoActual
+                    ) : (
+                      <EstadoSelector
+                        casoId={caso.id}
+                        estadoActual={caso.estadoActual}
+                      />
+                    )}
                   </td>
                   <td className="p-3">
                     <Link

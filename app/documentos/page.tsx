@@ -1,8 +1,12 @@
 import { casosSinDocumento, documentosSinMatch } from "@/lib/documentos/alertas";
 import { UploadForm } from "./UploadForm";
 import { BuscarYVincular } from "./BuscarYVincular";
+import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
 
 export default async function DocumentosPage() {
+  const { roles } = await getOrCreateUsuarioActual();
+  const soloLectura = !puedeActuar(roles);
+
   const [sinMatch, sinDocumento] = await Promise.all([
     documentosSinMatch(),
     casosSinDocumento(),
@@ -18,9 +22,11 @@ export default async function DocumentosPage() {
         automáticamente con los casos correspondientes.
       </p>
 
-      <div className="mt-6">
-        <UploadForm />
-      </div>
+      {!soloLectura && (
+        <div className="mt-6">
+          <UploadForm />
+        </div>
+      )}
 
       <section className="mt-10 rounded-lg border p-4">
         <h2 className="font-medium">Documentos sin match ({sinMatch.length})</h2>
@@ -32,7 +38,7 @@ export default async function DocumentosPage() {
               <li key={d.id}>
                 {d.nombreArchivo} — boleta extraída:{" "}
                 {d.nBoletaExtraido ?? "(ninguna)"}
-                <BuscarYVincular documentoId={d.id} />
+                {!soloLectura && <BuscarYVincular documentoId={d.id} />}
               </li>
             ))}
           </ul>

@@ -10,6 +10,7 @@ interface Props {
   conceptoGasto: string;
   datosActuales: Record<string, unknown>;
   datosNuevos: Record<string, unknown>;
+  soloLectura?: boolean;
 }
 
 function formatValor(v: unknown): string {
@@ -76,6 +77,7 @@ export function FilaRevisionCard({
   conceptoGasto,
   datosActuales,
   datosNuevos,
+  soloLectura = false,
 }: Props) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -108,22 +110,24 @@ export function FilaRevisionCard({
         <DiffTable datosActuales={datosActuales} datosNuevos={datosNuevos} />
       </div>
       {error && <p className="mt-2 text-red-700">{error}</p>}
-      <div className="mt-3 flex gap-2">
-        <button
-          onClick={aprobar}
-          disabled={pending}
-          className="rounded bg-primary px-3 py-1.5 font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
-        >
-          Aprobar
-        </button>
-        <button
-          onClick={descartar}
-          disabled={pending}
-          className="rounded border px-3 py-1.5 hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-50"
-        >
-          Descartar
-        </button>
-      </div>
+      {!soloLectura && (
+        <div className="mt-3 flex gap-2">
+          <button
+            onClick={aprobar}
+            disabled={pending}
+            className="rounded bg-primary px-3 py-1.5 font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+          >
+            Aprobar
+          </button>
+          <button
+            onClick={descartar}
+            disabled={pending}
+            className="rounded border px-3 py-1.5 hover:bg-black/5 dark:hover:bg-white/10 disabled:opacity-50"
+          >
+            Descartar
+          </button>
+        </div>
+      )}
     </div>
   );
 }
