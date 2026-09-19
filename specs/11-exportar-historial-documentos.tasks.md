@@ -15,7 +15,8 @@
 - Botón "Descargar documentos (ZIP)" en `app/casos/page.tsx`, junto al de "Exportar a Excel", con la misma `queryString` de filtros.
 - **Verificación:** manual en navegador — descargar el ZIP con y sin filtros, confirmar que abre y contiene los documentos esperados.
 
-## Task 11.3 — Verificación end-to-end
+## Task 11.3 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: el Excel exportado incluye la hoja "Historial" correctamente, y el botón "Descargar documentos (ZIP)" trae los documentos esperados.
 - En producción: exportar el Excel y confirmar la hoja `Historial`; descargar el ZIP de documentos con y sin filtros y confirmar el contenido.
 
 ---
