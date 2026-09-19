@@ -41,12 +41,20 @@ export default async function CasosPage(props: PageProps<"/casos">) {
     <div className="flex-1 p-8 max-w-5xl mx-auto">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Casos de reembolso</h1>
-        <a
-          href={`/api/exportar${queryString ? `?${queryString}` : ""}`}
-          className="rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-        >
-          Exportar a Excel
-        </a>
+        <div className="flex gap-2">
+          <a
+            href={`/api/exportar${queryString ? `?${queryString}` : ""}`}
+            className="rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            Exportar a Excel
+          </a>
+          <a
+            href={`/api/exportar/documentos${queryString ? `?${queryString}` : ""}`}
+            className="rounded border px-4 py-2 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10"
+          >
+            Descargar documentos (ZIP)
+          </a>
+        </div>
       </div>
 
       <form className="mt-4 flex flex-wrap items-end gap-3 rounded-lg border p-4 text-sm">

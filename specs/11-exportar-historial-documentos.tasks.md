@@ -10,7 +10,7 @@
 - `lib/exportacion/exportarDocumentos.ts`: `generarZipDocumentos(filtros): Promise<Buffer>` — obtiene los casos que cumplen los filtros (reutiliza `obtenerCasosParaExportar`), sus documentos asociados (`include: { documentos: true }` o el nombre real de la relación inversa en `CasoReembolso`), descarga cada blob (`@vercel/blob` `get`) y arma el zip con una carpeta por caso.
 - **Tests primero (mockeando `@vercel/blob`):** un caso con 1 documento genera 1 carpeta con 1 archivo; un documento matcheado a 2 casos filtrados aparece en las 2 carpetas; un caso sin documentos no genera carpeta; sin casos filtrados, el zip resultante está vacío pero es válido.
 
-## Task 11.2 — Endpoint `/api/exportar/documentos` + botón en `/casos`
+## Task 11.2 — Endpoint `/api/exportar/documentos` + botón en `/casos` ✅ implementada (verificación manual pendiente hasta Task 11.3)
 - `app/api/exportar/documentos/route.ts` (GET, protegido por auth como `/api/exportar`): mismos query params, llama a `generarZipDocumentos`, retorna `Content-Type: application/zip`.
 - Botón "Descargar documentos (ZIP)" en `app/casos/page.tsx`, junto al de "Exportar a Excel", con la misma `queryString` de filtros.
 - **Verificación:** manual en navegador — descargar el ZIP con y sin filtros, confirmar que abre y contiene los documentos esperados.
