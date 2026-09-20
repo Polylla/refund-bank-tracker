@@ -8,7 +8,7 @@ Backfill corrido sobre producción: 63/63 casos reales completados. Se corrigier
 - `lib/importacion/procesar.ts`: persistir `fila.estudioAbogado` al crear cada `CasoReembolso` (el parser ya lo extrae en `CasoImportado`, solo faltaba guardarlo como columna).
 - **Verificación:** migraciones aplican sin pérdida de datos; los 63 casos reales quedan con `estudioAbogado` completado; una nueva importación de prueba persiste el campo correctamente.
 
-## Task 12.1 — Agregación por estudio (TDD)
+## Task 12.1 — Agregación por estudio (TDD) ✅ completada
 (Hallazgo: el monto no es una columna de primera clase — solo vive en `datosImportados["Costo de diligencia"]`, igual que hoy lo lee `app/casos/page.tsx`. La agregación por monto se hace en memoria, no vía `groupBy` de Prisma con `_sum`.)
 - `lib/reporteria/porEstudio.ts`: `resumenPorEstudio()` — trae los casos con `estudioAbogado` (findMany) y agrupa en memoria, retornando por cada estudio distinto `{ estudio, cantidadTotal, montoTotal, porEstado: { [estado]: { cantidad, monto } } }`.
 - **Tests primero:** con un set de casos de prueba (2+ estudios, varios estados, montos conocidos vía `datosImportados["Costo de diligencia"]`), los totales y desgloses por estado son exactos; un estudio con 0 casos en un estado dado no aparece con valores incorrectos (0, no `undefined`).
