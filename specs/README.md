@@ -22,6 +22,7 @@ Metodología: SDD (spec por feature, aprobada antes de implementar) + TDD obliga
 | 12 | [Reporte por Estudio/Abogado](12-reporte-por-estudio.md) | 01, 02, 04, 06, 07 | ✅ Completa (ver [tasks](12-reporte-por-estudio.tasks.md)), verificada en producción |
 | 13 | [Búsqueda por OT y limpieza del dashboard](13-busqueda-por-ot.md) | 06, 07 | ✅ Completa (ver [tasks](13-busqueda-por-ot.tasks.md)), verificada en producción |
 | 14 | [Edición de datos en la cola de revisión](14-edicion-en-revision.md) | 03, 08, 09, 10 | ✅ Completa (ver [tasks](14-edicion-en-revision.tasks.md)), verificada en producción |
+| 15 | [Motivo de rechazo](15-motivo-rechazo.md) | 04 | 📋 Propuesta, pendiente de aprobación — ver [tasks](15-motivo-rechazo.tasks.md) |
 
 Nota sobre el orden: el documento original (sección 5) propone *ingesta → modelo de datos → duplicados → estados → matching → exportación*. Se adelantó "modelo de datos" a la spec 01 (junto con la fundación técnica y auth) porque ingesta, duplicados, estados y matching dependen todos de que el esquema de datos ya exista — no tiene sentido parsear un Excel sin tener dónde guardarlo. El resto del orden se mantiene igual al propuesto, agregando "historial y reportería" (punto 3.2 del documento original) al final porque es principalmente una capa de presentación sobre datos que generan las specs 02–05.
 

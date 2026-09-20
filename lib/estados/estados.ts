@@ -11,6 +11,19 @@ export function esEstadoValido(valor: string): valor is Estado {
   return (ESTADOS as readonly string[]).includes(valor);
 }
 
+export const MOTIVOS_RECHAZO = [
+  "Duplicidad",
+  "Sin documento",
+  "Fuera de plazo",
+  "Otro",
+] as const;
+
+export type MotivoRechazo = (typeof MOTIVOS_RECHAZO)[number];
+
+export function esMotivoRechazoValido(valor: string): valor is MotivoRechazo {
+  return (MOTIVOS_RECHAZO as readonly string[]).includes(valor);
+}
+
 /**
  * Estado inicial de un caso al importarse. En la práctica "Estado
  * reembolso" del Excel siempre viene vacío, pero "Fecha pago" /

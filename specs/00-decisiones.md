@@ -51,5 +51,14 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 ## 12. Reporte por Estudio/Abogado (2026-09-20)
 **Decisión:** `estudioAbogado` se promueve a columna de primera clase (hoy solo vive en `datosImportados`), con backfill retroactivo sobre los 63 casos reales. Nueva página `/reportes/estudios` con totales y desglose por estado por cada estudio, linkeando al filtro genérico ya existente en `/casos`. Ver [12-reporte-por-estudio.md](12-reporte-por-estudio.md).
 
+## 13. Búsqueda por OT y limpieza del dashboard (2026-09-20)
+**Decisión:** se quita "Importaciones recientes" del dashboard (código muerto). Se agrega búsqueda exacta por OT en `/casos` (campo `folio` en `FiltrosExportacion`), con un resumen de diligencias pagadas/monto. Ver [13-busqueda-por-ot.md](13-busqueda-por-ot.md).
+
+## 14. Edición de datos en la cola de revisión (2026-09-20)
+**Decisión:** la columna "Datos nuevos" de la cola de revisión pasa a ser editable para cualquier campo antes de aprobar; el RUT se revalida con el mismo dígito verificador que en la importación. No se agrega edición de casos fuera de la cola de revisión. Ver [14-edicion-en-revision.md](14-edicion-en-revision.md).
+
+## 15. Motivo de rechazo (2026-09-20)
+**Decisión:** lista cerrada de motivos (`Duplicidad`, `Sin documento`, `Fuera de plazo`, `Otro` con texto libre), obligatoria al cambiar el estado de un caso a `Rechazado`. Se completa en `CasoReembolso` (último motivo) y en cada entrada de `HistorialEstado` (motivo por evento). Ver [15-motivo-rechazo.md](15-motivo-rechazo.md).
+
 ## Abiertos / a revisar más adelante
 (ninguno pendiente por ahora)

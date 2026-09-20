@@ -74,6 +74,10 @@ model CasoReembolso {
   // cuando esto pasa: queda como snapshot historico del import original.
   fechaEnvioPago   DateTime?
   fechaPago        DateTime?
+  // Se completan al cambiar el estado a "Rechazado" (spec 15); no se
+  // limpian si el caso luego cambia a otro estado, igual que fechaPago.
+  motivoRechazo        String?
+  motivoRechazoDetalle String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -114,6 +118,8 @@ model HistorialEstado {
   estadoAnterior String?
   estadoNuevo    String
   fecha          DateTime @default(now())
+  motivoRechazo        String?
+  motivoRechazoDetalle String?
 
   usuarioId      String?
   usuario        Usuario? @relation(fields: [usuarioId], references: [id])
