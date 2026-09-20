@@ -36,3 +36,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Los <select>/<option> nativos no heredan bien el tema: sin esto,
+   las opciones quedaban con texto invisible (mismo color que el
+   fondo) hasta que el navegador aplicaba su resaltado nativo al
+   pasar el mouse. */
+select,
+option {
+  background-color: var(--background);
+  color: var(--foreground);
+}
