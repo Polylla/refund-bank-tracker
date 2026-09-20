@@ -18,7 +18,8 @@
 - Se muestra el motivo de rechazo actual (si `estadoActual === "Rechazado"`) en la ficha del caso, y el motivo de cada transición a "Rechazado" en la línea de tiempo de historial.
 - **Verificación:** manual en navegador.
 
-## Task 15.4 — Verificación end-to-end
+## Task 15.4 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: rechazar con motivo de la lista y con "Otro" + texto funciona, se guarda y se ve en el detalle del caso. De paso se corrigió un problema de contraste en los `<select>` en modo oscuro (opciones invisibles hasta pasar el mouse).
 - En producción: rechazar un caso real de prueba con cada uno de los 4 motivos (incluyendo "Otro" con texto) y confirmar que queda registrado correctamente en el caso y en el historial.
 
 ---
