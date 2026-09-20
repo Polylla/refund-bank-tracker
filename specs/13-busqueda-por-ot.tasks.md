@@ -17,7 +17,8 @@
 - `app/casos/page.tsx`: nuevo campo de búsqueda `ot` (form GET separado del de filtros), que al enviarse agrega `folio` a los filtros de `obtenerCasosParaExportar` y muestra la tarjeta de resumen (`resumenPorOt`) arriba de la tabla.
 - **Verificación:** manual en navegador — buscar una OT real muestra el resumen y filtra la tabla correctamente.
 
-## Task 13.3 — Verificación end-to-end
+## Task 13.3 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: el dashboard ya no muestra "Importaciones recientes", y buscar una OT real en /casos muestra el resumen correcto y filtra la tabla.
 - En producción: confirmar que el dashboard ya no muestra importaciones recientes, y que buscar una OT real trae el resumen y el listado correctos.
 
 ---
