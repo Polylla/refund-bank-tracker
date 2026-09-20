@@ -18,18 +18,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Gris medio, bastante más claro que las dos iteraciones
-       anteriores (#0a0a0a -> #1a1c22 -> #2b2e36), que seguían viéndose
-       muy oscuras para el usuario. */
-    --background: #4b4f59;
-    --foreground: #f5f5f7;
-    --color-primary: #fb923c;
-    --color-primary-foreground: #1a0f00;
-    --color-border: #6b6f7a;
-  }
-}
+/* Sin modo oscuro: la app siempre usa el tema claro de :root, sin
+   importar la preferencia del sistema (decisión explícita del
+   usuario tras varias iteraciones ajustando el oscuro). */
 
 body {
   background: var(--background);
