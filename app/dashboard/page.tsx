@@ -21,12 +21,16 @@ export default async function DashboardPage() {
         <h2 className="font-medium">Casos por estado</h2>
         <div className="mt-2 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {porEstado.map((p) => (
-            <div key={p.estado} className="rounded-lg border p-3 text-center">
+            <Link
+              key={p.estado}
+              href={`/casos?estado=${encodeURIComponent(p.estado)}`}
+              className="rounded-lg border p-3 text-center transition-colors hover:bg-black/[.03] dark:hover:bg-white/[.05]"
+            >
               <div className="text-2xl font-semibold text-primary">
                 {p.cantidad}
               </div>
               <div className="text-xs text-gray-500">{p.estado}</div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
