@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { normalizarRut } from "@/lib/importacion/rut";
 
 export interface ResultadoAccionRevision {
   ok: boolean;
@@ -8,7 +9,8 @@ export interface ResultadoAccionRevision {
 
 export async function aprobarFila(
   filaId: string,
-  usuarioId: string
+  usuarioId: string,
+  datosOverride?: Record<string, unknown>
 ): Promise<ResultadoAccionRevision> {
   const fila = await prisma.filaEnRevision.findUnique({ where: { id: filaId } });
   if (!fila) return { ok: false, mensaje: "Fila no encontrada" };
@@ -21,11 +23,26 @@ export async function aprobarFila(
   });
   if (!caso) return { ok: false, mensaje: "El caso asociado ya no existe" };
 
+  const datosFinales: Record<string, unknown> = {
+    ...(datosOverride ?? (fila.datosNuevos as Record<string, unknown>)),
+  };
+
+  if (typeof datosFinales.RUT === "string") {
+    const rutNormalizado = normalizarRut(datosFinales.RUT);
+    if (rutNormalizado === null) {
+      return {
+        ok: false,
+        mensaje: `"RUT" tiene un formato o dígito verificador inválido: "${datosFinales.RUT}"`,
+      };
+    }
+    datosFinales.RUT = rutNormalizado;
+  }
+
   await prisma.$transaction(async (tx) => {
     await tx.casoReembolso.update({
       where: { id: fila.casoExistenteId },
       data: {
-        datosImportados: fila.datosNuevos as Prisma.InputJsonValue,
+        datosImportados: datosFinales as Prisma.InputJsonValue,
       },
     });
 

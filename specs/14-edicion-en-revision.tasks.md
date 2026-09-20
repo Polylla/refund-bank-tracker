@@ -4,7 +4,7 @@
 - `app/dashboard/page.tsx`: cada tile de "Casos por estado" pasa a ser un `Link` a `/casos?estado=<estado>` (reutiliza el filtro ya existente).
 - **Verificación:** manual — clic en un tile lleva a `/casos` filtrado por ese estado.
 
-## Task 14.1 — Validación de RUT al aprobar con datos editados (TDD)
+## Task 14.1 — Validación de RUT al aprobar con datos editados (TDD) ✅ completada
 - `lib/revision/acciones.ts`: `aprobarFila(filaId, usuarioId, datosOverride?)` — si se pasa `datosOverride`, se usa en vez de `fila.datosNuevos` para actualizar `datosImportados`. Si `datosOverride.RUT` existe, se valida/normaliza con `normalizarRut` (spec 09); si es inválido, retorna `{ ok: false, mensaje: ... }` sin tocar nada.
 - **Tests primero:** aprobar con `datosOverride` guarda esos valores (no los originales de la fila); RUT editado inválido rechaza sin modificar caso ni fila; RUT editado válido en otro formato se normaliza igual que en la importación.
 

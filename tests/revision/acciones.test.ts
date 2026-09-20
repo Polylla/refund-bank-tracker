@@ -114,3 +114,98 @@ describe("acciones de revisión (aprobar / descartar)", () => {
     expect(resultado.ok).toBe(false);
   });
 });
+
+describe("aprobarFila con datosOverride (edición manual)", () => {
+  let usuarioId: string;
+  let importacionId: string;
+  let casoId: string;
+
+  beforeAll(async () => {
+    const usuario = await prisma.usuario.create({
+      data: {
+        clerkId: `test-clerk-override-${Date.now()}`,
+        email: `test-override-${Date.now()}@example.com`,
+        roles: ["REVISOR"],
+      },
+    });
+    usuarioId = usuario.id;
+
+    const importacion = await prisma.importacionExcel.create({
+      data: {
+        nombreArchivoOriginal: "test-override.xlsx",
+        usuarioId,
+        cantidadFilas: 1,
+        cantidadDuplicados: 0,
+        cantidadErrores: 0,
+      },
+    });
+    importacionId = importacion.id;
+
+    const caso = await prisma.casoReembolso.create({
+      data: {
+        folio: "override-1",
+        conceptoGasto: "NOTIF. TEST",
+        datosImportados: { RUT: "9.518.972-5" },
+        estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
+        importacionId,
+      },
+    });
+    casoId = caso.id;
+  });
+
+  afterAll(async () => {
+    await prisma.filaEnRevision.deleteMany({ where: { importacionId } });
+    await prisma.historialEstado.deleteMany({ where: { casoId } });
+    await prisma.casoReembolso.deleteMany({ where: { importacionId } });
+    await prisma.importacionExcel.delete({ where: { id: importacionId } });
+    await prisma.usuario.delete({ where: { id: usuarioId } });
+    await prisma.$disconnect();
+  });
+
+  it("guarda los valores editados en vez de los originales de la fila", async () => {
+    const fila = await prisma.filaEnRevision.create({
+      data: {
+        importacionId,
+        casoExistenteId: casoId,
+        datosNuevos: { RUT: "11111111-1" },
+      },
+    });
+
+    const resultado = await aprobarFila(fila.id, usuarioId, {
+      RUT: "12.345.678-5",
+    });
+    expect(resultado.ok).toBe(true);
+
+    const caso = await prisma.casoReembolso.findUnique({ where: { id: casoId } });
+    expect((caso!.datosImportados as Record<string, unknown>).RUT).toBe(
+      "12345678-5"
+    );
+  });
+
+  it("rechaza si el RUT editado tiene dígito verificador inválido, sin tocar el caso ni la fila", async () => {
+    const antes = await prisma.casoReembolso.findUnique({ where: { id: casoId } });
+
+    const fila = await prisma.filaEnRevision.create({
+      data: {
+        importacionId,
+        casoExistenteId: casoId,
+        datosNuevos: { RUT: "12.345.678-5" },
+      },
+    });
+
+    const resultado = await aprobarFila(fila.id, usuarioId, {
+      RUT: "12.345.678-9",
+    });
+    expect(resultado.ok).toBe(false);
+    expect(resultado.mensaje).toMatch(/rut/i);
+
+    const despues = await prisma.casoReembolso.findUnique({ where: { id: casoId } });
+    expect(despues!.datosImportados).toEqual(antes!.datosImportados);
+
+    const filaDespues = await prisma.filaEnRevision.findUnique({
+      where: { id: fila.id },
+    });
+    expect(filaDespues!.estado).toBe("PENDIENTE");
+  });
+});
