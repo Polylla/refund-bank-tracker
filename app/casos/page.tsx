@@ -6,6 +6,7 @@ import { ESTADOS } from "@/lib/estados/estados";
 import { obtenerCasosParaExportar } from "@/lib/exportacion/exportarCasos";
 import { COLUMNAS } from "@/lib/importacion/columns";
 import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
+import { resumenPorOt } from "@/lib/reporteria/porOt";
 
 export default async function CasosPage(props: PageProps<"/casos">) {
   const { roles } = await getOrCreateUsuarioActual();
@@ -22,17 +23,22 @@ export default async function CasosPage(props: PageProps<"/casos">) {
   const hasta = get("hasta");
   const campo = get("campo");
   const valor = get("valor");
+  const ot = get("ot");
 
-  const casos = await obtenerCasosParaExportar({
-    estado: estado || undefined,
-    fechaDesde: desde ? new Date(desde) : undefined,
-    fechaHasta: hasta ? new Date(hasta) : undefined,
-    campoImportado: campo || undefined,
-    valorImportado: valor || undefined,
-  });
+  const [casos, resumenOt] = await Promise.all([
+    obtenerCasosParaExportar({
+      estado: estado || undefined,
+      fechaDesde: desde ? new Date(desde) : undefined,
+      fechaHasta: hasta ? new Date(hasta) : undefined,
+      campoImportado: campo || undefined,
+      valorImportado: valor || undefined,
+      folio: ot || undefined,
+    }),
+    ot ? resumenPorOt(ot) : null,
+  ]);
 
   const queryString = new URLSearchParams(
-    Object.entries({ estado, desde, hasta, campo, valor }).filter(
+    Object.entries({ estado, desde, hasta, campo, valor, ot }).filter(
       ([, v]) => v
     ) as [string, string][]
   ).toString();
@@ -58,6 +64,16 @@ export default async function CasosPage(props: PageProps<"/casos">) {
       </div>
 
       <form className="mt-4 flex flex-wrap items-end gap-3 rounded-lg border p-4 text-sm">
+        <label className="flex flex-col gap-1">
+          Buscar por OT
+          <input
+            type="text"
+            name="ot"
+            defaultValue={ot ?? ""}
+            placeholder="Ej: 93306568"
+            className="rounded border p-1.5"
+          />
+        </label>
         <label className="flex flex-col gap-1">
           Estado
           <select
@@ -127,6 +143,18 @@ export default async function CasosPage(props: PageProps<"/casos">) {
           </Link>
         )}
       </form>
+
+      {resumenOt && (
+        <div className="mt-4 rounded-lg border p-4 text-sm">
+          <p className="font-medium">OT {resumenOt.folio}</p>
+          <p className="mt-1 text-gray-600">
+            {resumenOt.cantidadPagadas} de {resumenOt.cantidadTotal}{" "}
+            diligencia(s) pagada(s) — $
+            {resumenOt.montoPagado.toLocaleString("es-CL")} pagado de $
+            {resumenOt.montoTotal.toLocaleString("es-CL")} total
+          </p>
+        </div>
+      )}
 
       <div className="mt-6 overflow-x-auto rounded-lg border">
         <table className="w-full text-left text-sm">

@@ -12,7 +12,8 @@
 - `lib/reporteria/porOt.ts`: `resumenPorOt(folio)` — `{ folio, cantidadTotal, cantidadPagadas, montoTotal, montoPagado }`.
 - **Tests primero:** con 3 casos de la misma OT (2 pagados, 1 pendiente) los totales son exactos; una OT sin casos retorna todo en 0, no error.
 
-## Task 13.2 — Caja de búsqueda + resumen en `/casos`
+## Task 13.2 — Caja de búsqueda + resumen en `/casos` ✅ implementada (verificación manual pendiente hasta Task 13.3)
+(Se integró la búsqueda por OT como campo dentro del mismo form de filtros existente, en vez de un form separado, para que se pueda combinar con los demás filtros en un solo submit.)
 - `app/casos/page.tsx`: nuevo campo de búsqueda `ot` (form GET separado del de filtros), que al enviarse agrega `folio` a los filtros de `obtenerCasosParaExportar` y muestra la tarjeta de resumen (`resumenPorOt`) arriba de la tabla.
 - **Verificación:** manual en navegador — buscar una OT real muestra el resumen y filtra la tabla correctamente.
 
