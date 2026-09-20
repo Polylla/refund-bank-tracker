@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/importaciones", label: "Importar" },
   { href: "/revision", label: "Revisión" },
   { href: "/documentos", label: "Documentos" },
+  { href: "/reportes/estudios", label: "Reportes por estudio" },
 ];
 
 export function NavLinks({ roles }: { roles: Role[] }) {

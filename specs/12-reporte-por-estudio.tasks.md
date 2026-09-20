@@ -13,7 +13,7 @@ Backfill corrido sobre producción: 63/63 casos reales completados. Se corrigier
 - `lib/reporteria/porEstudio.ts`: `resumenPorEstudio()` — trae los casos con `estudioAbogado` (findMany) y agrupa en memoria, retornando por cada estudio distinto `{ estudio, cantidadTotal, montoTotal, porEstado: { [estado]: { cantidad, monto } } }`.
 - **Tests primero:** con un set de casos de prueba (2+ estudios, varios estados, montos conocidos vía `datosImportados["Costo de diligencia"]`), los totales y desgloses por estado son exactos; un estudio con 0 casos en un estado dado no aparece con valores incorrectos (0, no `undefined`).
 
-## Task 12.2 — Página `/reportes/estudios` + navegación
+## Task 12.2 — Página `/reportes/estudios` + navegación ✅ implementada (verificación manual pendiente hasta Task 12.3)
 - `app/reportes/estudios/page.tsx`: tabla con una fila por estudio (cantidad, monto total, desglose por estado), cada fila linkeando a `/casos?campo=Estudio/Abogado&valor=<estudio>`.
 - Enlace "Reportes por estudio" en `NavLinks`.
 - **Verificación:** manual en navegador — la tabla muestra los estudios reales con los totales correctos, y el link a `/casos` filtra bien.
