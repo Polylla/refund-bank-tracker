@@ -36,6 +36,7 @@ describe("marcarDuplicadoRevisado", () => {
         datosImportados: {},
         estadoActual: "Pendiente",
         posibleDuplicado: true,
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -48,6 +49,7 @@ describe("marcarDuplicadoRevisado", () => {
         datosImportados: {},
         estadoActual: "Pendiente",
         posibleDuplicado: false,
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });

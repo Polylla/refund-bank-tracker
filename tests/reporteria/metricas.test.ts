@@ -40,6 +40,7 @@ describe("métricas de reportería", () => {
           conceptoGasto: "X",
           datosImportados: {},
           estadoActual: estado,
+          estudioAbogado: "Estudio Test",
           importacionId,
         },
       });

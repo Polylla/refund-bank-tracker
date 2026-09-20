@@ -48,5 +48,8 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 ## 11. Exportar historial y documentos adjuntos (2026-09-18)
 **Decisión:** el historial de estados se agrega como segunda hoja (`Historial`) en el mismo Excel de spec 07, respetando los mismos filtros. Los documentos adjuntos se descargan aparte, en un `.zip` (carpeta por caso), vía un botón nuevo junto al de exportar Excel. Ver [11-exportar-historial-documentos.md](11-exportar-historial-documentos.md).
 
+## 12. Reporte por Estudio/Abogado (2026-09-20)
+**Decisión:** `estudioAbogado` se promueve a columna de primera clase (hoy solo vive en `datosImportados`), con backfill retroactivo sobre los 63 casos reales. Nueva página `/reportes/estudios` con totales y desglose por estado por cada estudio, linkeando al filtro genérico ya existente en `/casos`. Ver [12-reporte-por-estudio.md](12-reporte-por-estudio.md).
+
 ## Abiertos / a revisar más adelante
 (ninguno pendiente por ahora)

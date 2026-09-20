@@ -42,6 +42,7 @@ describe("alertas de documentos", () => {
         nBoleta: boleta1,
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -54,6 +55,7 @@ describe("alertas de documentos", () => {
         nBoleta: boleta2,
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -66,6 +68,7 @@ describe("alertas de documentos", () => {
         nBoleta: null,
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });

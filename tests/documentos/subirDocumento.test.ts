@@ -54,6 +54,7 @@ describe("subirDocumento", () => {
         nBoleta: boletaCompartida,
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -66,6 +67,7 @@ describe("subirDocumento", () => {
         nBoleta: boletaCompartida,
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -78,6 +80,7 @@ describe("subirDocumento", () => {
         nBoleta: null,
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });

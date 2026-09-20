@@ -41,6 +41,7 @@ describe("selección manual de documentos", () => {
         nBoleta: null,
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });

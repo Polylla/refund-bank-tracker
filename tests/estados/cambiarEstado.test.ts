@@ -49,6 +49,7 @@ describe("cambiarEstado", () => {
         conceptoGasto: "X",
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -69,6 +70,7 @@ describe("cambiarEstado", () => {
         conceptoGasto: "X",
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -98,6 +100,7 @@ describe("cambiarEstado", () => {
         conceptoGasto: "X",
         datosImportados: {},
         estadoActual: "Enviado a pago",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -119,6 +122,7 @@ describe("cambiarEstado", () => {
         conceptoGasto: "X",
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });

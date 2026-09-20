@@ -42,6 +42,7 @@ describe("exportación de casos a Excel", () => {
         conceptoGasto: "X",
         datosImportados: { RUT: rutUnico, OT: "export-1" },
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -53,6 +54,7 @@ describe("exportación de casos a Excel", () => {
         conceptoGasto: "X",
         datosImportados: { RUT: "otro-rut", OT: "export-2" },
         estadoActual: "Pagado",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });

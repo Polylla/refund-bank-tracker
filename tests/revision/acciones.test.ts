@@ -36,6 +36,7 @@ describe("acciones de revisión (aprobar / descartar)", () => {
         conceptoGasto: "NOTIF. TEST",
         datosImportados: { OT: "12345", "Costo de diligencia": 40000 },
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });

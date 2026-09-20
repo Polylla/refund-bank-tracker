@@ -66,6 +66,7 @@ describe("generarZipDocumentos", () => {
         nBoleta: "740",
         datosImportados: { RUT: rutUnico },
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
         documentos: { connect: { id: documentoCompartido.id } },
       },
@@ -79,6 +80,7 @@ describe("generarZipDocumentos", () => {
         nBoleta: "740",
         datosImportados: { RUT: rutUnico },
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
         documentos: { connect: { id: documentoCompartido.id } },
       },
@@ -91,6 +93,7 @@ describe("generarZipDocumentos", () => {
         conceptoGasto: "NOTIF. TEST",
         datosImportados: { RUT: rutUnico },
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });

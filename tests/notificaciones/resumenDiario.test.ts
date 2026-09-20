@@ -70,6 +70,7 @@ describe("resumen diario", () => {
         nBoleta: `resumen-boleta-${Date.now()}`,
         datosImportados: {},
         estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
@@ -80,6 +81,7 @@ describe("resumen diario", () => {
         datosImportados: {},
         estadoActual: "Pendiente",
         posibleDuplicado: true,
+        estudioAbogado: "Estudio Test",
         importacionId,
       },
     });
