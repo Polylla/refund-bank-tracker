@@ -127,7 +127,7 @@ describe("cambiarEstado", () => {
       },
     });
 
-    await cambiarEstado(caso.id, "Rechazado", usuarioId);
+    await cambiarEstado(caso.id, "Rechazado", usuarioId, "Duplicidad");
 
     const actualizado = await prisma.casoReembolso.findUnique({
       where: { id: caso.id },
@@ -135,5 +135,114 @@ describe("cambiarEstado", () => {
     expect(actualizado!.estadoActual).toBe("Rechazado");
     expect(actualizado!.fechaPago).toBeNull();
     expect(actualizado!.fechaEnvioPago).toBeNull();
+  });
+
+  it("rechaza el cambio a Rechazado sin motivo, sin tocar el caso", async () => {
+    const caso = await prisma.casoReembolso.create({
+      data: {
+        folio: "5",
+        conceptoGasto: "X",
+        datosImportados: {},
+        estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
+        importacionId,
+      },
+    });
+
+    const resultado = await cambiarEstado(caso.id, "Rechazado", usuarioId);
+    expect(resultado.ok).toBe(false);
+
+    const sinCambios = await prisma.casoReembolso.findUnique({ where: { id: caso.id } });
+    expect(sinCambios!.estadoActual).toBe("Pendiente");
+  });
+
+  it("rechaza el cambio a Rechazado con un motivo fuera de la lista", async () => {
+    const caso = await prisma.casoReembolso.create({
+      data: {
+        folio: "6",
+        conceptoGasto: "X",
+        datosImportados: {},
+        estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
+        importacionId,
+      },
+    });
+
+    const resultado = await cambiarEstado(
+      caso.id,
+      "Rechazado",
+      usuarioId,
+      "Motivo inventado"
+    );
+    expect(resultado.ok).toBe(false);
+  });
+
+  it('rechaza el cambio a Rechazado con motivo "Otro" sin detalle', async () => {
+    const caso = await prisma.casoReembolso.create({
+      data: {
+        folio: "7",
+        conceptoGasto: "X",
+        datosImportados: {},
+        estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
+        importacionId,
+      },
+    });
+
+    const resultado = await cambiarEstado(caso.id, "Rechazado", usuarioId, "Otro");
+    expect(resultado.ok).toBe(false);
+  });
+
+  it('acepta el cambio a Rechazado con motivo "Otro" y detalle, guardando ambos campos', async () => {
+    const caso = await prisma.casoReembolso.create({
+      data: {
+        folio: "8",
+        conceptoGasto: "X",
+        datosImportados: {},
+        estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
+        importacionId,
+      },
+    });
+
+    const resultado = await cambiarEstado(
+      caso.id,
+      "Rechazado",
+      usuarioId,
+      "Otro",
+      "Firma ilegible en el documento"
+    );
+    expect(resultado.ok).toBe(true);
+
+    const actualizado = await prisma.casoReembolso.findUnique({ where: { id: caso.id } });
+    expect(actualizado!.motivoRechazo).toBe("Otro");
+    expect(actualizado!.motivoRechazoDetalle).toBe("Firma ilegible en el documento");
+
+    const historial = await prisma.historialEstado.findFirst({
+      where: { casoId: caso.id },
+      orderBy: { fecha: "desc" },
+    });
+    expect(historial!.motivoRechazo).toBe("Otro");
+    expect(historial!.motivoRechazoDetalle).toBe("Firma ilegible en el documento");
+  });
+
+  it("cambiar a un estado distinto de Rechazado no exige ni toca el motivo", async () => {
+    const caso = await prisma.casoReembolso.create({
+      data: {
+        folio: "9",
+        conceptoGasto: "X",
+        datosImportados: {},
+        estadoActual: "Pendiente",
+        estudioAbogado: "Estudio Test",
+        importacionId,
+      },
+    });
+
+    const resultado = await cambiarEstado(caso.id, "Enviado a pago", usuarioId);
+    expect(resultado.ok).toBe(true);
+
+    const actualizado = await prisma.casoReembolso.findUnique({ where: { id: caso.id } });
+    expect(actualizado!.motivoRechazo).toBeNull();
+    expect(actualizado!.motivoRechazoDetalle).toBeNull();
   });
 });

@@ -5,7 +5,7 @@
 - `lib/estados/estados.ts`: `MOTIVOS_RECHAZO = ["Duplicidad", "Sin documento", "Fuera de plazo", "Otro"] as const` + `esMotivoRechazoValido`.
 - **Verificación:** migración aplica sin pérdida de datos (todos los casos existentes quedan con estos campos en `null`, no rompe nada ya que solo importan cuando el estado es `Rechazado`).
 
-## Task 15.1 — Validación en `cambiarEstado` (TDD)
+## Task 15.1 — Validación en `cambiarEstado` (TDD) ✅ completada
 - `cambiarEstado(casoId, nuevoEstado, usuarioId, motivoRechazo?, motivoRechazoDetalle?)`: si `nuevoEstado === "Rechazado"`, exige `motivoRechazo` válido (y `motivoRechazoDetalle` no vacío si es `"Otro"`); si no se cumple, retorna error sin tocar nada. Completa ambos campos en `CasoReembolso` y en la nueva entrada de `HistorialEstado`. Para cualquier otro estado, no los toca (igual que `fechaPago`/`fechaEnvioPago`, spec 04).
 - **Tests primero:** rechazar sin motivo falla; rechazar con motivo fuera de la lista falla; rechazar con `"Otro"` sin detalle falla; rechazar con motivo válido completa ambos campos correctamente; cambiar a cualquier otro estado no exige ni toca estos campos.
 

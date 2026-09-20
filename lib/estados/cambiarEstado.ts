@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { esEstadoValido } from "./estados";
+import { esEstadoValido, esMotivoRechazoValido } from "./estados";
 
 export interface ResultadoCambioEstado {
   ok: boolean;
@@ -9,10 +9,21 @@ export interface ResultadoCambioEstado {
 export async function cambiarEstado(
   casoId: string,
   nuevoEstado: string,
-  usuarioId: string
+  usuarioId: string,
+  motivoRechazo?: string,
+  motivoRechazoDetalle?: string
 ): Promise<ResultadoCambioEstado> {
   if (!esEstadoValido(nuevoEstado)) {
     return { ok: false, mensaje: `Estado inválido: ${nuevoEstado}` };
+  }
+
+  if (nuevoEstado === "Rechazado") {
+    if (!motivoRechazo || !esMotivoRechazoValido(motivoRechazo)) {
+      return { ok: false, mensaje: "Debes elegir un motivo de rechazo válido" };
+    }
+    if (motivoRechazo === "Otro" && !motivoRechazoDetalle?.trim()) {
+      return { ok: false, mensaje: 'Debes especificar el detalle del motivo "Otro"' };
+    }
   }
 
   const caso = await prisma.casoReembolso.findUnique({ where: { id: casoId } });
@@ -22,6 +33,10 @@ export async function cambiarEstado(
   const fechaEnvioPago =
     nuevoEstado === "Enviado a pago" ? ahora : caso.fechaEnvioPago;
   const fechaPago = nuevoEstado === "Pagado" ? ahora : caso.fechaPago;
+  const motivoRechazoFinal =
+    nuevoEstado === "Rechazado" ? motivoRechazo : caso.motivoRechazo;
+  const motivoRechazoDetalleFinal =
+    nuevoEstado === "Rechazado" ? motivoRechazoDetalle ?? null : caso.motivoRechazoDetalle;
 
   await prisma.$transaction(async (tx) => {
     await tx.casoReembolso.update({
@@ -30,6 +45,8 @@ export async function cambiarEstado(
         estadoActual: nuevoEstado,
         fechaEnvioPago,
         fechaPago,
+        motivoRechazo: motivoRechazoFinal,
+        motivoRechazoDetalle: motivoRechazoDetalleFinal,
       },
     });
 
@@ -39,6 +56,9 @@ export async function cambiarEstado(
         estadoAnterior: caso.estadoActual,
         estadoNuevo: nuevoEstado,
         usuarioId,
+        motivoRechazo: nuevoEstado === "Rechazado" ? motivoRechazo : null,
+        motivoRechazoDetalle:
+          nuevoEstado === "Rechazado" ? motivoRechazoDetalle ?? null : null,
       },
     });
   });
