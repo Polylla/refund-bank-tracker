@@ -9,12 +9,13 @@ import {
 } from "@/lib/revision/acciones";
 
 export async function aprobarFilaAction(
-  filaId: string
+  filaId: string,
+  datosEditados?: Record<string, unknown>
 ): Promise<ResultadoAccionRevision> {
   const { usuario, roles } = await getOrCreateUsuarioActual();
   requireRole(roles, "revisor");
 
-  const resultado = await aprobarFila(filaId, usuario.id);
+  const resultado = await aprobarFila(filaId, usuario.id, datosEditados);
   if (resultado.ok) revalidatePath("/revision");
   return resultado;
 }

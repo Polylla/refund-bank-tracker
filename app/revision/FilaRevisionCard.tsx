@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { aprobarFilaAction, descartarFilaAction } from "./actions";
 
@@ -18,17 +18,24 @@ function formatValor(v: unknown): string {
   return String(v);
 }
 
+function valorInicial(v: unknown): string {
+  if (v === null || v === undefined) return "";
+  return String(v);
+}
+
 function DiffTable({
   datosActuales,
-  datosNuevos,
+  claves,
+  valores,
+  onChange,
+  soloLectura,
 }: {
   datosActuales: Record<string, unknown>;
-  datosNuevos: Record<string, unknown>;
+  claves: string[];
+  valores: Record<string, string>;
+  onChange: (clave: string, valor: string) => void;
+  soloLectura: boolean;
 }) {
-  const claves = Array.from(
-    new Set([...Object.keys(datosActuales), ...Object.keys(datosNuevos)])
-  );
-
   return (
     <table className="w-full text-xs">
       <thead>
@@ -41,8 +48,9 @@ function DiffTable({
       <tbody>
         {claves.map((clave) => {
           const actual = formatValor(datosActuales[clave]);
-          const nuevo = formatValor(datosNuevos[clave]);
-          const distinto = actual !== nuevo;
+          const editado = valores[clave] ?? "";
+          const editadoDisplay = editado.trim() === "" ? "—" : editado;
+          const distinto = actual !== editadoDisplay;
           return (
             <tr
               key={clave}
@@ -54,14 +62,27 @@ function DiffTable({
             >
               <td className="py-1.5 pr-3 align-top text-gray-500">{clave}</td>
               <td className="py-1.5 pr-3 align-top">{actual}</td>
-              <td
-                className={`py-1.5 align-top ${
-                  distinto
-                    ? "font-medium text-amber-700 dark:text-amber-400"
-                    : ""
-                }`}
-              >
-                {nuevo}
+              <td className="py-1.5 align-top">
+                {soloLectura ? (
+                  <span
+                    className={
+                      distinto
+                        ? "font-medium text-amber-700 dark:text-amber-400"
+                        : ""
+                    }
+                  >
+                    {editadoDisplay}
+                  </span>
+                ) : (
+                  <input
+                    type="text"
+                    value={editado}
+                    onChange={(e) => onChange(clave, e.target.value)}
+                    className={`w-full rounded border px-1.5 py-1 ${
+                      distinto ? "font-medium text-amber-700 dark:text-amber-400" : ""
+                    }`}
+                  />
+                )}
               </td>
             </tr>
           );
@@ -79,14 +100,25 @@ export function FilaRevisionCard({
   datosNuevos,
   soloLectura = false,
 }: Props) {
+  const claves = useMemo(
+    () => Array.from(new Set([...Object.keys(datosActuales), ...Object.keys(datosNuevos)])),
+    [datosActuales, datosNuevos]
+  );
+  const [valores, setValores] = useState<Record<string, string>>(() =>
+    Object.fromEntries(claves.map((clave) => [clave, valorInicial(datosNuevos[clave])]))
+  );
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  function onChange(clave: string, valor: string) {
+    setValores((prev) => ({ ...prev, [clave]: valor }));
+  }
+
   function aprobar() {
     setError(null);
     startTransition(async () => {
-      const resultado = await aprobarFilaAction(filaId);
+      const resultado = await aprobarFilaAction(filaId, valores);
       if (!resultado.ok) setError(resultado.mensaje ?? "No se pudo aprobar");
       else router.refresh();
     });
@@ -107,7 +139,13 @@ export function FilaRevisionCard({
         OT {folio} — {conceptoGasto}
       </p>
       <div className="mt-3 overflow-x-auto">
-        <DiffTable datosActuales={datosActuales} datosNuevos={datosNuevos} />
+        <DiffTable
+          datosActuales={datosActuales}
+          claves={claves}
+          valores={valores}
+          onChange={onChange}
+          soloLectura={soloLectura}
+        />
       </div>
       {error && <p className="mt-2 text-red-700">{error}</p>}
       {!soloLectura && (

@@ -8,7 +8,7 @@
 - `lib/revision/acciones.ts`: `aprobarFila(filaId, usuarioId, datosOverride?)` — si se pasa `datosOverride`, se usa en vez de `fila.datosNuevos` para actualizar `datosImportados`. Si `datosOverride.RUT` existe, se valida/normaliza con `normalizarRut` (spec 09); si es inválido, retorna `{ ok: false, mensaje: ... }` sin tocar nada.
 - **Tests primero:** aprobar con `datosOverride` guarda esos valores (no los originales de la fila); RUT editado inválido rechaza sin modificar caso ni fila; RUT editado válido en otro formato se normaliza igual que en la importación.
 
-## Task 14.2 — UI editable en `FilaRevisionCard`
+## Task 14.2 — UI editable en `FilaRevisionCard` ✅ implementada (verificación manual pendiente hasta Task 14.3)
 - `DiffTable` (dentro de `FilaRevisionCard.tsx`) recibe estado local editable para "Datos nuevos": cada celda es un `<input>` (deshabilitado si `soloLectura`), inicializado con el valor actual.
 - "Aprobar" envía los valores editados vía `aprobarFilaAction(filaId, datosEditados)`.
 - **Verificación:** manual en navegador — editar el RUT de una fila en revisión y aprobar guarda el valor corregido; un RUT inválido muestra el error sin aprobar.
