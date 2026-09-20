@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import {
   casosPorEstado,
   filasEnRevisionPendientes,
-  importacionesRecientes,
 } from "@/lib/reporteria/metricas";
 
 describe("métricas de reportería", () => {
@@ -85,12 +84,5 @@ describe("métricas de reportería", () => {
     const antes = await filasEnRevisionPendientes();
     // El lote de prueba agrega exactamente 1 pendiente (la aprobada no cuenta)
     expect(antes).toBeGreaterThanOrEqual(1);
-  });
-
-  it("importacionesRecientes incluye la importación recién creada", async () => {
-    const recientes = await importacionesRecientes(50);
-    const encontrada = recientes.find((i) => i.id === importacionId);
-    expect(encontrada).toBeDefined();
-    expect(encontrada?.cantidadFilas).toBe(3);
   });
 });

@@ -2,19 +2,16 @@ import Link from "next/link";
 import {
   casosPorEstado,
   filasEnRevisionPendientes,
-  importacionesRecientes,
 } from "@/lib/reporteria/metricas";
 import { casosSinDocumento, documentosSinMatch } from "@/lib/documentos/alertas";
 
 export default async function DashboardPage() {
-  const [porEstado, enRevision, importaciones, sinMatch, sinDocumento] =
-    await Promise.all([
-      casosPorEstado(),
-      filasEnRevisionPendientes(),
-      importacionesRecientes(5),
-      documentosSinMatch(),
-      casosSinDocumento(),
-    ]);
+  const [porEstado, enRevision, sinMatch, sinDocumento] = await Promise.all([
+    casosPorEstado(),
+    filasEnRevisionPendientes(),
+    documentosSinMatch(),
+    casosSinDocumento(),
+  ]);
 
   return (
     <div className="flex-1 p-8 max-w-4xl mx-auto">
@@ -73,27 +70,6 @@ export default async function DashboardPage() {
             <div className="text-xs text-gray-500">casos sin documento</div>
           </Link>
         </div>
-      </section>
-
-      <section className="mt-8">
-        <h2 className="font-medium">Importaciones recientes</h2>
-        <ul className="mt-2 flex flex-col gap-2 text-sm">
-          {importaciones.map((imp) => (
-            <li key={imp.id} className="rounded-lg border p-3">
-              <div className="flex justify-between">
-                <span>{imp.nombreArchivoOriginal}</span>
-                <span className="text-gray-500">
-                  {imp.fecha.toLocaleString("es-CL")}
-                </span>
-              </div>
-              <div className="mt-1 text-xs text-gray-600">
-                {imp.cantidadFilas} filas — {imp.cantidadDuplicados}{" "}
-                duplicados — {imp.cantidadEnRevision} en revisión —{" "}
-                {imp.usuario.email}
-              </div>
-            </li>
-          ))}
-        </ul>
       </section>
     </div>
   );

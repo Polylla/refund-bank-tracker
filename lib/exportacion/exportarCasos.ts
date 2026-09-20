@@ -9,10 +9,15 @@ export interface FiltrosExportacion {
   fechaHasta?: Date;
   campoImportado?: string;
   valorImportado?: string;
+  folio?: string;
 }
 
 function construirWhere(filtros: FiltrosExportacion): Prisma.CasoReembolsoWhereInput {
   const where: Prisma.CasoReembolsoWhereInput = {};
+
+  if (filtros.folio) {
+    where.folio = filtros.folio.trim();
+  }
 
   if (filtros.estado) {
     where.estadoActual = filtros.estado;

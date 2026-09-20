@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ESTADOS, esEstadoValido, type Estado } from "@/lib/estados/estados";
+import { extraerMonto } from "./monto";
 
 interface ResumenEstado {
   cantidad: number;
@@ -17,14 +18,6 @@ function estadoVacio(): Record<Estado, ResumenEstado> {
   return Object.fromEntries(
     ESTADOS.map((estado) => [estado, { cantidad: 0, monto: 0 }])
   ) as Record<Estado, ResumenEstado>;
-}
-
-function extraerMonto(datosImportados: unknown): number {
-  const valor = (datosImportados as Record<string, unknown> | null)?.[
-    "Costo de diligencia"
-  ];
-  const numero = typeof valor === "number" ? valor : Number(valor);
-  return Number.isFinite(numero) ? numero : 0;
 }
 
 export async function resumenPorEstudio(): Promise<ResumenEstudio[]> {

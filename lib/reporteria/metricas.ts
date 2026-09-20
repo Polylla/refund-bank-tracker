@@ -22,11 +22,3 @@ export async function casosPorEstado(): Promise<
 export function filasEnRevisionPendientes(): Promise<number> {
   return prisma.filaEnRevision.count({ where: { estado: "PENDIENTE" } });
 }
-
-export function importacionesRecientes(limite: number) {
-  return prisma.importacionExcel.findMany({
-    orderBy: { fecha: "desc" },
-    take: limite,
-    include: { usuario: true },
-  });
-}
