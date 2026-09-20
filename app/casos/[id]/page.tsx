@@ -52,6 +52,17 @@ export default async function CasoDetallePage(
         <dd>
           {caso.fechaPago ? caso.fechaPago.toLocaleDateString("es-CL") : "—"}
         </dd>
+        {caso.estadoActual === "Rechazado" && (
+          <>
+            <dt className="text-gray-500">Motivo de rechazo</dt>
+            <dd>
+              {caso.motivoRechazo}
+              {caso.motivoRechazo === "Otro" && caso.motivoRechazoDetalle
+                ? ` — ${caso.motivoRechazoDetalle}`
+                : ""}
+            </dd>
+          </>
+        )}
       </dl>
 
       <h2 className="mt-8 font-medium">Historial de estados</h2>
@@ -63,6 +74,15 @@ export default async function CasoDetallePage(
             </span>{" "}
             — {h.estadoAnterior ?? "(creación)"} → {h.estadoNuevo}
             {h.usuario ? ` (${h.usuario.email})` : " (sistema)"}
+            {h.estadoNuevo === "Rechazado" && h.motivoRechazo && (
+              <span className="text-gray-500">
+                {" "}
+                — motivo: {h.motivoRechazo}
+                {h.motivoRechazo === "Otro" && h.motivoRechazoDetalle
+                  ? ` (${h.motivoRechazoDetalle})`
+                  : ""}
+              </span>
+            )}
           </li>
         ))}
       </ol>

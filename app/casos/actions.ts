@@ -13,12 +13,20 @@ import {
 
 export async function cambiarEstadoAction(
   casoId: string,
-  nuevoEstado: string
+  nuevoEstado: string,
+  motivoRechazo?: string,
+  motivoRechazoDetalle?: string
 ): Promise<ResultadoCambioEstado> {
   const { usuario, roles } = await getOrCreateUsuarioActual();
   requireAnyRole(roles, ["importador", "revisor"]);
 
-  const resultado = await cambiarEstado(casoId, nuevoEstado, usuario.id);
+  const resultado = await cambiarEstado(
+    casoId,
+    nuevoEstado,
+    usuario.id,
+    motivoRechazo,
+    motivoRechazoDetalle
+  );
   if (resultado.ok) {
     revalidatePath("/casos");
     revalidatePath(`/casos/${casoId}`);
