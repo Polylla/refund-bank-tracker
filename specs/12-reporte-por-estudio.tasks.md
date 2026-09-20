@@ -18,7 +18,8 @@ Backfill corrido sobre producción: 63/63 casos reales completados. Se corrigier
 - Enlace "Reportes por estudio" en `NavLinks`.
 - **Verificación:** manual en navegador — la tabla muestra los estudios reales con los totales correctos, y el link a `/casos` filtra bien.
 
-## Task 12.3 — Verificación end-to-end
+## Task 12.3 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: los 63 casos reales aparecen agrupados por estudio con los totales correctos, y el link a cada estudio filtra bien `/casos`.
 - En producción: confirmar el backfill sobre los 63 casos reales, revisar `/reportes/estudios` con datos reales, e importar un archivo de prueba para confirmar que el nuevo campo se persiste en importaciones futuras.
 
 ---
