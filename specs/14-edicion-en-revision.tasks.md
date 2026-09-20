@@ -13,7 +13,8 @@
 - "Aprobar" envía los valores editados vía `aprobarFilaAction(filaId, datosEditados)`.
 - **Verificación:** manual en navegador — editar el RUT de una fila en revisión y aprobar guarda el valor corregido; un RUT inválido muestra el error sin aprobar.
 
-## Task 14.3 — Verificación end-to-end
+## Task 14.3 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: editó el RUT del caso real OT 93306568 desde la cola de revisión y aprobó; el caso quedó con el RUT corregido.
 - En producción: corregir el caso real con RUT "11111111-1" desde la cola de revisión, editándolo a su valor correcto, y confirmar que el caso queda con el RUT corregido.
 
 ---
