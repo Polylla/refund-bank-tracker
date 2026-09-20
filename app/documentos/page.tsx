@@ -33,12 +33,20 @@ export default async function DocumentosPage() {
         {sinMatch.length === 0 ? (
           <p className="mt-2 text-sm text-gray-500">Ninguno.</p>
         ) : (
-          <ul className="mt-2 flex flex-col gap-3 text-sm">
+          <ul className="mt-3 flex flex-col divide-y divide-black/5 text-sm">
             {sinMatch.map((d) => (
-              <li key={d.id}>
-                {d.nombreArchivo} — boleta extraída:{" "}
-                {d.nBoletaExtraido ?? "(ninguna)"}
-                {!soloLectura && <BuscarYVincular documentoId={d.id} />}
+              <li key={d.id} className="py-2.5 first:pt-0 last:pb-0">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-medium">{d.nombreArchivo}</span>
+                  <span className="shrink-0 rounded bg-black/5 px-2 py-0.5 text-xs text-gray-600">
+                    boleta extraída: {d.nBoletaExtraido ?? "(ninguna)"}
+                  </span>
+                </div>
+                {!soloLectura && (
+                  <div className="mt-1.5">
+                    <BuscarYVincular documentoId={d.id} />
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -52,10 +60,19 @@ export default async function DocumentosPage() {
         {sinDocumento.length === 0 ? (
           <p className="mt-2 text-sm text-gray-500">Ninguno.</p>
         ) : (
-          <ul className="mt-2 flex flex-col gap-1 text-sm">
+          <ul className="mt-3 flex max-h-96 flex-col divide-y divide-black/5 overflow-y-auto text-sm">
             {sinDocumento.map((c) => (
-              <li key={c.id}>
-                OT {c.folio} — {c.conceptoGasto} — boleta {c.nBoleta}
+              <li
+                key={c.id}
+                className="flex items-center justify-between gap-3 py-2 first:pt-0 last:pb-0"
+              >
+                <span>
+                  <span className="font-medium">OT {c.folio}</span>
+                  <span className="text-gray-500"> — {c.conceptoGasto}</span>
+                </span>
+                <span className="shrink-0 rounded bg-black/5 px-2 py-0.5 text-xs text-gray-600">
+                  boleta {c.nBoleta}
+                </span>
               </li>
             ))}
           </ul>

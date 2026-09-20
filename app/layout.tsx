@@ -48,7 +48,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
         <body className="min-h-full flex flex-col">
-          <header className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 sm:px-6">
+          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/5 px-4 py-3 shadow-sm sm:px-6">
             <div className="flex flex-wrap items-center gap-4">
               <Link
                 href="/"

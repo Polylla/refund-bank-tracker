@@ -5,7 +5,7 @@
   --foreground: #171717;
   --color-primary: #f26522;
   --color-primary-foreground: #ffffff;
-  --color-border: #e5e7eb;
+  --color-border: #e2e4e9;
 }
 
 @theme inline {
@@ -16,6 +16,9 @@
   --color-border: var(--color-border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* Esquinas más suaves en toda la app (rounded-lg es el patrón más
+     usado para tarjetas/paneles/tablas). */
+  --radius-lg: 0.75rem;
 }
 
 /* Sin modo oscuro: la app siempre usa el tema claro de :root, sin
@@ -31,9 +34,11 @@ body {
 }
 
 /* Un poco de profundidad en las tarjetas/paneles (patrón usado en
-   toda la app: rounded-lg + border) — se veían muy planas. */
+   toda la app: rounded-lg + border) — se veían muy planas. Borde más
+   sutil, apoyado en la sombra para dar la sensación de "tarjeta
+   elevada" en vez de "celda de tabla". */
 .rounded-lg.border {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 /* Idem para los botones principales (bg-primary), que se veían chatos. */
