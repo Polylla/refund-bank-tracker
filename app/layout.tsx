@@ -39,7 +39,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <ClerkProvider
       appearance={{
         variables: {
-          colorPrimary: "#2563eb",
+          colorPrimary: "#f26522",
         },
       }}
     >
