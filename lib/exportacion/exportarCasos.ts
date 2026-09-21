@@ -2,6 +2,7 @@ import ExcelJS from "exceljs";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { COLUMNAS } from "@/lib/importacion/columns";
+import { extraerMonto } from "@/lib/reporteria/monto";
 
 export interface FiltrosExportacion {
   estado?: string;
@@ -69,6 +70,40 @@ export function obtenerCasosParaExportar(filtros: FiltrosExportacion) {
     where: construirWhere(filtros),
     orderBy: { createdAt: "desc" },
   });
+}
+
+export interface ResultadoCasosPaginados {
+  casos: Awaited<ReturnType<typeof obtenerCasosParaExportar>>;
+  total: number;
+}
+
+export async function obtenerCasosPaginados(
+  filtros: FiltrosExportacion,
+  pagina: number,
+  porPagina: number
+): Promise<ResultadoCasosPaginados> {
+  const where = construirWhere(filtros);
+  const [casos, total] = await Promise.all([
+    prisma.casoReembolso.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (pagina - 1) * porPagina,
+      take: porPagina,
+    }),
+    prisma.casoReembolso.count({ where }),
+  ]);
+
+  return { casos, total };
+}
+
+export async function calcularMontoTotal(
+  filtros: FiltrosExportacion
+): Promise<number> {
+  const casos = await prisma.casoReembolso.findMany({
+    where: construirWhere(filtros),
+    select: { datosImportados: true },
+  });
+  return casos.reduce((suma, c) => suma + extraerMonto(c.datosImportados), 0);
 }
 
 export function obtenerCasosConDocumentosParaExportar(

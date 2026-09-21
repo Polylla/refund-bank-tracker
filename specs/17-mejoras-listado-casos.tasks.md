@@ -4,7 +4,7 @@
 - `lib/exportacion/exportarCasos.ts`: `FiltrosExportacion` gana `busqueda?: string` (OR entre `folio contains`, `estudioAbogado contains`, y `datosImportados` `string_contains` en `["Nombre cliente", "RUT", "Nombre receptor", "Tribunal"]`) y `estadoIn?: string[]` (alternativa a `estado` para filtrar por una lista, usado por "Pagos pendientes").
 - **Tests primero:** buscar por un texto que solo aparece en RUT encuentra el caso; buscar por parte del nombre del cliente también; `estadoIn` filtra correctamente por múltiples estados a la vez.
 
-## Task 17.1 — Paginación + total (TDD)
+## Task 17.1 — Paginación + total (TDD) ✅ completada
 - `lib/exportacion/exportarCasos.ts`: `obtenerCasosPaginados(filtros, pagina, porPagina)` → `{ casos, total }` (usa `construirWhere` + `skip`/`take` + `count` en paralelo).
 - `lib/reporteria/monto.ts` o `exportarCasos.ts`: `calcularMontoTotal(filtros)` — suma `extraerMonto` de TODOS los casos que cumplen el filtro (sin paginar).
 - **Tests primero:** con un set de casos de prueba, `obtenerCasosPaginados` retorna la página correcta y el `total` real (no el de la página); `calcularMontoTotal` suma todos los filtrados, no solo los de una página.
