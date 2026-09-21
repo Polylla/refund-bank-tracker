@@ -63,5 +63,8 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 ## 16. Notificaciones por email descartadas (2026-09-21)
 **Decisión:** el usuario decide no crear una cuenta en Resend; la Task 8.7 (spec 08) queda descartada. El sistema de notificaciones se mantiene solo in-app (campanita + `/notificaciones`).
 
+## 17. Eliminar documentos e importaciones por error (2026-09-21)
+**Decisión:** se permite eliminar un documento individual, y una importación completa (con todos sus casos, historial y filas en revisión relacionadas) — mismo permiso que importar (`importador`/`revisor`), no restringido a `admin`. Si algún caso tiene avance de estado o documento vinculado, se advierte con conteos antes de confirmar, pero no se bloquea. Ver [16-eliminar-documentos-importaciones.md](16-eliminar-documentos-importaciones.md).
+
 ## Abiertos / a revisar más adelante
 (ninguno pendiente por ahora)

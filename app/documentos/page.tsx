@@ -1,6 +1,7 @@
 import { casosSinDocumento, documentosSinMatch } from "@/lib/documentos/alertas";
 import { UploadForm } from "./UploadForm";
 import { BuscarYVincular } from "./BuscarYVincular";
+import { EliminarDocumentoBoton } from "./EliminarDocumentoBoton";
 import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
 
 export default async function DocumentosPage() {
@@ -43,8 +44,9 @@ export default async function DocumentosPage() {
                   </span>
                 </div>
                 {!soloLectura && (
-                  <div className="mt-1.5">
+                  <div className="mt-1.5 flex items-center gap-3">
                     <BuscarYVincular documentoId={d.id} />
+                    <EliminarDocumentoBoton documentoId={d.id} />
                   </div>
                 )}
               </li>

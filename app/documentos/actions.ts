@@ -8,6 +8,10 @@ import {
   vincularDocumentoManualmente,
   type ResultadoVinculacion,
 } from "@/lib/documentos/vincularManual";
+import {
+  eliminarDocumento,
+  type ResultadoEliminarDocumento,
+} from "@/lib/documentos/eliminarDocumento";
 import { prisma } from "@/lib/prisma";
 
 export interface ResultadoSubidaDocumento {
@@ -67,5 +71,19 @@ export async function vincularManualAction(
 
   const resultado = await vincularDocumentoManualmente(documentoId, casoIds);
   if (resultado.ok) revalidatePath("/documentos");
+  return resultado;
+}
+
+export async function eliminarDocumentoAction(
+  documentoId: string
+): Promise<ResultadoEliminarDocumento> {
+  const { roles } = await getOrCreateUsuarioActual();
+  requireAnyRole(roles, ["importador", "revisor"]);
+
+  const resultado = await eliminarDocumento(documentoId);
+  if (resultado.ok) {
+    revalidatePath("/documentos");
+    revalidatePath("/casos");
+  }
   return resultado;
 }

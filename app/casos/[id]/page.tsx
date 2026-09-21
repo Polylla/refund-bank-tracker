@@ -1,11 +1,15 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { EstadoSelector } from "../EstadoSelector";
+import { EliminarDocumentoBoton } from "@/app/documentos/EliminarDocumentoBoton";
+import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
 
 export default async function CasoDetallePage(
   props: PageProps<"/casos/[id]">
 ) {
   const { id } = await props.params;
+  const { roles } = await getOrCreateUsuarioActual();
+  const soloLectura = !puedeActuar(roles);
 
   const caso = await prisma.casoReembolso.findUnique({
     where: { id },
@@ -32,7 +36,11 @@ export default async function CasoDetallePage(
 
       <div className="mt-4 flex items-center gap-4">
         <span className="text-sm text-gray-600">Estado actual:</span>
-        <EstadoSelector casoId={caso.id} estadoActual={caso.estadoActual} />
+        {soloLectura ? (
+          caso.estadoActual
+        ) : (
+          <EstadoSelector casoId={caso.id} estadoActual={caso.estadoActual} />
+        )}
       </div>
 
       <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-2 rounded-lg border p-4 text-sm">
@@ -99,7 +107,7 @@ export default async function CasoDetallePage(
       ) : (
         <ul className="mt-2 flex flex-col gap-1 text-sm">
           {caso.documentos.map((doc) => (
-            <li key={doc.id}>
+            <li key={doc.id} className="flex items-center gap-3">
               <a
                 href={`/api/documentos/${doc.id}`}
                 target="_blank"
@@ -111,6 +119,7 @@ export default async function CasoDetallePage(
               <span className="text-gray-500">
                 subido {doc.fechaCarga.toLocaleDateString("es-CL")}
               </span>
+              {!soloLectura && <EliminarDocumentoBoton documentoId={doc.id} />}
             </li>
           ))}
         </ul>
