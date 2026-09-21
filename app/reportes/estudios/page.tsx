@@ -40,7 +40,7 @@ export default async function ReporteEstudiosPage() {
               >
                 <td className="p-3">
                   <Link
-                    href={`/casos?campo=${encodeURIComponent("Estudio/Abogado")}&valor=${encodeURIComponent(r.estudio)}`}
+                    href={`/casos?busqueda=${encodeURIComponent(r.estudio)}`}
                     className="text-primary underline"
                   >
                     {r.estudio}

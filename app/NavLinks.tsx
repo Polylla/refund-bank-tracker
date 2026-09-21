@@ -7,6 +7,7 @@ import type { Role } from "@/lib/roles";
 const LINKS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/casos", label: "Casos" },
+  { href: "/casos/pagos-pendientes", label: "Pagos pendientes" },
   { href: "/importaciones", label: "Importar" },
   { href: "/revision", label: "Revisión" },
   { href: "/documentos", label: "Documentos" },
