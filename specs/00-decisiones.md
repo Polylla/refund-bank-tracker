@@ -60,5 +60,8 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 ## 15. Motivo de rechazo (2026-09-20)
 **Decisión:** lista cerrada de motivos (`Duplicidad`, `Sin documento`, `Fuera de plazo`, `Otro` con texto libre), obligatoria al cambiar el estado de un caso a `Rechazado`. Se completa en `CasoReembolso` (último motivo) y en cada entrada de `HistorialEstado` (motivo por evento). Ver [15-motivo-rechazo.md](15-motivo-rechazo.md).
 
+## 16. Notificaciones por email descartadas (2026-09-21)
+**Decisión:** el usuario decide no crear una cuenta en Resend; la Task 8.7 (spec 08) queda descartada. El sistema de notificaciones se mantiene solo in-app (campanita + `/notificaciones`).
+
 ## Abiertos / a revisar más adelante
 (ninguno pendiente por ahora)

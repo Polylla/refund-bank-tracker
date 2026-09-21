@@ -36,15 +36,12 @@ Confirmado por el usuario en producción: la campanita mostró el contador y `/n
 - `/notificaciones`: lista ordenada por fecha descendente, cada una linkeando a `enlace`; al cargar la página se marcan todas como leídas.
 - **Verificación:** manual en navegador.
 
-## Task 8.7 — Envío de emails con Resend
-- **Bloqueante:** requiere que el usuario cree una cuenta en [resend.com](https://resend.com) y provea `RESEND_API_KEY`. Para producción real (enviar a cualquier destinatario) también requiere verificar un dominio propio en Resend — mientras tanto, el modo de prueba de Resend solo permite enviar al email de la cuenta.
-- `lib/notificaciones/email.ts`: envía el email correspondiente a cada tipo de notificación.
-- Integrar en Tasks 8.2 y 8.5 (llamar al envío de email además de crear la `Notificacion` in-app).
-- **Verificación:** manual — con `RESEND_API_KEY` configurada, disparar cada tipo de evento y confirmar que llega el email.
+## Task 8.7 — Envío de emails con Resend ❌ descartada (2026-09-21)
+**Decisión del usuario:** por ahora se queda solo con notificaciones in-app; no quiere crear la cuenta de Resend. Si más adelante cambia de opinión, retomar desde aquí (requiere `RESEND_API_KEY` y, para enviar a destinatarios reales, verificar un dominio propio en Resend — en modo de prueba solo se puede enviar al email de la cuenta).
 
-## Task 8.8 — Verificación end-to-end
-- En producción: subir un documento sin match, reimportar algo que genere fila en revisión, marcar un duplicado como revisado, y correr el cron manualmente. Confirmar notificaciones in-app + emails (si Resend está configurado) en cada caso.
+## Task 8.8 — Verificación end-to-end ✅ completada (alcance in-app)
+Ya cubierta por la verificación de Task 8.6 en producción (campanita + `/notificaciones` con el resumen diario). Sin envío de email (Task 8.7 descartada), no aplica verificar esa parte.
 
 ---
-**Orden de ejecución:** 8.0 → 8.1 → 8.2 → 8.3 → 8.4 → 8.5 → 8.6 → 8.7 → 8.8.
-Las Tasks 8.0–8.6 no requieren Resend y se pueden completar y verificar (in-app) sin bloquearse en la cuenta de email.
+**Orden de ejecución:** 8.0 → 8.1 → 8.2 → 8.3 → 8.4 → 8.5 → 8.6 → ~~8.7~~ → 8.8.
+Spec 08 completa en su alcance in-app; el envío por email queda descartado por decisión del usuario.
