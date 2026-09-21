@@ -6,7 +6,7 @@
 - Server Action + botón "Eliminar" en `BuscarYVincular`/lista de "Documentos sin match" (`/documentos`) y en "Documentos asociados" (`/casos/[id]`), protegido con `requireAnyRole(roles, ["importador", "revisor"])`.
 - **Tests primero (mockeando `@vercel/blob`):** borra la fila y llama a `del` con la urlBlob correcta; si el documento no existe, retorna error sin llamar a `del`.
 
-## Task 16.1 — Eliminar importación completa (TDD)
+## Task 16.1 — Eliminar importación completa (TDD) ✅ completada
 - `lib/importacion/eliminarImportacion.ts`:
   - `resumenEliminarImportacion(importacionId)`: `{ cantidadCasos, casosConAvance, casosConDocumento }`.
   - `eliminarImportacion(importacionId)`: borra en transacción `FilaEnRevision` (por `importacionId` o `casoExistenteId` de alguno de los casos), `HistorialEstado` de esos casos, desvincula documentos (`documentos: { set: [] }`), marca `SIN_MATCH` los documentos que quedan sin ningún caso, borra los `CasoReembolso`, y por último la `ImportacionExcel`.
