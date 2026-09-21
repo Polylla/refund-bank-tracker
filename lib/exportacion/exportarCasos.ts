@@ -5,12 +5,21 @@ import { COLUMNAS } from "@/lib/importacion/columns";
 
 export interface FiltrosExportacion {
   estado?: string;
+  estadoIn?: string[];
   fechaDesde?: Date;
   fechaHasta?: Date;
   campoImportado?: string;
   valorImportado?: string;
   folio?: string;
+  busqueda?: string;
 }
+
+const CAMPOS_BUSQUEDA_UNICA = [
+  "Nombre cliente",
+  "RUT",
+  "Nombre receptor",
+  "Tribunal",
+];
 
 function construirWhere(filtros: FiltrosExportacion): Prisma.CasoReembolsoWhereInput {
   const where: Prisma.CasoReembolsoWhereInput = {};
@@ -21,6 +30,10 @@ function construirWhere(filtros: FiltrosExportacion): Prisma.CasoReembolsoWhereI
 
   if (filtros.estado) {
     where.estadoActual = filtros.estado;
+  }
+
+  if (filtros.estadoIn && filtros.estadoIn.length > 0) {
+    where.estadoActual = { in: filtros.estadoIn };
   }
 
   if (filtros.fechaDesde || filtros.fechaHasta) {
@@ -35,6 +48,17 @@ function construirWhere(filtros: FiltrosExportacion): Prisma.CasoReembolsoWhereI
       path: [filtros.campoImportado],
       string_contains: filtros.valorImportado,
     };
+  }
+
+  if (filtros.busqueda) {
+    const q = filtros.busqueda.trim();
+    where.OR = [
+      { folio: { contains: q, mode: "insensitive" } },
+      { estudioAbogado: { contains: q, mode: "insensitive" } },
+      ...CAMPOS_BUSQUEDA_UNICA.map((campo) => ({
+        datosImportados: { path: [campo], string_contains: q },
+      })),
+    ];
   }
 
   return where;

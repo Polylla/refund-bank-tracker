@@ -108,6 +108,34 @@ describe("exportación de casos a Excel", () => {
     expect(ids).toEqual([casoIds[0]]);
   });
 
+  it("busqueda única encuentra por RUT", async () => {
+    const casos = await obtenerCasosParaExportar({ busqueda: rutUnico });
+    const ids = casos.map((c) => c.id);
+    expect(ids).toEqual([casoIds[0]]);
+  });
+
+  it("busqueda única encuentra por OT (folio)", async () => {
+    const casos = await obtenerCasosParaExportar({ busqueda: "export-2" });
+    const ids = casos.map((c) => c.id);
+    expect(ids).toContain(casoIds[1]);
+    expect(ids).not.toContain(casoIds[0]);
+  });
+
+  it("estadoIn filtra por varios estados a la vez", async () => {
+    const casos = await obtenerCasosParaExportar({
+      busqueda: rutUnico,
+      estadoIn: ["Pendiente", "Rechazado"],
+    });
+    const ids = casos.map((c) => c.id);
+    expect(ids).toEqual([casoIds[0]]); // Pendiente, matchea
+
+    const casosPagado = await obtenerCasosParaExportar({
+      busqueda: "otro-rut",
+      estadoIn: ["Pendiente", "Rechazado"],
+    });
+    expect(casosPagado.map((c) => c.id)).not.toContain(casoIds[1]); // Pagado, excluido
+  });
+
   it("genera un .xlsx válido y re-leíble con las columnas esperadas", async () => {
     // Filtra por un valor único de este test (no por estado solo, que
     // matchearía también casos reales de la base compartida).

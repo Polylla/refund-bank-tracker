@@ -66,5 +66,8 @@ Consecuencia en el modelo de datos: `CasoReembolso.folio` deja de ser `@unique` 
 ## 17. Eliminar documentos e importaciones por error (2026-09-21)
 **Decisión:** se permite eliminar un documento individual, y una importación completa (con todos sus casos, historial y filas en revisión relacionadas) — mismo permiso que importar (`importador`/`revisor`), no restringido a `admin`. Si algún caso tiene avance de estado o documento vinculado, se advierte con conteos antes de confirmar, pero no se bloquea. Ver [16-eliminar-documentos-importaciones.md](16-eliminar-documentos-importaciones.md).
 
+## 18. Mejoras al listado de casos (2026-09-21)
+**Decisión:** `/casos` gana buscador único (multi-campo), paginación (20 por página) y un total sumado al pie, tomando ideas de una pantalla de referencia de otro sistema. Se agrega además `/casos/pagos-pendientes`, la misma tabla pre-filtrada a `Pendiente`/`Enviado a pago`. La exportación a Excel/ZIP sigue trayendo todo lo filtrado, sin paginar. Ver [17-mejoras-listado-casos.md](17-mejoras-listado-casos.md).
+
 ## Abiertos / a revisar más adelante
 (ninguno pendiente por ahora)
