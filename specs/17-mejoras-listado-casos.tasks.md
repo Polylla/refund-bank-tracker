@@ -25,7 +25,8 @@
 - Enlace "Pagos pendientes" en `NavLinks`.
 - **Verificación:** manual — nunca aparecen casos Pagados ni Rechazados.
 
-## Task 17.5 — Verificación end-to-end
+## Task 17.5 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: buscador único, total al pie, paginación y "Pagos pendientes" (sin Pagados ni Rechazados) funcionan correctamente.
 - En producción: probar el buscador único con distintos campos, confirmar que el total y la paginación son correctos, y que "Pagos pendientes" excluye los casos que corresponde.
 
 ---
