@@ -12,7 +12,7 @@
   - `eliminarImportacion(importacionId)`: borra en transacción `FilaEnRevision` (por `importacionId` o `casoExistenteId` de alguno de los casos), `HistorialEstado` de esos casos, desvincula documentos (`documentos: { set: [] }`), marca `SIN_MATCH` los documentos que quedan sin ningún caso, borra los `CasoReembolso`, y por último la `ImportacionExcel`.
 - **Tests primero:** con una importación con 2 casos (uno con documento vinculado, otro con avance de estado) y una `FilaEnRevision` de OTRA importación que referencia uno de esos casos como `casoExistente`: `resumenEliminarImportacion` retorna los conteos correctos; `eliminarImportacion` borra todo sin error de FK, el documento que quedó sin casos vuelve a `SIN_MATCH`, y la `FilaEnRevision` externa también se borró (no queda huérfana).
 
-## Task 16.2 — UI: lista de importaciones + confirmación con advertencia
+## Task 16.2 — UI: lista de importaciones + confirmación con advertencia ✅ implementada (verificación manual pendiente hasta Task 16.3)
 - `/importaciones`: nueva sección "Importaciones recientes" (últimas 20), con botón "Eliminar" por fila.
 - Al hacer clic, se muestra el resumen (`resumenEliminarImportacion`) con la advertencia si corresponde, y un botón "Confirmar eliminación" / "Cancelar" — igual patrón que el motivo de rechazo (spec 15).
 - **Verificación:** manual — eliminar una importación de prueba y confirmar que desaparece junto con sus casos.
