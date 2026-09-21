@@ -17,7 +17,8 @@
 - Al hacer clic, se muestra el resumen (`resumenEliminarImportacion`) con la advertencia si corresponde, y un botón "Confirmar eliminación" / "Cancelar" — igual patrón que el motivo de rechazo (spec 15).
 - **Verificación:** manual — eliminar una importación de prueba y confirmar que desaparece junto con sus casos.
 
-## Task 16.3 — Verificación end-to-end
+## Task 16.3 — Verificación end-to-end ✅ completada
+Confirmado por el usuario en producción: eliminar un documento deja al caso sin documento, y eliminar la importación de prueba completa funciona correctamente.
 - En producción: subir un archivo de prueba, vincular un documento, eliminar el documento (confirmar que el caso queda sin documento), y luego eliminar la importación completa (confirmar que los casos desaparecen y no rompe nada).
 
 ---
