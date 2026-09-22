@@ -1,11 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  /* Fondo de página gris muy claro (no blanco puro) para que las
+     tarjetas blancas (--color-surface) resalten con su sombra —
+     spec 18, estilo "app" en vez de "documento". */
+  --background: #f4f5f7;
   --foreground: #171717;
   --color-primary: #f26522;
   --color-primary-foreground: #ffffff;
   --color-border: #e2e4e9;
+  --color-surface: #ffffff;
+
+  /* Menú lateral (spec 18): negro/carbón sólido con el naranjo de
+     marca como único acento. */
+  --sidebar-bg: #1a1a1a;
+  --sidebar-foreground: #d4d4d8;
+  --sidebar-foreground-muted: #8b8b8f;
+  --sidebar-active-bg: var(--color-primary);
+  --sidebar-active-foreground: #ffffff;
+
+  /* Colores semánticos de estado — deliberadamente distintos del
+     naranjo de marca para no confundir "acento" con "estado". */
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-info: #2563eb;
+  --color-danger: #dc2626;
 }
 
 @theme inline {
@@ -14,6 +33,13 @@
   --color-primary: var(--color-primary);
   --color-primary-foreground: var(--color-primary-foreground);
   --color-border: var(--color-border);
+  --color-surface: var(--color-surface);
+  --color-sidebar: var(--sidebar-bg);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-info: var(--color-info);
+  --color-danger: var(--color-danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   /* Esquinas más suaves en toda la app (rounded-lg es el patrón más
@@ -38,6 +64,7 @@ body {
    sutil, apoyado en la sombra para dar la sensación de "tarjeta
    elevada" en vez de "celda de tabla". */
 .rounded-lg.border {
+  background-color: var(--color-surface);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
@@ -52,6 +79,6 @@ body {
    pasar el mouse. */
 select,
 option {
-  background-color: var(--background);
+  background-color: var(--color-surface);
   color: var(--foreground);
 }
