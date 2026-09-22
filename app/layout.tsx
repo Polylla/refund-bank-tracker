@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider, Show, SignInButton, UserButton } from "@clerk/nextjs";
-import { NavLinks } from "./NavLinks";
+import { Sidebar } from "./Sidebar";
 import { NotificacionesBadge } from "./NotificacionesBadge";
 import { getOrCreateUsuarioActual } from "@/lib/usuarios";
 import type { Role } from "@/lib/roles";
@@ -47,30 +47,30 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         lang="es"
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
-        <body className="min-h-full flex flex-col">
-          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/5 px-4 py-3 shadow-sm sm:px-6">
-            <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href="/"
-                className="text-base font-semibold text-primary whitespace-nowrap"
-              >
-                Gestión de Reembolsos
-              </Link>
-              <Show when="signed-in">
-                <NavLinks roles={roles} />
-              </Show>
-            </div>
-            <div className="flex items-center gap-4">
-              <Show when="signed-out">
+        <body className="flex min-h-full">
+          <Show when="signed-in">
+            <Sidebar roles={roles} />
+          </Show>
+          <div className="flex min-h-full flex-1 flex-col">
+            <Show when="signed-out">
+              <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/5 bg-surface px-4 py-3 shadow-sm sm:px-6">
+                <Link
+                  href="/"
+                  className="text-base font-semibold text-primary whitespace-nowrap"
+                >
+                  Gestión de Reembolsos
+                </Link>
                 <SignInButton />
-              </Show>
-              <Show when="signed-in">
+              </header>
+            </Show>
+            <Show when="signed-in">
+              <header className="flex items-center justify-end gap-4 border-b border-black/5 bg-surface px-4 py-3 shadow-sm sm:px-6">
                 <NotificacionesBadge />
                 <UserButton />
-              </Show>
-            </div>
-          </header>
-          {children}
+              </header>
+            </Show>
+            {children}
+          </div>
         </body>
       </html>
     </ClerkProvider>
