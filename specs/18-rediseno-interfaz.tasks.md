@@ -31,7 +31,8 @@
 - `/documentos` y "Documentos asociados" en `/casos/[id]`: icono según extensión (PDF, imagen) junto al nombre del archivo.
 - **Verificación:** manual.
 
-## Task 18.7 — Página `/estadisticas` con gráficos (TDD en la agregación) ✅ implementada (verificación manual pendiente)
+## Task 18.7 — Página `/estadisticas` con gráficos (TDD en la agregación) ✅ completada, verificada en producción
+(Extra, a pedido del usuario tras ver el resultado: clic en el donut o en una barra navega a `/casos` filtrado por ese estado o ese rango de mes.)
 - Agregar dependencia `recharts`.
 - `lib/reporteria/evolucionMensual.ts`: `casosCreadosPorMes(meses: number)` — cantidad de casos creados por mes, últimos N meses.
 - `/estadisticas`: donut de casos por estado (reutiliza `casosPorEstado`) + barras de `casosCreadosPorMes`.
