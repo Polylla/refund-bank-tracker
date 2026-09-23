@@ -2,6 +2,7 @@ import { casosSinDocumento, documentosSinMatch } from "@/lib/documentos/alertas"
 import { UploadForm } from "./UploadForm";
 import { BuscarYVincular } from "./BuscarYVincular";
 import { EliminarDocumentoBoton } from "./EliminarDocumentoBoton";
+import { FileIcon } from "./FileIcon";
 import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
 
 export default async function DocumentosPage() {
@@ -38,7 +39,10 @@ export default async function DocumentosPage() {
             {sinMatch.map((d) => (
               <li key={d.id} className="py-2.5 first:pt-0 last:pb-0">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-medium">{d.nombreArchivo}</span>
+                  <span className="flex items-center gap-2 font-medium">
+                    <FileIcon tipoArchivo={d.tipoArchivo} />
+                    {d.nombreArchivo}
+                  </span>
                   <span className="shrink-0 rounded bg-black/5 px-2 py-0.5 text-xs text-gray-600">
                     boleta extraída: {d.nBoletaExtraido ?? "(ninguna)"}
                   </span>

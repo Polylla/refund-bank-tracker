@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { EstadoSelector } from "../EstadoSelector";
 import { EstadoBadge } from "../EstadoBadge";
 import { EliminarDocumentoBoton } from "@/app/documentos/EliminarDocumentoBoton";
+import { FileIcon } from "@/app/documentos/FileIcon";
 import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
 import { CasoTabs } from "./CasoTabs";
 
@@ -95,7 +96,8 @@ export default async function CasoDetallePage(
       ) : (
         <ul className="mt-2 flex flex-col gap-1 text-sm">
           {caso.documentos.map((doc) => (
-            <li key={doc.id} className="flex items-center gap-3">
+            <li key={doc.id} className="flex items-center gap-2">
+              <FileIcon tipoArchivo={doc.tipoArchivo} />
               <a
                 href={`/api/documentos/${doc.id}`}
                 target="_blank"

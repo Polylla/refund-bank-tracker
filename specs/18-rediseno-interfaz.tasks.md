@@ -23,11 +23,11 @@
 - `CasosFiltros`: input de búsqueda con icono de lupa, bordes más redondeados, estilo más "app".
 - **Verificación:** manual.
 
-## Task 18.5 — Ficha de caso con pestañas ✅ implementada (verificación manual pendiente)
+## Task 18.5 — Ficha de caso con pestañas ✅ completada, verificada en producción
 - `/casos/[id]`: reorganizar en pestañas "Información" (datos + estado), "Historial", "Documentos", en vez de todo apilado.
 - **Verificación:** manual — mismos datos, misma funcionalidad, navegación por pestañas.
 
-## Task 18.6 — Iconos por tipo de archivo en Documentos
+## Task 18.6 — Iconos por tipo de archivo en Documentos ✅ implementada (verificación manual pendiente)
 - `/documentos` y "Documentos asociados" en `/casos/[id]`: icono según extensión (PDF, imagen) junto al nombre del archivo.
 - **Verificación:** manual.
 
