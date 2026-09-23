@@ -10,11 +10,6 @@ export default async function NuevoCasoPage() {
       <h1 className="text-xl font-semibold text-primary">
         Nuevo caso de reembolso
       </h1>
-      <p className="mt-1 text-sm text-gray-600">
-        Ingresá un caso a mano cuando el origen no sea un Excel. Se aplican
-        las mismas validaciones que al importar (RUT, duplicados por OT +
-        concepto).
-      </p>
 
       {soloLectura ? (
         <p className="mt-6 text-sm text-gray-500">

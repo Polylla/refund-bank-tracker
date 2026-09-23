@@ -11,9 +11,6 @@ export default async function EstadisticasPage() {
   return (
     <div className="flex-1 p-8 max-w-4xl mx-auto">
       <h1 className="text-xl font-semibold text-primary">Estadísticas</h1>
-      <p className="mt-1 text-sm text-gray-600">
-        Los mismos datos del dashboard, en formato gráfico.
-      </p>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
         <section className="rounded-lg border p-4">

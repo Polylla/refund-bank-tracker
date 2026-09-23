@@ -18,9 +18,6 @@ export default async function AdminUsuariosPage() {
   return (
     <div className="flex-1 p-8 max-w-3xl mx-auto">
       <h1 className="text-xl font-semibold">Administración de usuarios</h1>
-      <p className="mt-1 text-sm text-gray-500">
-        Los cambios de rol se aplican de inmediato; el usuario los ve reflejados en su próximo login.
-      </p>
       <div className="mt-6 flex flex-col gap-3">
         {usuarios.map((u) => (
           <RolesUsuarioRow

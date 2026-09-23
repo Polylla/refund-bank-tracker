@@ -18,9 +18,6 @@ export default async function ImportacionesPage() {
       <h1 className="text-xl font-semibold text-primary">
         Importar casos de reembolso
       </h1>
-      <p className="mt-1 text-sm text-gray-600">
-        Sube un archivo .xlsx o .csv con el listado de casos.
-      </p>
 
       {soloLectura ? (
         <p className="mt-6 text-sm text-gray-500">

@@ -72,10 +72,6 @@ export default async function PagosPendientesPage(
           </a>
         </div>
       </div>
-      <p className="mt-1 text-sm text-gray-600">
-        Casos en estado Pendiente o Enviado a pago (excluye Pagado y
-        Rechazado).
-      </p>
 
       <CasosFiltros
         basePath="/casos/pagos-pendientes"

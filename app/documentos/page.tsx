@@ -19,10 +19,6 @@ export default async function DocumentosPage() {
       <h1 className="text-xl font-semibold text-primary">
         Documentos de respaldo
       </h1>
-      <p className="mt-1 text-sm text-gray-600">
-        Sube PDFs/imágenes nombrados por N° de boleta; se matchean
-        automáticamente con los casos correspondientes.
-      </p>
 
       {!soloLectura && (
         <div className="mt-6">

@@ -14,9 +14,6 @@ export default async function ReporteEstudiosPage() {
       <h1 className="text-xl font-semibold text-primary">
         Reporte por Estudio/Abogado
       </h1>
-      <p className="mt-1 text-sm text-gray-600">
-        Histórico de casos agrupado por estudio, con desglose por estado.
-      </p>
 
       <div className="mt-6 overflow-x-auto rounded-lg border">
         <table className="w-full text-left text-sm">
