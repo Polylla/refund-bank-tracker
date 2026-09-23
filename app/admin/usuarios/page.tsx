@@ -3,7 +3,7 @@ import { listarUsuariosConRoles } from "@/lib/usuarios/gestionRoles";
 import { RolesUsuarioRow } from "./RolesUsuarioRow";
 
 export default async function AdminUsuariosPage() {
-  const { roles } = await getOrCreateUsuarioActual();
+  const { usuario, roles } = await getOrCreateUsuarioActual();
 
   if (!roles.includes("admin")) {
     return (
@@ -22,8 +22,12 @@ export default async function AdminUsuariosPage() {
         Los cambios de rol se aplican de inmediato; el usuario los ve reflejados en su próximo login.
       </p>
       <div className="mt-6 flex flex-col gap-3">
-        {usuarios.map((usuario) => (
-          <RolesUsuarioRow key={usuario.clerkUserId} usuario={usuario} />
+        {usuarios.map((u) => (
+          <RolesUsuarioRow
+            key={u.clerkUserId}
+            usuario={u}
+            esUsuarioActual={u.clerkUserId === usuario.clerkId}
+          />
         ))}
       </div>
     </div>
