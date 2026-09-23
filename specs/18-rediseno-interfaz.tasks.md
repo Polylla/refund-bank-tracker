@@ -12,13 +12,14 @@
 - `/dashboard`: las tarjetas de "Casos por estado" y "Alertas pendientes" pasan a tener un icono circular coloreado (estilo mockup) en vez de solo el número.
 - **Verificación:** manual.
 
-## Task 18.3 — Badge de estado reutilizable ✅ implementada (verificación manual pendiente)
+## Task 18.3 — Badge de estado reutilizable ✅ completada, verificada en producción
 (No se aplicó en `/revision`: `FilaRevisionCard` no muestra `estadoActual` en ningún lado — solo compara campos importados del Excel, "Estado reembolso" incluido, que es un dato distinto al estado real del caso. No había nada que reemplazar ahí.)
 - `app/casos/EstadoBadge.tsx`: pill coloreada según estado (verde/ámbar/azul/rojo).
 - Aplicar en `/casos`, `/casos/pagos-pendientes` (dentro de `CasosTable`), `/revision`, `/casos/[id]` — junto al `EstadoSelector` cuando corresponda editar, o solo el badge en modo lectura.
 - **Verificación:** manual — el color coincide con el estado real en cada vista.
 
-## Task 18.4 — Estilo de buscador/filtros en `/casos`
+## Task 18.4 — Estilo de buscador/filtros en `/casos` ✅ completada, verificada en producción
+(De paso se corrigió que el sidebar no ocupaba toda la altura en páginas con contenido más largo que el viewport — pasó a `sticky top-0 h-screen`.)
 - `CasosFiltros`: input de búsqueda con icono de lupa, bordes más redondeados, estilo más "app".
 - **Verificación:** manual.
 
