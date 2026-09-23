@@ -47,11 +47,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         lang="es"
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
-        <body className="flex min-h-full">
+        <body className="flex min-h-screen">
           <Show when="signed-in">
             <Sidebar roles={roles} />
           </Show>
-          <div className="flex min-h-full flex-1 flex-col">
+          <div className="flex min-h-screen flex-1 flex-col">
             <Show when="signed-out">
               <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/5 bg-surface px-4 py-3 shadow-sm sm:px-6">
                 <Link

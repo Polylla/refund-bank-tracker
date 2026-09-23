@@ -38,7 +38,7 @@ export function Sidebar({ roles }: { roles: Role[] }) {
     : LINKS;
 
   return (
-    <aside className="flex h-full w-60 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
+    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
       <div className="px-5 py-5">
         <Link href="/" className="block text-base font-semibold text-white">
           Gestión de Reembolsos
