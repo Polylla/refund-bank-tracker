@@ -40,7 +40,8 @@
 - **Tests primero (para `casosCreadosPorMes`):** con casos de prueba creados en meses conocidos, el conteo por mes es exacto.
 - **Verificación:** manual — los números coinciden con `/dashboard`.
 
-## Task 18.8 — Verificación end-to-end y pulido general
+## Task 18.8 — Verificación end-to-end y pulido general ✅ completada
+Confirmado por el usuario en producción: ninguna funcionalidad existente se rompió con el rediseño (filtros, paginación, exportar, acciones, roles/soloLectura). Surgió un pedido nuevo, fuera del alcance de esta spec: poder ingresar casos manualmente sin pasar por Excel (ver spec 19).
 - Recorrer todas las páginas en producción confirmando que nada se rompió (filtros, paginación, exportar, acciones, roles/soloLectura).
 
 ---
