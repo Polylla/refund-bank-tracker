@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CasoReembolso } from "@prisma/client";
 import { EstadoSelector } from "./EstadoSelector";
+import { EstadoBadge } from "./EstadoBadge";
 import { MarcarDuplicadoRevisado } from "./MarcarDuplicadoRevisado";
 
 export function CasosTable({
@@ -50,12 +51,15 @@ export function CasosTable({
                 </td>
                 <td className="p-3">
                   {soloLectura ? (
-                    caso.estadoActual
+                    <EstadoBadge estado={caso.estadoActual} />
                   ) : (
-                    <EstadoSelector
-                      casoId={caso.id}
-                      estadoActual={caso.estadoActual}
-                    />
+                    <div className="flex flex-col items-start gap-1.5">
+                      <EstadoBadge estado={caso.estadoActual} />
+                      <EstadoSelector
+                        casoId={caso.id}
+                        estadoActual={caso.estadoActual}
+                      />
+                    </div>
                   )}
                 </td>
                 <td className="p-3">

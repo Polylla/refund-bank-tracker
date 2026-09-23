@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { EstadoSelector } from "../EstadoSelector";
+import { EstadoBadge } from "../EstadoBadge";
 import { EliminarDocumentoBoton } from "@/app/documentos/EliminarDocumentoBoton";
 import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
 
@@ -36,9 +37,8 @@ export default async function CasoDetallePage(
 
       <div className="mt-4 flex items-center gap-4">
         <span className="text-sm text-gray-600">Estado actual:</span>
-        {soloLectura ? (
-          caso.estadoActual
-        ) : (
+        <EstadoBadge estado={caso.estadoActual} />
+        {!soloLectura && (
           <EstadoSelector casoId={caso.id} estadoActual={caso.estadoActual} />
         )}
       </div>
