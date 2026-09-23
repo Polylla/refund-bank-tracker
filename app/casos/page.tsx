@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { obtenerCasosPaginados, calcularMontoTotal } from "@/lib/exportacion/exportarCasos";
 import { getOrCreateUsuarioActual, puedeActuar } from "@/lib/usuarios";
 import { resumenPorOt } from "@/lib/reporteria/porOt";
@@ -49,6 +50,14 @@ export default async function CasosPage(props: PageProps<"/casos">) {
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Casos de reembolso</h1>
         <div className="flex gap-2">
+          {!soloLectura && (
+            <Link
+              href="/casos/nuevo"
+              className="rounded border px-4 py-2 text-sm font-medium hover:bg-black/5"
+            >
+              Nuevo caso
+            </Link>
+          )}
           <a
             href={`/api/exportar${queryString ? `?${queryString}` : ""}`}
             className="rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"

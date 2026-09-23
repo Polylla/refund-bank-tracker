@@ -4,7 +4,7 @@
 - `lib/importacion/casoManual.ts`: `crearCasoManual(datos, usuarioId)` — recibe un objeto con los campos del formulario, arma el CSV (`Papa.unparse`, ya es dependencia) con las cabeceras canónicas de `COLUMNAS`, y llama a `procesarImportacion(buffer, "Ingreso manual - <fecha ISO>.csv", usuarioId)`.
 - **Tests primero:** con datos válidos crea 1 `CasoReembolso`; con RUT inválido lo rechaza (mismo mensaje que importar); con OT+Concepto ya existente, la fila termina en `FilaEnRevision` en vez de crear un caso nuevo.
 
-## Task 19.1 — Página `/casos/nuevo` + Server Action
+## Task 19.1 — Página `/casos/nuevo` + Server Action ✅ implementada (verificación manual pendiente)
 - `app/casos/nuevo/page.tsx`: formulario con los campos de `COLUMNAS` (obligatorios/opcionales según corresponda), protegido por rol (`importador`/`revisor`).
 - `app/casos/nuevo/actions.ts`: `crearCasoManualAction(formData)`, llama a `crearCasoManual`.
 - Botón "Nuevo caso" en `/casos`.
