@@ -2,19 +2,20 @@ import { describe, expect, it, vi } from "vitest";
 
 const getUserListMock = vi.fn();
 const updateUserMetadataMock = vi.fn();
+const deleteUserMock = vi.fn();
 
 vi.mock("@clerk/nextjs/server", () => ({
   clerkClient: async () => ({
     users: {
       getUserList: getUserListMock,
       updateUserMetadata: updateUserMetadataMock,
+      deleteUser: deleteUserMock,
     },
   }),
 }));
 
-const { listarUsuariosConRoles, actualizarRolesUsuario } = await import(
-  "@/lib/usuarios/gestionRoles"
-);
+const { listarUsuariosConRoles, actualizarRolesUsuario, eliminarUsuario } =
+  await import("@/lib/usuarios/gestionRoles");
 
 describe("listarUsuariosConRoles", () => {
   it("mapea usuarios de Clerk a email + roles válidos", async () => {
@@ -58,5 +59,22 @@ describe("actualizarRolesUsuario", () => {
     expect(updateUserMetadataMock).toHaveBeenCalledWith("user_1", {
       publicMetadata: { roles: ["revisor", "visor"] },
     });
+  });
+});
+
+describe("eliminarUsuario", () => {
+  it("llama a deleteUser con el id correcto", async () => {
+    deleteUserMock.mockResolvedValueOnce({});
+
+    const resultado = await eliminarUsuario("user_1");
+    expect(resultado.ok).toBe(true);
+    expect(deleteUserMock).toHaveBeenCalledWith("user_1");
+  });
+
+  it("retorna ok:false si Clerk falla", async () => {
+    deleteUserMock.mockRejectedValueOnce(new Error("clerk no disponible"));
+
+    const resultado = await eliminarUsuario("user_2");
+    expect(resultado.ok).toBe(false);
   });
 });

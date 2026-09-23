@@ -42,3 +42,20 @@ export async function actualizarRolesUsuario(
 
   return { ok: true };
 }
+
+export interface ResultadoEliminarUsuario {
+  ok: boolean;
+  mensaje?: string;
+}
+
+export async function eliminarUsuario(
+  clerkUserId: string
+): Promise<ResultadoEliminarUsuario> {
+  const client = await clerkClient();
+  try {
+    await client.users.deleteUser(clerkUserId);
+  } catch {
+    return { ok: false, mensaje: "No se pudo eliminar la cuenta" };
+  }
+  return { ok: true };
+}
