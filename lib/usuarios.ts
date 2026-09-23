@@ -16,22 +16,38 @@ export async function getOrCreateUsuarioActual() {
 
   const rolesClerk = getRoles(user.publicMetadata);
   const roles = rolesClerk.map((r) => ROL_CLERK_A_PRISMA[r]);
+  const email = user.primaryEmailAddress?.emailAddress ?? "";
+  const nombre = user.fullName;
 
-  const usuario = await prisma.usuario.upsert({
+  const existentePorClerkId = await prisma.usuario.findUnique({
     where: { clerkId: user.id },
-    update: {
-      email: user.primaryEmailAddress?.emailAddress ?? "",
-      nombre: user.fullName,
-      roles,
-    },
-    create: {
-      clerkId: user.id,
-      email: user.primaryEmailAddress?.emailAddress ?? "",
-      nombre: user.fullName,
-      roles,
-    },
   });
+  if (existentePorClerkId) {
+    const usuario = await prisma.usuario.update({
+      where: { id: existentePorClerkId.id },
+      data: { email, nombre, roles },
+    });
+    return { usuario, roles: rolesClerk };
+  }
 
+  // No hay registro con este clerkId — puede ser un usuario nuevo, o
+  // alguien cuya cuenta de Clerk fue eliminada (spec 20) y se volvió a
+  // registrar con el mismo email. En ese caso se re-vincula el mismo
+  // registro histórico en vez de fallar por email duplicado.
+  const existentePorEmail = email
+    ? await prisma.usuario.findUnique({ where: { email } })
+    : null;
+  if (existentePorEmail) {
+    const usuario = await prisma.usuario.update({
+      where: { id: existentePorEmail.id },
+      data: { clerkId: user.id, nombre, roles },
+    });
+    return { usuario, roles: rolesClerk };
+  }
+
+  const usuario = await prisma.usuario.create({
+    data: { clerkId: user.id, email, nombre, roles },
+  });
   return { usuario, roles: rolesClerk };
 }
 
