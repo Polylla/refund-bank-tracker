@@ -28,7 +28,7 @@ Metodología: SDD (spec por feature, aprobada antes de implementar) + TDD obliga
 | 18 | [Rediseño de interfaz](18-rediseno-interfaz.md) | Todas las anteriores | ✅ Completa (ver [tasks](18-rediseno-interfaz.tasks.md)), verificada en producción |
 | 19 | [Ingreso manual de casos](19-ingreso-manual-casos.md) | 02, 03, 09, 16 | ✅ Completa (ver [tasks](19-ingreso-manual-casos.tasks.md)), verificada en producción |
 | 20 | [Eliminar usuario](20-eliminar-usuario.md) | 10 | ✅ Completa (ver [tasks](20-eliminar-usuario.tasks.md)), verificada en producción |
-| 21 | [Reingreso de un usuario eliminado](21-reingreso-usuario-eliminado.md) | 20 | 📋 Propuesta, pendiente de aprobación — ver [tasks](21-reingreso-usuario-eliminado.tasks.md) |
+| 21 | [Reingreso de un usuario eliminado](21-reingreso-usuario-eliminado.md) | 20 | ✅ Completa (ver [tasks](21-reingreso-usuario-eliminado.tasks.md)), verificada con tests automáticos |
 
 Nota sobre el orden: el documento original (sección 5) propone *ingesta → modelo de datos → duplicados → estados → matching → exportación*. Se adelantó "modelo de datos" a la spec 01 (junto con la fundación técnica y auth) porque ingesta, duplicados, estados y matching dependen todos de que el esquema de datos ya exista — no tiene sentido parsear un Excel sin tener dónde guardarlo. El resto del orden se mantiene igual al propuesto, agregando "historial y reportería" (punto 3.2 del documento original) al final porque es principalmente una capa de presentación sobre datos que generan las specs 02–05.
 
