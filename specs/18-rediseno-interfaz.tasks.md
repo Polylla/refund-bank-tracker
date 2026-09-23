@@ -27,11 +27,11 @@
 - `/casos/[id]`: reorganizar en pestañas "Información" (datos + estado), "Historial", "Documentos", en vez de todo apilado.
 - **Verificación:** manual — mismos datos, misma funcionalidad, navegación por pestañas.
 
-## Task 18.6 — Iconos por tipo de archivo en Documentos ✅ implementada (verificación manual pendiente)
+## Task 18.6 — Iconos por tipo de archivo en Documentos ✅ completada, verificada en producción
 - `/documentos` y "Documentos asociados" en `/casos/[id]`: icono según extensión (PDF, imagen) junto al nombre del archivo.
 - **Verificación:** manual.
 
-## Task 18.7 — Página `/estadisticas` con gráficos (TDD en la agregación)
+## Task 18.7 — Página `/estadisticas` con gráficos (TDD en la agregación) ✅ implementada (verificación manual pendiente)
 - Agregar dependencia `recharts`.
 - `lib/reporteria/evolucionMensual.ts`: `casosCreadosPorMes(meses: number)` — cantidad de casos creados por mes, últimos N meses.
 - `/estadisticas`: donut de casos por estado (reutiliza `casosPorEstado`) + barras de `casosCreadosPorMes`.

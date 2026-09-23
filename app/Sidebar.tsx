@@ -10,6 +10,7 @@ import {
   ClipboardCheck,
   FileText,
   BarChart3,
+  PieChart,
   ShieldCheck,
 } from "lucide-react";
 import type { Role } from "@/lib/roles";
@@ -26,6 +27,7 @@ const LINKS = [
     label: "Reportes por estudio",
     icon: BarChart3,
   },
+  { href: "/estadisticas", label: "Estadísticas", icon: PieChart },
 ];
 
 export function Sidebar({ roles }: { roles: Role[] }) {
