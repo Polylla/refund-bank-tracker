@@ -23,7 +23,7 @@
 - `CasosFiltros`: input de búsqueda con icono de lupa, bordes más redondeados, estilo más "app".
 - **Verificación:** manual.
 
-## Task 18.5 — Ficha de caso con pestañas
+## Task 18.5 — Ficha de caso con pestañas ✅ implementada (verificación manual pendiente)
 - `/casos/[id]`: reorganizar en pestañas "Información" (datos + estado), "Historial", "Documentos", en vez de todo apilado.
 - **Verificación:** manual — mismos datos, misma funcionalidad, navegación por pestañas.
 
