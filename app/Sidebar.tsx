@@ -14,6 +14,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { Role } from "@/lib/roles";
+import { SidebarCalendar } from "./SidebarCalendar";
 
 const LINKS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -57,7 +58,7 @@ export function Sidebar({ roles }: { roles: Role[] }) {
           Gestión de Reembolsos
         </Link>
       </div>
-      <nav className="flex flex-1 flex-col gap-0.5 px-3">
+      <nav className="flex flex-col gap-0.5 px-3">
         {links.map((link) => {
           const Icon = link.icon;
           const activo = link.href === hrefActivo;
@@ -77,6 +78,10 @@ export function Sidebar({ roles }: { roles: Role[] }) {
           );
         })}
       </nav>
+
+      <div className="mt-auto pt-4">
+        <SidebarCalendar />
+      </div>
     </aside>
   );
 }

@@ -36,6 +36,7 @@
   --color-surface: var(--color-surface);
   --color-sidebar: var(--sidebar-bg);
   --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-foreground-muted: var(--sidebar-foreground-muted);
   --color-success: var(--color-success);
   --color-warning: var(--color-warning);
   --color-info: var(--color-info);
