@@ -26,6 +26,7 @@ Metodología: SDD (spec por feature, aprobada antes de implementar) + TDD obliga
 | 16 | [Eliminar documentos e importaciones por error](16-eliminar-documentos-importaciones.md) | 02, 03, 05 | ✅ Completa (ver [tasks](16-eliminar-documentos-importaciones.tasks.md)), verificada en producción |
 | 17 | [Mejoras al listado de casos](17-mejoras-listado-casos.md) | 07, 12, 13 | ✅ Completa (ver [tasks](17-mejoras-listado-casos.tasks.md)), verificada en producción |
 | 18 | [Rediseño de interfaz](18-rediseno-interfaz.md) | Todas las anteriores | ✅ Completa (ver [tasks](18-rediseno-interfaz.tasks.md)), verificada en producción |
+| 19 | [Ingreso manual de casos](19-ingreso-manual-casos.md) | 02, 03, 09, 16 | 📋 Propuesta, pendiente de aprobación — ver [tasks](19-ingreso-manual-casos.tasks.md) |
 
 Nota sobre el orden: el documento original (sección 5) propone *ingesta → modelo de datos → duplicados → estados → matching → exportación*. Se adelantó "modelo de datos" a la spec 01 (junto con la fundación técnica y auth) porque ingesta, duplicados, estados y matching dependen todos de que el esquema de datos ya exista — no tiene sentido parsear un Excel sin tener dónde guardarlo. El resto del orden se mantiene igual al propuesto, agregando "historial y reportería" (punto 3.2 del documento original) al final porque es principalmente una capa de presentación sobre datos que generan las specs 02–05.
 
