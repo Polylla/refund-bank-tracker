@@ -1,9 +1,32 @@
-import Link from "next/link";
+import {
+  Clock,
+  Send,
+  CheckCircle2,
+  XCircle,
+  ClipboardList,
+  FileWarning,
+  ReceiptText,
+} from "lucide-react";
 import {
   casosPorEstado,
   filasEnRevisionPendientes,
 } from "@/lib/reporteria/metricas";
 import { casosSinDocumento, documentosSinMatch } from "@/lib/documentos/alertas";
+import { StatCard, type StatColor } from "./StatCard";
+
+const ICONO_POR_ESTADO: Record<string, typeof Clock> = {
+  Pendiente: Clock,
+  "Enviado a pago": Send,
+  Pagado: CheckCircle2,
+  Rechazado: XCircle,
+};
+
+const COLOR_POR_ESTADO: Record<string, StatColor> = {
+  Pendiente: "warning",
+  "Enviado a pago": "info",
+  Pagado: "success",
+  Rechazado: "danger",
+};
 
 export default async function DashboardPage() {
   const [porEstado, enRevision, sinMatch, sinDocumento] = await Promise.all([
@@ -21,16 +44,14 @@ export default async function DashboardPage() {
         <h2 className="font-medium">Casos por estado</h2>
         <div className="mt-2 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {porEstado.map((p) => (
-            <Link
+            <StatCard
               key={p.estado}
               href={`/casos?estado=${encodeURIComponent(p.estado)}`}
-              className="rounded-lg border p-3 text-center transition-colors hover:bg-black/[.03] dark:hover:bg-white/[.05]"
-            >
-              <div className="text-2xl font-semibold text-primary">
-                {p.cantidad}
-              </div>
-              <div className="text-xs text-gray-500">{p.estado}</div>
-            </Link>
+              icon={ICONO_POR_ESTADO[p.estado] ?? Clock}
+              value={p.cantidad}
+              label={p.estado}
+              color={COLOR_POR_ESTADO[p.estado] ?? "neutral"}
+            />
           ))}
         </div>
       </section>
@@ -38,41 +59,27 @@ export default async function DashboardPage() {
       <section className="mt-8">
         <h2 className="font-medium">Alertas pendientes</h2>
         <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Link
+          <StatCard
             href="/revision"
-            className="rounded-lg border p-3 transition-colors hover:bg-black/[.03] dark:hover:bg-white/[.05]"
-          >
-            <div
-              className={`text-2xl font-semibold ${enRevision > 0 ? "text-amber-600" : ""}`}
-            >
-              {enRevision}
-            </div>
-            <div className="text-xs text-gray-500">
-              filas en cola de revisión
-            </div>
-          </Link>
-          <Link
+            icon={ClipboardList}
+            value={enRevision}
+            label="filas en cola de revisión"
+            color={enRevision > 0 ? "warning" : "neutral"}
+          />
+          <StatCard
             href="/documentos"
-            className="rounded-lg border p-3 transition-colors hover:bg-black/[.03] dark:hover:bg-white/[.05]"
-          >
-            <div
-              className={`text-2xl font-semibold ${sinMatch.length > 0 ? "text-amber-600" : ""}`}
-            >
-              {sinMatch.length}
-            </div>
-            <div className="text-xs text-gray-500">documentos sin match</div>
-          </Link>
-          <Link
+            icon={FileWarning}
+            value={sinMatch.length}
+            label="documentos sin match"
+            color={sinMatch.length > 0 ? "warning" : "neutral"}
+          />
+          <StatCard
             href="/documentos"
-            className="rounded-lg border p-3 transition-colors hover:bg-black/[.03] dark:hover:bg-white/[.05]"
-          >
-            <div
-              className={`text-2xl font-semibold ${sinDocumento.length > 0 ? "text-amber-600" : ""}`}
-            >
-              {sinDocumento.length}
-            </div>
-            <div className="text-xs text-gray-500">casos sin documento</div>
-          </Link>
+            icon={ReceiptText}
+            value={sinDocumento.length}
+            label="casos sin documento"
+            color={sinDocumento.length > 0 ? "warning" : "neutral"}
+          />
         </div>
       </section>
     </div>
