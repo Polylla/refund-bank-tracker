@@ -39,6 +39,17 @@ export function Sidebar({ roles }: { roles: Role[] }) {
       ]
     : LINKS;
 
+  // Solo se resalta el link más específico que matchea (evita que
+  // "Casos" y "Pagos pendientes" queden ambos activos en
+  // /casos/pagos-pendientes, ya que ese path empieza con "/casos/").
+  const hrefActivo = links.reduce<string | null>((mejor, link) => {
+    const matchea =
+      pathname === link.href || pathname.startsWith(`${link.href}/`);
+    if (!matchea) return mejor;
+    if (!mejor || link.href.length > mejor.length) return link.href;
+    return mejor;
+  }, null);
+
   return (
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
       <div className="px-5 py-5">
@@ -49,8 +60,7 @@ export function Sidebar({ roles }: { roles: Role[] }) {
       <nav className="flex flex-1 flex-col gap-0.5 px-3">
         {links.map((link) => {
           const Icon = link.icon;
-          const activo =
-            pathname === link.href || pathname.startsWith(`${link.href}/`);
+          const activo = link.href === hrefActivo;
           return (
             <Link
               key={link.href}
